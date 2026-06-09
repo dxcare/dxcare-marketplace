@@ -1,0 +1,68 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHARTS — opt-in container styling for the Chart.js module (_shared/js/charts.js).
+
+   OPT-IN, like charts.js itself: a deck links this only when it draws charts.
+   It carries NO element selectors and NO layout poison (no body/.slide rules),
+   so it is safe to link from either a skeleton or a rich/self-contained deck —
+   same contract as tokens.css.
+
+   ── Why an explicit-height container (R1-C3, AC-1.2) ────────────────────────
+   Chart.js with `responsive: true` sizes the canvas to its PARENT box. A bare
+   <canvas> in a flex/auto-height column has no determinate height, so the chart
+   either collapses to 0 or grows unbounded on every resize. `.chart-box` gives
+   the canvas a bounded, explicit box; charts.js sets `maintainAspectRatio:false`
+   so the canvas fills it. Authors override the height per slide inline or with a
+   modifier class.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.chart-box {
+  position: relative;       /* responsive Chart.js measures the nearest positioned/sized ancestor */
+  width: 100%;
+  max-width: min(900px, 92vw);
+  margin-inline: auto;
+  /* Explicit, bounded height. clamp keeps it sane from phone to 4K. Override
+     with `style="height: …"` or a modifier when a slide needs a taller chart. */
+  height: clamp(240px, 42vh, 520px);
+}
+
+.chart-box > canvas {
+  /* Chart.js sets width/height attributes; this keeps the CSS box honest if a
+     consumer stylesheet sets `img,canvas{max-width:100%}` etc. */
+  display: block;
+}
+
+/* Taller variant for chart-only slides. */
+.chart-box.chart-box--tall {
+  height: clamp(300px, 60vh, 680px);
+}
+
+/* Placeholder shown when a chart cannot render (CDN failed / bad target).
+   Prevents a silently blank slide (AC-5.1). Uses design tokens so it reads in
+   both themes; falls back to neutral values when tokens.css is absent. */
+.chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  border: 1px dashed var(--card-border, rgba(0, 0, 0, 0.2));
+  border-radius: var(--radius-md, 8px);
+  color: var(--muted, #888);
+  font-family: var(--font-body, sans-serif);
+  font-size: var(--small-size, 0.9rem);
+  background: var(--bg-secondary, transparent);
+}
+
+/* When the placeholder is appended next to the (empty) canvas inside a
+   .chart-box, hide the dead canvas so only the message shows. */
+.chart-box > .chart-placeholder ~ canvas,
+.chart-box > canvas + .chart-placeholder { /* either order */ }
+.chart-box:has(.chart-placeholder) > canvas { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* charts.js already passes animation:false during PDF capture; for users who
+     ask for reduced motion the chart's own entry animation is the only motion,
+     and Chart.js honours prefers-reduced-motion at the JS level since v3, so no
+     extra CSS is needed here. This block is a documented no-op anchor. */
+}

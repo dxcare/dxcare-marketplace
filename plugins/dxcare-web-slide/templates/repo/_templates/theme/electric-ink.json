@@ -1,0 +1,30 @@
+{
+  "preset": "electric-ink",
+  "category": "tech",
+  "description": "순수 블랙 + 일렉트릭 블루 단일 액센트. 강렬한 타이포그래피 중심.",
+  "mood": "대담, 타이포 중심, 에디토리얼",
+  "tokens": {
+    "color": {
+      "bg": "#fafafa",
+      "bgDark": "#000000",
+      "bgSecondary": "#f5f5f5",
+      "bgSecondaryDark": "#0a0a0a",
+      "fg": "#0a0a0a",
+      "fgDark": "#ffffff",
+      "muted": "#737373",
+      "mutedDark": "#737373",
+      "primary": "#2563eb",
+      "primaryDark": "#3b82f6",
+      "accent": "#3b82f6",
+      "cardBorder": "rgba(0, 0, 0, 0.08)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.06)"
+    },
+    "font": {
+      "heading": "'Bebas Neue', 'Black Han Sans', sans-serif",
+      "body": "'Open Sans', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "2px", "md": "4px", "lg": "8px" },
+    "motion": { "fast": "100ms", "base": "180ms" }
+  }
+}

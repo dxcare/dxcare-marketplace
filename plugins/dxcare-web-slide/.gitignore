@@ -1,0 +1,33 @@
+node_modules/
+.DS_Store
+*.log
+.qa-reports/
+.auto-loop-state.json
+.night-shift-state.json
+.ha-metrics.jsonl
+.ha-learnings.jsonl
+.ha-version
+.ha-counsel-log.jsonl
+.ha-design-risks.jsonl
+.ha-session-context.md
+.ha-tenacity-log.jsonl
+.ha-self-check-history.jsonl
+.ha-anti-patterns.jsonl
+.ha-harness-gaps.jsonl
+.ha-codex-availability.json
+.ha-freeze
+.dogfood/
+
+# ── dxcare-agile workflow (dev-time scaffolding; NOT part of the shipped plugin) ──
+# Working environment used to develop this plugin, not plugin surface.
+/BACKLOG.md
+/dxcare-agile.config.yaml
+/proposals/
+/docs/handoff/
+/docs/announcements/
+/docs/UPGRADE-TO-STANDARD.md
+/.ha-archive/
+
+# Raw brand-asset source kit (dev-time). The SHIPPED brand library lives in
+# templates/repo/brand-assets/ — this root copy is Noel's unprocessed source.
+/brand-assets/

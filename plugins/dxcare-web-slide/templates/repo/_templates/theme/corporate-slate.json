@@ -1,0 +1,30 @@
+{
+  "preset": "corporate-slate",
+  "category": "investor",
+  "description": "따뜻한 그레이 톤. 깔끔한 비즈니스 보고서.",
+  "mood": "정돈됨, 프로, 경영진",
+  "tokens": {
+    "color": {
+      "bg": "#ffffff",
+      "bgDark": "#1a1a2e",
+      "bgSecondary": "#f8f9fa",
+      "bgSecondaryDark": "#22223b",
+      "fg": "#2b2d42",
+      "fgDark": "#edf2f4",
+      "muted": "#8d99ae",
+      "mutedDark": "#8d99ae",
+      "primary": "#d90429",
+      "primaryDark": "#ef233c",
+      "accent": "#2b6cb0",
+      "cardBorder": "rgba(0, 0, 0, 0.08)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.08)"
+    },
+    "font": {
+      "heading": "'Plus Jakarta Sans', 'Pretendard Variable', sans-serif",
+      "body": "'Source Sans 3', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "6px", "md": "12px", "lg": "20px" },
+    "motion": { "fast": "150ms", "base": "250ms" }
+  }
+}

@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Retro Wave — Theme Sample</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0720; --bg2: rgba(26,15,48,0.8); --text: #f5f0ff; --text2: #c4b5fd;
+            --accent: #f472b6; --accent2: #fbbf24;
+            --glow-pink: rgba(244,114,182,0.5); --glow-pink-soft: rgba(244,114,182,0.2);
+            --glow-gold: rgba(251,191,36,0.4);
+            --border-pink: rgba(244,114,182,0.2);
+            --radius: 12px;
+            --font-heading: 'Clash Display', sans-serif;
+            --font-body: 'Satoshi', sans-serif;
+        }
+        .light-theme {
+            --bg: #fefce8; --bg2: rgba(254,249,195,0.85); --text: #1e1b4b; --text2: #4c1d95;
+            --accent: #db2777; --accent2: #d97706;
+            --glow-pink: rgba(219,39,119,0.3); --glow-pink-soft: rgba(219,39,119,0.1);
+            --glow-gold: rgba(217,119,6,0.3);
+            --border-pink: rgba(219,39,119,0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-snap-type: y mandatory; height: 100%; overflow-x: hidden; overflow-y: auto; scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body); background: var(--bg); color: var(--text);
+            height: 100%; overflow: hidden;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        /* Film grain overlay */
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: 999; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        .light-theme::after { opacity: 0.3; }
+
+        .slide {
+            width: 100vw; height: 100vh; height: 100dvh;
+            scroll-snap-align: start; display: flex; flex-direction: column;
+            justify-content: center; position: relative; overflow: hidden;
+            padding: clamp(2rem, 5vw, 5rem);
+        }
+
+        /* Typography */
+        h1 {
+            font-family: var(--font-heading); font-size: clamp(2.4rem, 7vw, 5.2rem);
+            font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; color: var(--text);
+        }
+        h2 {
+            font-family: var(--font-heading); font-size: clamp(1.5rem, 4vw, 2.8rem);
+            font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; color: var(--text);
+        }
+        p, li {
+            font-size: clamp(0.9rem, 1.8vw, 1.15rem); line-height: 1.7; color: var(--text2);
+        }
+
+        /* Outline text effect */
+        .outline-text {
+            -webkit-text-stroke: 2px var(--accent);
+            -webkit-text-fill-color: transparent;
+        }
+        .filled-text {
+            color: var(--text);
+            text-shadow: 0 0 20px var(--glow-pink), 0 0 40px var(--glow-pink-soft);
+        }
+        .light-theme .filled-text {
+            text-shadow: none;
+        }
+
+        /* Neon glow text */
+        .neon-glow {
+            text-shadow: 0 0 20px var(--glow-pink), 0 0 40px var(--glow-pink-soft);
+        }
+        .light-theme .neon-glow { text-shadow: none; }
+
+        /* Retro grid perspective */
+        .retro-grid {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 30%;
+            background:
+                linear-gradient(transparent 0%, rgba(244,114,182,0.05) 100%),
+                linear-gradient(rgba(244,114,182,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(244,114,182,0.1) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: bottom;
+            pointer-events: none;
+            animation: gridDrift 8s linear infinite;
+        }
+        .light-theme .retro-grid {
+            background:
+                linear-gradient(transparent 0%, rgba(219,39,119,0.04) 100%),
+                linear-gradient(rgba(219,39,119,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(219,39,119,0.08) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+        @keyframes gridDrift {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 0 40px, 0 0; }
+        }
+
+        /* Neon horizontal line divider */
+        .neon-line {
+            width: 100%; height: 1px; border: none; margin: 1.5rem 0;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), var(--accent), transparent);
+            box-shadow: 0 0 8px var(--glow-pink), 0 0 16px var(--glow-pink-soft);
+            position: relative;
+        }
+        .light-theme .neon-line { box-shadow: none; }
+
+        /* Star/sparkle decorative dots */
+        .sparkle {
+            position: absolute; width: 3px; height: 3px; border-radius: 50%;
+            background: var(--accent); pointer-events: none;
+            box-shadow: 0 0 6px var(--glow-pink);
+            animation: sparkleFlicker 3s ease-in-out infinite alternate;
+        }
+        .sparkle:nth-child(2) { animation-delay: 0.7s; }
+        .sparkle:nth-child(3) { animation-delay: 1.4s; }
+        .sparkle.gold { background: var(--accent2); box-shadow: 0 0 6px var(--glow-gold); }
+        @keyframes sparkleFlicker {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.6); }
+        }
+        .light-theme .sparkle { box-shadow: none; }
+
+        /* ====================== */
+        /* SLIDE 1 — Title Slide  */
+        /* ====================== */
+        .slide-title {
+            align-items: center; text-align: center;
+        }
+        .slide-title::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 40%, rgba(244,114,182,0.18) 0%, rgba(139,92,246,0.12) 30%, transparent 65%);
+            pointer-events: none;
+        }
+        .light-theme .slide-title::before {
+            background: radial-gradient(ellipse at 50% 40%, rgba(219,39,119,0.08) 0%, rgba(99,102,241,0.06) 30%, transparent 65%);
+        }
+
+        .badge {
+            display: inline-block; font-family: var(--font-heading);
+            font-size: clamp(0.6rem, 1vw, 0.75rem); font-weight: 700;
+            letter-spacing: 0.18em; text-transform: uppercase;
+            color: #0f0720; background: var(--accent2);
+            padding: 0.3rem 1rem; border-radius: 100px;
+            margin-bottom: 1.5rem; position: relative;
+        }
+        .light-theme .badge { color: #fefce8; }
+
+        .slide-title h1 { position: relative; margin-bottom: 0.75rem; }
+
+        .title-glow {
+            animation: neonPulse 3s ease-in-out infinite;
+        }
+        @keyframes neonPulse {
+            0%, 100% {
+                text-shadow: 0 0 20px var(--glow-pink), 0 0 40px var(--glow-pink-soft);
+            }
+            50% {
+                text-shadow: 0 0 30px var(--glow-pink), 0 0 60px var(--glow-pink-soft), 0 0 80px rgba(244,114,182,0.1);
+            }
+        }
+        .light-theme .title-glow { animation: none; text-shadow: none; }
+
+        .slide-title .subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem); color: var(--text2);
+            max-width: 550px; position: relative;
+        }
+
+        /* ======================== */
+        /* SLIDE 2 — Content Cards  */
+        /* ======================== */
+        .content-cards {
+            display: flex; flex-direction: column;
+            gap: clamp(0.6rem, 1.5vw, 1rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+        }
+        .c-card {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: clamp(0.8rem, 2vw, 1.3rem) clamp(1rem, 2.5vw, 1.5rem);
+            background: var(--bg2); border-radius: var(--radius);
+            border: 1px solid var(--border-pink);
+            border-left: 3px solid var(--accent);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(8px);
+        }
+        .c-card:hover {
+            transform: translateX(6px);
+            box-shadow: 0 0 30px rgba(244,114,182,0.15);
+        }
+        .light-theme .c-card:hover { box-shadow: 0 4px 20px rgba(219,39,119,0.1); }
+        .c-card .c-dot {
+            flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent2); margin-top: 0.55rem;
+            box-shadow: 0 0 8px var(--glow-gold);
+        }
+        .light-theme .c-card .c-dot { box-shadow: none; }
+        .c-card strong {
+            display: block; font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.5vw, 1.05rem); font-weight: 700;
+            color: var(--text); margin-bottom: 0.2rem;
+        }
+        .c-card span {
+            font-size: clamp(0.78rem, 1.3vw, 0.92rem); color: var(--text2);
+        }
+        .c-card .highlight {
+            color: var(--accent); font-weight: 500;
+            text-shadow: 0 0 10px var(--glow-pink-soft);
+        }
+        .light-theme .c-card .highlight { text-shadow: none; }
+
+        /* =============================== */
+        /* SLIDE 3 — Retro Dashboard       */
+        /* =============================== */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+            gap: clamp(0.8rem, 2vw, 1.2rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+        }
+        .metric-card {
+            background: var(--bg2); border-radius: var(--radius);
+            padding: clamp(1.2rem, 3vw, 2rem);
+            text-align: center; position: relative; overflow: hidden;
+            border: 1px solid var(--border-pink);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(8px);
+        }
+        .metric-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(244,114,182,0.15);
+        }
+        .light-theme .metric-card:hover { box-shadow: 0 4px 20px rgba(219,39,119,0.1); }
+        .metric-num {
+            font-family: var(--font-heading); font-weight: 700;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            color: var(--accent); line-height: 1.1; margin-bottom: 0.4rem;
+            text-shadow: 0 0 20px var(--glow-pink), 0 0 40px var(--glow-pink-soft);
+        }
+        .light-theme .metric-num { text-shadow: none; }
+        .metric-label {
+            font-family: var(--font-heading); font-weight: 600;
+            font-size: clamp(0.75rem, 1.3vw, 0.9rem);
+            color: var(--accent2); letter-spacing: 0.08em; text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+        .metric-desc {
+            font-size: clamp(0.7rem, 1.1vw, 0.82rem); color: var(--text2); line-height: 1.5;
+        }
+
+        /* ================================ */
+        /* SLIDE 4 — Two-Column Layout      */
+        /* ================================ */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 2.5vw, 2rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+            position: relative; z-index: 1;
+        }
+        .col-card {
+            background: var(--bg2); border-radius: var(--radius);
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .col-card--pink {
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 20px rgba(244,114,182,0.1), inset 0 0 30px rgba(244,114,182,0.03);
+        }
+        .col-card--pink:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 40px rgba(244,114,182,0.2), inset 0 0 30px rgba(244,114,182,0.05);
+        }
+        .light-theme .col-card--pink {
+            box-shadow: none; border-color: var(--accent);
+        }
+        .light-theme .col-card--pink:hover { box-shadow: 0 4px 20px rgba(219,39,119,0.1); }
+        .col-card--gold {
+            border: 1px solid var(--accent2);
+            box-shadow: 0 0 20px rgba(251,191,36,0.08), inset 0 0 30px rgba(251,191,36,0.03);
+        }
+        .col-card--gold:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 40px rgba(251,191,36,0.15), inset 0 0 30px rgba(251,191,36,0.05);
+        }
+        .light-theme .col-card--gold {
+            box-shadow: none; border-color: var(--accent2);
+        }
+        .light-theme .col-card--gold:hover { box-shadow: 0 4px 20px rgba(217,119,6,0.1); }
+        .col-card h3 {
+            font-family: var(--font-heading); font-weight: 700;
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            margin-bottom: 0.75rem; color: var(--text);
+        }
+        .col-card ul {
+            list-style: none; padding: 0;
+        }
+        .col-card ul li {
+            padding: 0.35rem 0; font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+            color: var(--text2); position: relative; padding-left: 1.2rem;
+        }
+        .col-card ul li::before {
+            content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+        .col-card--pink ul li::before {
+            background: var(--accent); box-shadow: 0 0 6px var(--glow-pink);
+        }
+        .col-card--gold ul li::before {
+            background: var(--accent2); box-shadow: 0 0 6px var(--glow-gold);
+        }
+        .light-theme .col-card ul li::before { box-shadow: none; }
+        .col-accent-pink { color: var(--accent); font-weight: 600; }
+        .col-accent-gold { color: var(--accent2); font-weight: 600; }
+
+        @media (max-width: 640px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+
+        /* ================================ */
+        /* SLIDE 5 — Data / Metrics         */
+        /* ================================ */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+        }
+        .data-card {
+            background: var(--bg2); border-radius: var(--radius);
+            padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.5rem);
+            text-align: center; position: relative; overflow: hidden;
+            border: 1px solid var(--border-pink);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(8px);
+        }
+        .data-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+        .data-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 30px rgba(244,114,182,0.15);
+        }
+        .light-theme .data-card:hover { box-shadow: 0 4px 20px rgba(219,39,119,0.1); }
+        .data-num {
+            font-family: var(--font-heading); font-weight: 700;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--accent); line-height: 1; margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px var(--glow-pink), 0 0 40px var(--glow-pink-soft);
+        }
+        .light-theme .data-num { text-shadow: none; }
+        .data-num--outline {
+            -webkit-text-stroke: 2px var(--accent);
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+            filter: drop-shadow(0 0 12px var(--glow-pink));
+        }
+        .light-theme .data-num--outline { filter: none; }
+        .data-label {
+            font-family: var(--font-heading); font-weight: 600;
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--accent2); letter-spacing: 0.1em; text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+        .data-sub {
+            font-size: clamp(0.7rem, 1.1vw, 0.82rem); color: var(--text2); line-height: 1.5;
+        }
+
+        @media (max-width: 640px) {
+            .data-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ================================ */
+        /* SLIDE 6 — Timeline               */
+        /* ================================ */
+        .timeline-container {
+            position: relative; z-index: 1;
+            margin-top: clamp(2rem, 4vw, 3.5rem);
+            padding-bottom: 1rem;
+        }
+        .timeline-track {
+            position: relative;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 0 clamp(0.5rem, 2vw, 2rem);
+        }
+        .timeline-line {
+            position: absolute; top: 18px; left: clamp(0.5rem, 2vw, 2rem); right: clamp(0.5rem, 2vw, 2rem);
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+            box-shadow: 0 0 10px var(--glow-pink), 0 0 20px var(--glow-pink-soft);
+        }
+        .light-theme .timeline-line { box-shadow: none; }
+        .timeline-node {
+            position: relative; text-align: center; flex: 1;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .timeline-dot {
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--accent); border: 2px solid var(--bg);
+            box-shadow: 0 0 12px var(--glow-pink), 0 0 24px var(--glow-pink-soft);
+            position: relative; z-index: 2;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .timeline-dot::after {
+            content: ''; position: absolute; inset: -4px; border-radius: 50%;
+            border: 1px solid rgba(244,114,182,0.3);
+            animation: dotPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 0; }
+        }
+        .light-theme .timeline-dot { box-shadow: 0 0 0 3px rgba(219,39,119,0.2); }
+        .light-theme .timeline-dot::after { border-color: rgba(219,39,119,0.15); }
+        .timeline-node:hover .timeline-dot {
+            transform: scale(1.3);
+            box-shadow: 0 0 20px var(--glow-pink), 0 0 40px var(--glow-pink-soft);
+        }
+        .timeline-date {
+            font-family: var(--font-heading); font-weight: 700;
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--accent2); letter-spacing: 0.05em;
+            margin-top: 0.8rem;
+            text-shadow: 0 0 8px var(--glow-gold);
+        }
+        .light-theme .timeline-date { text-shadow: none; }
+        .timeline-label {
+            font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+            color: var(--text); font-weight: 600; margin-top: 0.3rem;
+            font-family: var(--font-heading);
+        }
+        .timeline-desc {
+            font-size: clamp(0.65rem, 1vw, 0.78rem);
+            color: var(--text2); margin-top: 0.2rem; max-width: 140px;
+        }
+
+        @media (max-width: 640px) {
+            .timeline-track { flex-direction: column; gap: 1.5rem; align-items: flex-start; padding-left: 2rem; }
+            .timeline-line { display: none; }
+            .timeline-node { flex-direction: row; gap: 1rem; text-align: left; }
+            .timeline-date, .timeline-label, .timeline-desc { margin-top: 0; }
+        }
+
+        /* ================================ */
+        /* SLIDE 7 — Quote                  */
+        /* ================================ */
+        .quote-container {
+            position: relative; z-index: 1;
+            max-width: 700px; margin: 0 auto;
+            text-align: center;
+            padding: clamp(1.5rem, 3vw, 3rem) 0;
+        }
+        .quote-mark {
+            font-family: var(--font-heading); font-weight: 700;
+            font-size: clamp(4rem, 10vw, 8rem); line-height: 0.6;
+            color: var(--accent);
+            text-shadow: 0 0 30px var(--glow-pink), 0 0 60px var(--glow-pink-soft), 0 0 90px rgba(244,114,182,0.1);
+            display: block; margin-bottom: 0.5rem;
+            animation: neonPulse 3s ease-in-out infinite;
+        }
+        .light-theme .quote-mark { text-shadow: none; animation: none; }
+        .quote-text {
+            font-family: var(--font-heading); font-weight: 600;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--text); line-height: 1.5;
+            text-shadow: 0 0 15px rgba(244,114,182,0.08);
+            margin-bottom: 1.5rem;
+        }
+        .light-theme .quote-text { text-shadow: none; }
+        .quote-attribution {
+            font-family: var(--font-heading); font-weight: 600;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            color: var(--accent2); letter-spacing: 0.08em;
+            text-shadow: 0 0 8px var(--glow-gold);
+        }
+        .light-theme .quote-attribution { text-shadow: none; }
+        .quote-line {
+            width: 60px; height: 2px; margin: 0 auto 1rem;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            box-shadow: 0 0 8px var(--glow-pink);
+            border-radius: 2px;
+        }
+        .light-theme .quote-line { box-shadow: none; }
+
+        /* ================================ */
+        /* SLIDE 8 — Closing / Ending       */
+        /* ================================ */
+        .closing-container {
+            position: relative; z-index: 1;
+            text-align: center;
+        }
+        .closing-container h1 {
+            margin-bottom: 1.5rem;
+        }
+        .closing-actions {
+            display: flex; align-items: center; justify-content: center;
+            gap: clamp(0.8rem, 2vw, 1.5rem); flex-wrap: wrap;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .closing-action {
+            font-family: var(--font-heading); font-weight: 700;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: clamp(0.7rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2.5rem);
+            border-radius: 100px;
+            background: rgba(219,39,119,0.12);
+            color: var(--accent);
+            border: 1px solid rgba(219,39,119,0.25);
+        }
+        .light-theme .closing-action {
+            background: rgba(219,39,119,0.08);
+            border-color: rgba(219,39,119,0.2);
+        }
+        .closing-sub {
+            font-size: clamp(0.78rem, 1.3vw, 0.92rem); color: var(--text2);
+            margin-top: 1.2rem;
+        }
+        .closing-sub .gold-text { color: var(--accent2); font-weight: 600; }
+
+        /* ================= */
+        /* Reveal Animations */
+        /* ================= */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+        }
+        .slide.visible .reveal {
+            opacity: 1; transform: translateY(0);
+        }
+        .slide.visible .reveal.glow-trail {
+            box-shadow: 0 8px 30px rgba(244,114,182,0.1);
+        }
+        .light-theme .slide.visible .reveal.glow-trail { box-shadow: none; }
+        .reveal:nth-child(2) { transition-delay: 0.08s; }
+        .reveal:nth-child(3) { transition-delay: 0.16s; }
+        .reveal:nth-child(4) { transition-delay: 0.24s; }
+        .reveal:nth-child(5) { transition-delay: 0.32s; }
+        .reveal:nth-child(6) { transition-delay: 0.40s; }
+        .reveal:nth-child(7) { transition-delay: 0.48s; }
+        .reveal:nth-child(8) { transition-delay: 0.56s; }
+        .reveal:nth-child(9) { transition-delay: 0.64s; }
+
+        /* Card slide-in from bottom */
+        .card-reveal {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), box-shadow 0.6s;
+        }
+        .slide.visible .card-reveal {
+            opacity: 1; transform: translateY(0);
+            box-shadow: 0 4px 20px rgba(244,114,182,0.08);
+        }
+        .light-theme .slide.visible .card-reveal { box-shadow: 0 2px 12px rgba(219,39,119,0.06); }
+        .card-reveal:nth-child(1) { transition-delay: 0.1s; }
+        .card-reveal:nth-child(2) { transition-delay: 0.2s; }
+        .card-reveal:nth-child(3) { transition-delay: 0.3s; }
+        .card-reveal:nth-child(4) { transition-delay: 0.4s; }
+        .card-reveal:nth-child(5) { transition-delay: 0.5s; }
+
+        /* ======== */
+        /* UI Layer */
+        /* ======== */
+        .back-link {
+            position: fixed; top: 1.5rem; left: 1.5rem;
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem); color: var(--text2);
+            background: var(--bg2); border: 1px solid var(--border-pink);
+            padding: 0.35rem 0.75rem; border-radius: 8px;
+            text-decoration: none; z-index: 100; transition: all 0.2s;
+            backdrop-filter: blur(8px);
+        }
+        .back-link:hover { color: var(--text); border-color: var(--accent); box-shadow: 0 0 15px rgba(244,114,182,0.15); }
+        .light-theme .back-link:hover { box-shadow: none; }
+
+        .theme-toggle {
+            position: fixed; top: 1.5rem; right: 1.5rem;
+            font-size: 1.2rem; cursor: pointer; z-index: 100;
+            background: var(--bg2); border: 1px solid var(--border-pink);
+            padding: 0.4rem 0.6rem; border-radius: 8px;
+            transition: all 0.2s; line-height: 1;
+            backdrop-filter: blur(8px);
+        }
+        .theme-toggle:hover { border-color: var(--accent); box-shadow: 0 0 15px rgba(244,114,182,0.15); }
+        .light-theme .theme-toggle:hover { box-shadow: none; }
+
+        .nav-dots {
+            position: fixed; right: 1.5rem; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 0.5rem; z-index: 100;
+        }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--text2); opacity: 0.35; cursor: pointer;
+            transition: all 0.3s; border: none;
+        }
+        .dot.active {
+            background: var(--accent); opacity: 1; transform: scale(1.4);
+            box-shadow: 0 0 10px var(--glow-pink);
+        }
+        .light-theme .dot.active { box-shadow: none; }
+        .dot:hover { opacity: 0.7; }
+
+        .slide-counter {
+            position: fixed; bottom: 2rem; right: 1.5rem;
+            font-size: clamp(0.65rem, 1vw, 0.8rem); color: var(--text2);
+            background: var(--bg2); border: 1px solid var(--border-pink);
+            padding: 0.35rem 0.7rem; border-radius: 8px; z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        /* ================ */
+        /* Reduced Motion   */
+        /* ================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+                transition-duration: 0.15s !important;
+            }
+            html { scroll-behavior: auto; }
+            .retro-grid { animation: none !important; }
+            .sparkle { animation: none !important; opacity: 0.5 !important; }
+            .title-glow { animation: none !important; }
+            .timeline-dot::after { animation: none !important; }
+        }
+
+        @media (max-height: 500px) { .nav-dots { display: none; } }
+
+        @media (max-width: 480px) {
+            .slide { padding: clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 4vw, 2rem); }
+            .metric-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <a href="./" class="back-link">&larr; Gallery</a>
+    <div class="theme-toggle" onclick="setTheme(document.body.classList.contains('light-theme')?'dark':'light')"><span id="themeIcon">&#9788;</span></div>
+    <nav class="nav-dots" id="navDots"></nav>
+    <div class="slide-counter"><span id="counterCurrent">1</span> / <span id="counterTotal">8</span></div>
+
+    <!-- ==================== -->
+    <!-- Slide 1: Synthwave Hero -->
+    <!-- ==================== -->
+    <section class="slide slide-title" id="slide-0">
+        <!-- Sparkle decorations -->
+        <div class="sparkle" style="top:18%;left:12%;"></div>
+        <div class="sparkle gold" style="top:25%;right:15%;"></div>
+        <div class="sparkle" style="bottom:35%;left:20%;"></div>
+        <div class="sparkle gold" style="top:15%;right:30%;"></div>
+
+        <div class="reveal badge">RETRO WAVE</div>
+        <h1 class="reveal">
+            <span class="filled-text title-glow">Sample</span><br>
+            <span class="outline-text">Presentation</span>
+        </h1>
+        <p class="reveal subtitle">레트로퓨처리즘에서 영감을 받은 신스웨이브 비주얼 아이덴티티</p>
+        <div class="reveal neon-line" style="width:140px;margin:1.5rem auto 0;"></div>
+
+        <!-- Retro grid at bottom -->
+        <div class="retro-grid"></div>
+    </section>
+
+    <!-- ==================== -->
+    <!-- Slide 2: Neon Cards  -->
+    <!-- ==================== -->
+    <section class="slide" id="slide-1">
+        <div class="sparkle" style="top:12%;right:10%;"></div>
+        <div class="sparkle gold" style="bottom:20%;left:8%;"></div>
+
+        <h2 class="reveal neon-glow">테마 특성</h2>
+        <div class="reveal neon-line" style="width:80px;margin-bottom:0.5rem;"></div>
+        <div class="content-cards">
+            <div class="c-card card-reveal glow-trail">
+                <div class="c-dot"></div>
+                <div><strong>Clash Display 헤딩 폰트</strong><span>Fontshare의 <span class="highlight">대담한 디스플레이 폰트</span>로 강렬한 첫인상을 만듭니다</span></div>
+            </div>
+            <div class="c-card card-reveal glow-trail">
+                <div class="c-dot"></div>
+                <div><strong>핑크 + 골드 듀얼 액센트</strong><span><span class="highlight">네온 글로우 이펙트</span>와 대비감 있는 컬러 페어링으로 에너지를 전달합니다</span></div>
+            </div>
+            <div class="c-card card-reveal glow-trail">
+                <div class="c-dot"></div>
+                <div><strong>신스웨이브 그리드 &amp; 그레인</strong><span><span class="highlight">퍼스펙티브 그리드</span>와 필름 그레인 텍스처로 분위기를 연출합니다</span></div>
+            </div>
+            <div class="c-card card-reveal glow-trail">
+                <div class="c-dot"></div>
+                <div><strong>크리에이티브 프레젠테이션에 최적</strong><span>스타트업 피칭, 포트폴리오, <span class="highlight">브랜드 소개</span>에 잘 어울립니다</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- Slide 3: Retro Dashboard   -->
+    <!-- ========================== -->
+    <section class="slide" id="slide-2">
+        <div class="sparkle gold" style="top:10%;left:15%;"></div>
+        <div class="sparkle" style="top:18%;right:12%;"></div>
+        <div class="sparkle gold" style="bottom:35%;right:20%;"></div>
+
+        <h2 class="reveal neon-glow">크리에이티브 프로세스</h2>
+        <div class="reveal neon-line" style="width:80px;margin-bottom:0.5rem;"></div>
+        <div class="metric-grid">
+            <div class="metric-card card-reveal">
+                <div class="metric-num">2.4K</div>
+                <div class="metric-label">아이디어</div>
+                <p class="metric-desc">트렌드와 영감을 탐색하고 아이디어를 수집합니다</p>
+            </div>
+            <div class="metric-card card-reveal">
+                <div class="metric-num">97%</div>
+                <div class="metric-label">완성도</div>
+                <p class="metric-desc">컨셉을 정의하고 무드보드를 구성합니다</p>
+            </div>
+            <div class="metric-card card-reveal">
+                <div class="metric-num">42h</div>
+                <div class="metric-label">제작 시간</div>
+                <p class="metric-desc">비주얼 에셋을 디자인하고 프로토타입을 개발합니다</p>
+            </div>
+        </div>
+
+        <!-- Retro grid at bottom -->
+        <div class="retro-grid"></div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- Slide 4: Two-Column        -->
+    <!-- ========================== -->
+    <section class="slide" id="slide-3">
+        <div class="sparkle" style="top:10%;left:8%;"></div>
+        <div class="sparkle gold" style="top:14%;right:18%;"></div>
+        <div class="sparkle" style="bottom:38%;right:10%;"></div>
+
+        <h2 class="reveal neon-glow">디자인 시스템</h2>
+        <div class="reveal neon-line" style="width:80px;margin-bottom:0.5rem;"></div>
+        <div class="two-col reveal">
+            <div class="col-card col-card--pink card-reveal">
+                <h3><span class="col-accent-pink">&#9670;</span> 비주얼 레이어</h3>
+                <ul>
+                    <li>네온 글로우 타이포그래피 시스템</li>
+                    <li><span class="col-accent-pink">퍼스펙티브 그리드</span> 배경 효과</li>
+                    <li>필름 그레인 오버레이 텍스처</li>
+                    <li>스파클 데코레이션 애니메이션</li>
+                </ul>
+            </div>
+            <div class="col-card col-card--gold card-reveal">
+                <h3><span class="col-accent-gold">&#9670;</span> 인터랙션 레이어</h3>
+                <ul>
+                    <li>스크롤 스냅 네비게이션</li>
+                    <li><span class="col-accent-gold">카드 호버 글로우</span> 트랜지션</li>
+                    <li>다크/라이트 테마 전환</li>
+                    <li>리듀스드 모션 대응</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Retro grid at bottom -->
+        <div class="retro-grid"></div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- Slide 5: Data / Metrics    -->
+    <!-- ========================== -->
+    <section class="slide" id="slide-4">
+        <div class="sparkle gold" style="top:8%;right:12%;"></div>
+        <div class="sparkle" style="top:15%;left:10%;"></div>
+        <div class="sparkle gold" style="bottom:32%;left:18%;"></div>
+
+        <h2 class="reveal neon-glow">프로젝트 성과</h2>
+        <div class="reveal neon-line" style="width:80px;margin-bottom:0.5rem;"></div>
+        <div class="data-grid reveal">
+            <div class="data-card card-reveal">
+                <div class="data-num">180K</div>
+                <div class="data-label">총 방문자</div>
+                <p class="data-sub">글로벌 사용자 트래픽 누적 수치</p>
+            </div>
+            <div class="data-card card-reveal">
+                <div class="data-num data-num--outline">64</div>
+                <div class="data-label">디자인 에셋</div>
+                <p class="data-sub">컴포넌트 라이브러리에 등록된 에셋 수</p>
+            </div>
+            <div class="data-card card-reveal">
+                <div class="data-num">99.8%</div>
+                <div class="data-label">업타임</div>
+                <p class="data-sub">지난 365일간 서비스 가용성 지표</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- Slide 6: Timeline          -->
+    <!-- ========================== -->
+    <section class="slide" id="slide-5">
+        <div class="sparkle" style="top:10%;left:12%;"></div>
+        <div class="sparkle gold" style="top:8%;right:16%;"></div>
+        <div class="sparkle" style="top:22%;right:8%;"></div>
+        <div class="sparkle gold" style="bottom:38%;left:6%;"></div>
+
+        <h2 class="reveal neon-glow">프로젝트 타임라인</h2>
+        <div class="reveal neon-line" style="width:80px;margin-bottom:0.5rem;"></div>
+        <div class="timeline-container reveal">
+            <div class="timeline-track">
+                <div class="timeline-line"></div>
+                <div class="timeline-node card-reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2025 Q1</div>
+                    <div class="timeline-label">리서치</div>
+                    <div class="timeline-desc">트렌드 분석 및 사용자 인사이트 도출</div>
+                </div>
+                <div class="timeline-node card-reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2025 Q2</div>
+                    <div class="timeline-label">프로토타입</div>
+                    <div class="timeline-desc">핵심 컨셉 검증 및 와이어프레임</div>
+                </div>
+                <div class="timeline-node card-reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2025 Q3</div>
+                    <div class="timeline-label">개발</div>
+                    <div class="timeline-desc">프론트엔드 구현 및 시스템 연동</div>
+                </div>
+                <div class="timeline-node card-reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2025 Q4</div>
+                    <div class="timeline-label">런칭</div>
+                    <div class="timeline-desc">프로덕션 배포 및 성과 모니터링</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Retro grid at bottom -->
+        <div class="retro-grid"></div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- Slide 7: Quote             -->
+    <!-- ========================== -->
+    <section class="slide" id="slide-6">
+        <div class="sparkle" style="top:12%;left:15%;"></div>
+        <div class="sparkle gold" style="top:10%;right:12%;"></div>
+        <div class="sparkle" style="bottom:25%;right:18%;"></div>
+        <div class="sparkle gold" style="bottom:30%;left:10%;"></div>
+        <div class="sparkle" style="top:40%;left:5%;"></div>
+        <div class="sparkle gold" style="top:35%;right:6%;"></div>
+
+        <div class="quote-container">
+            <span class="reveal quote-mark">&ldquo;</span>
+            <p class="reveal quote-text">미래는 이미 여기에 있다.<br>단지 고르게 퍼져 있지 않을 뿐이다.</p>
+            <div class="reveal quote-line"></div>
+            <p class="reveal quote-attribution">&#8212; 윌리엄 깁슨</p>
+        </div>
+    </section>
+
+    <!-- ========================== -->
+    <!-- Slide 8: Closing / Ending   -->
+    <!-- ========================== -->
+    <section class="slide slide-title" id="slide-7">
+        <!-- Sparkle decorations -->
+        <div class="sparkle" style="top:15%;left:10%;"></div>
+        <div class="sparkle gold" style="top:12%;right:14%;"></div>
+        <div class="sparkle" style="top:30%;right:8%;"></div>
+        <div class="sparkle gold" style="bottom:38%;left:12%;"></div>
+        <div class="sparkle" style="bottom:35%;right:20%;"></div>
+
+        <div class="closing-container">
+            <div class="reveal badge">THANK YOU</div>
+            <h1 class="reveal">
+                <span class="filled-text title-glow">THE</span><br>
+                <span class="outline-text">END</span>
+            </h1>
+            <div class="reveal neon-line" style="width:120px;margin:1rem auto;"></div>
+            <p class="reveal subtitle" style="max-width:480px;margin:0 auto;">레트로 웨이브 테마를 경험해 주셔서 감사합니다</p>
+            <div class="closing-actions reveal">
+                <span class="closing-action">레트로 웨이브의 비주얼 아이덴티티를 확인했습니다</span>
+                <span class="closing-action">네온과 신스웨이브 미학을 살펴보았습니다</span>
+            </div>
+            <p class="reveal closing-sub">Presented by <span class="gold-text">Retro Wave Theme</span></p>
+        </div>
+
+        <!-- Retro grid at bottom -->
+        <div class="retro-grid"></div>
+    </section>
+
+    <script>
+    /* Theme toggle */
+    function setTheme(t) {
+        document.body.classList.toggle('light-theme', t === 'light');
+        document.getElementById('themeIcon').textContent = t === 'light' ? '\u263E' : '\u2606';
+        localStorage.setItem('theme-retro-wave', t);
+    }
+    (function() {
+        var s = localStorage.getItem('theme-retro-wave');
+        if (s) setTheme(s);
+        else if (matchMedia('(prefers-color-scheme:light)').matches) setTheme('light');
+    })();
+
+    /* Slide Presentation Engine */
+    class SlidePresentation {
+        constructor() {
+            this.slides = [].slice.call(document.querySelectorAll('.slide'));
+            this.current = 0;
+            this.total = this.slides.length;
+            this.wheelAcc = 0;
+            this.wheelTimer = null;
+            this.touchY = 0;
+            this.init();
+        }
+        init() {
+            this.buildDots();
+            this.updateUI();
+            this.slides[0].classList.add('visible');
+
+            var self = this;
+
+            /* Keyboard */
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault(); self.next();
+                }
+                if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    e.preventDefault(); self.prev();
+                }
+            });
+
+            /* Wheel */
+            document.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                self.wheelAcc += e.deltaY;
+                clearTimeout(self.wheelTimer);
+                self.wheelTimer = setTimeout(function() {
+                    if (Math.abs(self.wheelAcc) > 50) {
+                        self.wheelAcc > 0 ? self.next() : self.prev();
+                    }
+                    self.wheelAcc = 0;
+                }, 80);
+            }, { passive: false });
+
+            /* Touch */
+            document.addEventListener('touchstart', function(e) {
+                self.touchY = e.touches[0].clientY;
+            }, { passive: true });
+            document.addEventListener('touchend', function(e) {
+                var d = self.touchY - e.changedTouches[0].clientY;
+                if (Math.abs(d) > 50) { d > 0 ? self.next() : self.prev(); }
+            }, { passive: true });
+        }
+        buildDots() {
+            var nav = document.getElementById('navDots');
+            var self = this;
+            this.slides.forEach(function(_, i) {
+                var d = document.createElement('div');
+                d.className = 'dot' + (i === 0 ? ' active' : '');
+                d.addEventListener('click', function() { self.goTo(i); });
+                nav.appendChild(d);
+            });
+        }
+        goTo(i) {
+            if (i < 0 || i >= this.total || i === this.current) return;
+            this.slides[this.current].classList.remove('visible');
+            this.current = i;
+            this.slides[this.current].classList.add('visible');
+            this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+            this.updateUI();
+        }
+        next() { this.goTo(this.current + 1); }
+        prev() { this.goTo(this.current - 1); }
+        updateUI() {
+            var self = this;
+            document.querySelectorAll('.dot').forEach(function(d, i) {
+                d.classList.toggle('active', i === self.current);
+            });
+            document.getElementById('counterCurrent').textContent = this.current + 1;
+            document.getElementById('counterTotal').textContent = this.total;
+        }
+    }
+    new SlidePresentation();
+    </script>
+</body>
+</html>

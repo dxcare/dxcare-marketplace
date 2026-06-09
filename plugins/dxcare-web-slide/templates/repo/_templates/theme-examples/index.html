@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Theme Gallery — DXCare Web Slide</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Lora:wght@500;600;700&family=Nunito:wght@400;600;700&family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            background: #000; color: #f5f5f7;
+            min-height: 100vh;
+            padding: clamp(1.5rem, 4vw, 4rem);
+        }
+        .gallery-header { text-align: center; margin-bottom: clamp(2rem, 4vw, 4rem); }
+        .gallery-header h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+        .gallery-header p { color: #86868b; font-size: clamp(0.85rem, 1.5vw, 1.1rem); }
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+        }
+        .theme-card {
+            border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer; display: block; text-decoration: none; color: inherit;
+        }
+        .theme-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-color: rgba(255,255,255,0.15);
+        }
+        .preview {
+            aspect-ratio: 16/10; position: relative; overflow: hidden;
+            padding: 1.5rem; display: flex; flex-direction: column; justify-content: flex-end;
+        }
+        .card-footer {
+            padding: 0.8rem 1.2rem;
+            background: rgba(255,255,255,0.03);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card-footer .name { font-size: 0.85rem; font-weight: 600; }
+        .card-footer .meta { font-size: 0.65rem; color: #86868b; margin-top: 2px; }
+        .card-footer .tags { display: flex; gap: 0.3rem; }
+        .card-footer .cat-tag {
+            font-size: 0.55rem; font-weight: 600; padding: 0.15rem 0.4rem;
+            border-radius: 4px; background: rgba(255,255,255,0.06); color: #86868b;
+        }
+        .click-hint { text-align: center; margin-top: 2rem; font-size: 0.8rem; color: #48484a; }
+    </style>
+</head>
+<body>
+    <div class="gallery-header">
+        <h1>Theme Gallery</h1>
+        <p id="gallery-subtitle">클릭하면 풀사이즈 샘플 페이지로 이동</p>
+    </div>
+    <div class="theme-grid" id="grid"></div>
+    <p class="click-hint">각 카드를 클릭하면 해당 테마의 풀사이즈 8장 슬라이드를 볼 수 있습니다</p>
+
+    <script>
+    const grid = document.getElementById('grid');
+
+    const cards = [
+        /* ── Apple Keynote ── */
+        {
+            id: 'apple-keynote', name: 'Apple Keynote Dark',
+            cat: ['비즈니스', '투자'], meta: 'Pretendard · radius 12px',
+            html: `
+                <div style="position:absolute;inset:0;background:#000;"></div>
+                <div style="position:absolute;top:-40%;right:-20%;width:80%;height:120%;background:radial-gradient(ellipse,rgba(41,151,255,0.25),transparent 65%);"></div>
+                <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                    <div style="font-size:0.5rem;font-weight:700;letter-spacing:0.12em;color:#2997ff;font-family:Pretendard;margin-bottom:0.6rem;">APPLE KEYNOTE</div>
+                    <div style="font-size:1.8rem;font-weight:800;color:#f5f5f7;font-family:Pretendard;letter-spacing:-0.03em;line-height:1.1;">Sample Presentation</div>
+                    <div style="font-size:0.6rem;color:#86868b;font-family:Pretendard;margin-top:0.5rem;">깔끔하고 미니멀한 Apple 스타일</div>
+                </div>`
+        },
+        /* ── Midnight Jewel ── */
+        {
+            id: 'midnight-jewel', name: 'Midnight Jewel',
+            cat: ['프리미엄', '금융'], meta: 'DM Sans · radius 16px',
+            html: `
+                <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0a0e1a 0%,#111827 50%,#0f172a 100%);"></div>
+                <div style="position:absolute;top:50%;left:50%;width:200px;height:200px;background:radial-gradient(circle,rgba(52,211,153,0.15),transparent 60%);transform:translate(-50%,-50%);"></div>
+                <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#34d399,#fbbf24,transparent);"></div>
+                <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                    <div style="font-size:0.5rem;font-weight:700;letter-spacing:0.15em;color:#34d399;font-family:'DM Sans';margin-bottom:0.6rem;">MIDNIGHT JEWEL</div>
+                    <div style="font-size:1.6rem;font-weight:700;color:#e8eaed;font-family:'DM Sans';line-height:1.15;">Premium <span style="color:#fbbf24;">Insight</span> Report</div>
+                    <div style="font-size:0.55rem;color:#9ca3af;font-family:'DM Sans';margin-top:0.5rem;">에메랄드 + 골드 듀얼 액센트</div>
+                </div>`
+        },
+        /* ── Corporate Slate ── */
+        {
+            id: 'corporate-slate', name: 'Corporate Slate',
+            cat: ['경영진', 'B2B'], meta: 'Plus Jakarta Sans · radius 12px',
+            html: `
+                <div style="position:absolute;inset:0;background:#1a1a2e;"></div>
+                <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px);"></div>
+                <div style="position:relative;padding:1.5rem;height:100%;display:flex;flex-direction:column;justify-content:flex-end;">
+                    <div style="font-size:0.5rem;color:#8d99ae;font-family:'Plus Jakarta Sans';">2026.03.26 &nbsp;<span style="border:1px solid #ef233c;color:#ef233c;padding:0.1rem 0.3rem;border-radius:2px;font-size:0.4rem;">CONFIDENTIAL</span></div>
+                    <div style="width:40px;height:3px;background:#ef233c;margin:0.5rem 0;"></div>
+                    <div style="font-size:1.6rem;font-weight:800;color:#edf2f4;font-family:'Plus Jakarta Sans';letter-spacing:-0.02em;line-height:1.1;">2026 전략 보고서</div>
+                    <div style="font-size:0.55rem;color:#8d99ae;font-family:'Plus Jakarta Sans';margin-top:0.3rem;">좌측 정렬 · 레드 액센트라인</div>
+                </div>`
+        },
+        /* ── Neon Terminal ── */
+        {
+            id: 'neon-terminal', name: 'Neon Terminal',
+            cat: ['개발자', '기술'], meta: 'JetBrains Mono · radius 8px',
+            html: `
+                <div style="position:absolute;inset:0;background:#0d1117;background-image:radial-gradient(rgba(63,185,80,0.03) 1px,transparent 1px);background-size:16px 16px;"></div>
+                <div style="position:relative;padding:1rem;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;">
+                    <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:0.8rem 1rem;width:85%;font-family:'JetBrains Mono',monospace;">
+                        <div style="display:flex;gap:4px;margin-bottom:0.5rem;"><span style="width:8px;height:8px;border-radius:50%;background:#ff5f57;display:inline-block;"></span><span style="width:8px;height:8px;border-radius:50%;background:#febc2e;display:inline-block;"></span><span style="width:8px;height:8px;border-radius:50%;background:#28c840;display:inline-block;"></span></div>
+                        <div style="font-size:0.5rem;color:#7d8590;margin-bottom:0.2rem;">[<span style="color:#3fb950;">OK</span>] Theme: <span style="font-weight:700;color:#e6edf3;">neon-terminal</span> v2.0</div>
+                        <div style="font-size:0.5rem;color:#7d8590;">[<span style="color:#f0883e;">&&</span>] Starting presentation...</div>
+                        <div style="margin-top:0.4rem;font-size:0.4rem;color:#3fb950;">noel@slides : ~ $</div>
+                        <div style="font-size:1.2rem;font-weight:700;color:#e6edf3;margin-top:0.1rem;"><span style="color:#3fb950;">Neon</span> Terminal</div>
+                    </div>
+                </div>`
+        },
+        /* ── Electric Ink ── */
+        {
+            id: 'electric-ink', name: 'Electric Ink',
+            cat: ['타이포', '에디토리얼'], meta: 'Bebas Neue · radius 4px',
+            html: `
+                <div style="position:absolute;inset:0;background:#000;"></div>
+                <div style="position:relative;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+                    <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:#fff;letter-spacing:0.05em;line-height:0.85;">ELECTRIC</div>
+                    <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:transparent;-webkit-text-stroke:1.5px #fff;letter-spacing:0.05em;line-height:0.85;">INK</div>
+                    <div style="width:60px;height:2px;background:#fff;margin:0.6rem 0 0.4rem;"></div>
+                    <div style="font-size:0.5rem;color:#737373;font-family:'Source Sans 3';letter-spacing:0.1em;">극단적 타이포그래피 · 순수 흑백</div>
+                </div>`
+        },
+        /* ── Cyber Gradient ── */
+        {
+            id: 'cyber-gradient', name: 'Cyber Gradient',
+            cat: ['AI', '스타트업'], meta: 'General Sans · radius 16px',
+            html: `
+                <div style="position:absolute;inset:0;background:#09090b;"></div>
+                <div style="position:absolute;top:-30%;left:-20%;width:70%;height:100%;background:radial-gradient(ellipse,rgba(139,92,246,0.2),transparent 60%);animation:cgFloat1 6s ease-in-out infinite;"></div>
+                <div style="position:absolute;bottom:-30%;right:-20%;width:70%;height:100%;background:radial-gradient(ellipse,rgba(6,182,212,0.15),transparent 60%);animation:cgFloat2 8s ease-in-out infinite;"></div>
+                <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                    <div style="background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:1.2rem 2rem;">
+                        <div style="font-size:0.5rem;font-weight:600;letter-spacing:0.12em;background:linear-gradient(135deg,#8b5cf6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-family:'General Sans';margin-bottom:0.4rem;">CYBER GRADIENT</div>
+                        <div style="font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-family:'General Sans';">Aurora Glassmorphism</div>
+                    </div>
+                </div>
+                <style>@keyframes cgFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(15px,-15px)}}@keyframes cgFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(-15px,10px)}}</style>`
+        },
+        /* ── Warm Earth ── */
+        {
+            id: 'warm-earth', name: 'Warm Earth',
+            cat: ['교육', '헬스케어'], meta: 'Lora · radius 16px',
+            html: `
+                <div style="position:absolute;inset:0;background:#1c1917;"></div>
+                <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence baseFrequency=%220.65%22 stitchTiles=%22stitch%22/></filter><rect width=%22200%22 height=%22200%22 filter=%22url(%23n)%22 opacity=%220.04%22/></svg>');opacity:0.5;"></div>
+                <div style="position:relative;padding:1.2rem 1.5rem;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                    <div style="width:30px;height:3px;background:#f59e0b;margin-bottom:0.5rem;border-radius:2px;"></div>
+                    <div style="font-family:'Lora',serif;font-size:1.5rem;font-weight:700;color:#fafaf9;line-height:1.2;">따뜻한 대지의<br>이야기</div>
+                    <div style="font-family:'Source Sans 3',sans-serif;font-size:0.55rem;color:#a8a29e;margin-top:0.5rem;">세리프 + 앰버 · grain 텍스처</div>
+                    <div style="display:flex;gap:0.4rem;margin-top:0.6rem;">
+                        <span style="width:20px;height:20px;border-radius:50%;background:#f59e0b;display:block;"></span>
+                        <span style="width:20px;height:20px;border-radius:50%;background:#92400e;display:block;"></span>
+                        <span style="width:20px;height:20px;border-radius:50%;background:#78716c;display:block;"></span>
+                    </div>
+                </div>`
+        },
+        /* ── Soft Botanical ── */
+        {
+            id: 'soft-botanical', name: 'Soft Botanical',
+            cat: ['웰니스', '자연'], meta: 'Cormorant Garamond · radius 20px',
+            html: `
+                <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0f1a14 0%,#1a2e23 100%);"></div>
+                <div style="position:absolute;top:10%;right:5%;width:60px;height:60px;border:1.5px solid rgba(74,222,128,0.2);border-radius:50%;"></div>
+                <div style="position:absolute;top:15%;right:10%;width:40px;height:40px;border:1.5px solid rgba(74,222,128,0.12);border-radius:50%;"></div>
+                <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                    <div style="font-size:0.5rem;font-weight:600;letter-spacing:0.15em;color:#4ade80;font-family:'Cormorant Garamond',serif;">SOFT BOTANICAL</div>
+                    <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:#ecfdf5;line-height:1.1;margin-top:0.4rem;font-style:italic;">Organic<br>Elegance</div>
+                    <div style="width:40px;height:1px;background:rgba(74,222,128,0.3);margin:0.5rem 0;"></div>
+                    <div style="font-size:0.5rem;color:#86efac;font-family:'Cormorant Garamond',serif;">세리프 · 유기적 라운드 · 자연</div>
+                </div>`
+        },
+        /* ── Paper Editorial ── */
+        {
+            id: 'paper-editorial', name: 'Paper Editorial',
+            cat: ['스토리텔링', '잡지'], meta: 'Playfair Display · radius 0px',
+            html: `
+                <div style="position:absolute;inset:0;background:#1a1a1a;"></div>
+                <div style="position:absolute;left:12%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.06);"></div>
+                <div style="position:relative;padding:1.2rem 1.5rem 1.2rem 20%;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                    <div style="font-size:0.45rem;letter-spacing:0.2em;color:#999;font-family:'Source Sans 3';text-transform:uppercase;margin-bottom:0.5rem;">Issue No. 01 — Spring 2026</div>
+                    <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;color:#ededed;line-height:1.05;letter-spacing:-0.02em;">The Art of<br>Storytelling</div>
+                    <div style="width:40px;height:1.5px;background:#ededed;margin:0.5rem 0;"></div>
+                    <div style="font-size:0.5rem;color:#999;font-family:'Source Sans 3';">매거진 레이아웃 · 비대칭 · 모노크롬</div>
+                </div>`
+        },
+        /* ── Bento Pastel ── */
+        {
+            id: 'bento-pastel', name: 'Bento Pastel',
+            cat: ['트렌디', '제품'], meta: 'Satoshi · radius 24px',
+            html: `
+                <div style="position:absolute;inset:0;background:#18181b;"></div>
+                <div style="position:relative;padding:0.8rem;height:100%;display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:1fr 1fr;gap:0.4rem;">
+                    <div style="background:rgba(244,114,182,0.12);border-radius:16px;padding:0.6rem;display:flex;flex-direction:column;justify-content:flex-end;grid-row:1/3;">
+                        <div style="font-family:'Satoshi',sans-serif;font-size:1.1rem;font-weight:700;color:#fafafa;line-height:1.1;">Bento<br>Pastel</div>
+                        <div style="font-size:0.4rem;color:#a1a1aa;font-family:'Satoshi';margin-top:0.3rem;">4색 멀티 액센트</div>
+                    </div>
+                    <div style="background:rgba(96,165,250,0.12);border-radius:16px;padding:0.5rem;display:flex;align-items:center;justify-content:center;">
+                        <div style="font-family:'Satoshi';font-size:0.9rem;font-weight:700;color:#60a5fa;">24px</div>
+                    </div>
+                    <div style="background:rgba(52,211,153,0.12);border-radius:16px;display:flex;align-items:center;justify-content:center;gap:0.2rem;">
+                        <span style="width:10px;height:10px;border-radius:50%;background:#f472b6;"></span>
+                        <span style="width:10px;height:10px;border-radius:50%;background:#60a5fa;"></span>
+                        <span style="width:10px;height:10px;border-radius:50%;background:#34d399;"></span>
+                        <span style="width:10px;height:10px;border-radius:50%;background:#fbbf24;"></span>
+                    </div>
+                </div>`
+        },
+        /* ── Retro Wave ── */
+        {
+            id: 'retro-wave', name: 'Retro Wave',
+            cat: ['크리에이티브', '대담'], meta: 'Clash Display · radius 12px',
+            html: `
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,#0f0720 0%,#1a0f30 60%,#2d1b4e 100%);"></div>
+                <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(180deg,transparent,rgba(244,114,182,0.08));"></div>
+                <div style="position:absolute;bottom:15%;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#f472b6,transparent);opacity:0.4;"></div>
+                <div style="position:absolute;bottom:20%;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#818cf8,transparent);opacity:0.3;"></div>
+                <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                    <div style="font-family:'Clash Display',sans-serif;font-size:2.2rem;font-weight:700;color:#f5f0ff;line-height:0.9;text-shadow:0 0 40px rgba(244,114,182,0.4);">RETRO</div>
+                    <div style="font-family:'Clash Display',sans-serif;font-size:2.2rem;font-weight:700;color:transparent;-webkit-text-stroke:1px #c4b5fd;line-height:0.9;">WAVE</div>
+                    <div style="font-size:0.5rem;color:#c4b5fd;margin-top:0.5rem;font-family:'General Sans';letter-spacing:0.1em;">신스웨이브 · 네온글로우 · 레트로</div>
+                </div>`
+        },
+        /* ── Stormy Night ── */
+        {
+            id: 'stormy-night', name: 'Stormy Night',
+            cat: ['데이터', '다이나믹'], meta: 'General Sans · radius 14px',
+            html: `
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,#111111 0%,#0f1413 100%);"></div>
+                <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                    <div style="font-size:0.45rem;font-weight:600;letter-spacing:0.12em;color:#2dd4bf;font-family:'General Sans';padding:0.2rem 0.6rem;border:1px solid rgba(45,212,191,0.3);border-radius:20px;margin-bottom:0.5rem;">STORMY NIGHT</div>
+                    <div style="font-family:'General Sans',sans-serif;font-size:1.4rem;font-weight:700;color:#f0f0f0;line-height:1.15;">운영 데이터를 위한<br><span style="color:#f43f5e;">실시간</span> 대시보드</div>
+                    <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
+                        <span style="display:flex;align-items:center;gap:3px;font-size:0.4rem;color:#2dd4bf;font-family:'General Sans';"><span style="width:6px;height:6px;border-radius:50%;background:#2dd4bf;display:inline-block;"></span>정상</span>
+                        <span style="display:flex;align-items:center;gap:3px;font-size:0.4rem;color:#f43f5e;font-family:'General Sans';"><span style="width:6px;height:6px;border-radius:50%;background:#f43f5e;display:inline-block;"></span>경고</span>
+                    </div>
+                </div>`
+        },
+        /* ── Corporate (base) ── */
+        {
+            id: 'corporate', name: 'Corporate',
+            cat: ['비즈니스', '기본'], meta: 'Pretendard · radius 16px',
+            html: `
+                <div style="position:absolute;inset:0;background:#0A1A24;"></div>
+                <div style="position:absolute;top:-30%;right:-15%;width:65%;height:110%;background:radial-gradient(ellipse,rgba(1,186,239,0.18),transparent 65%);"></div>
+                <div style="position:relative;padding:1.5rem;height:100%;display:flex;flex-direction:column;justify-content:flex-end;">
+                    <div style="width:36px;height:3px;background:#01BAEF;margin-bottom:0.6rem;border-radius:2px;"></div>
+                    <div style="font-size:0.5rem;font-weight:700;letter-spacing:0.12em;color:#01BAEF;font-family:'Pretendard Variable',Pretendard,sans-serif;margin-bottom:0.4rem;">CORPORATE</div>
+                    <div style="font-size:1.6rem;font-weight:800;color:#F5F7F9;font-family:'Pretendard Variable',Pretendard,sans-serif;letter-spacing:-0.02em;line-height:1.1;">신뢰감 있는<br>비즈니스 보고</div>
+                    <div style="font-size:0.55rem;color:#94A3B0;font-family:'Pretendard Variable',Pretendard,sans-serif;margin-top:0.4rem;">딥 틸 블루 · 정돈된 기본 톤</div>
+                </div>`
+        },
+        /* ── Warm (base) ── */
+        {
+            id: 'warm', name: 'Warm',
+            cat: ['교육', '편안'], meta: 'Fraunces · radius 24px',
+            html: `
+                <div style="position:absolute;inset:0;background:#2B1E16;"></div>
+                <div style="position:absolute;top:12%;left:8%;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,rgba(226,169,59,0.35),transparent 70%);"></div>
+                <div style="position:relative;padding:1.3rem 1.5rem;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                    <div style="width:30px;height:3px;background:#E2A93B;margin-bottom:0.5rem;border-radius:2px;"></div>
+                    <div style="font-family:'Fraunces',serif;font-size:1.7rem;font-weight:700;color:#FDF6EC;line-height:1.15;">따뜻한 배움의<br>이야기</div>
+                    <div style="font-family:'Pretendard Variable',Pretendard,sans-serif;font-size:0.55rem;color:#A88E7A;margin-top:0.5rem;">세리프 헤딩 · 크림 + 앰버</div>
+                    <div style="display:flex;gap:0.4rem;margin-top:0.6rem;">
+                        <span style="width:18px;height:18px;border-radius:50%;background:#E2A93B;display:block;"></span>
+                        <span style="width:18px;height:18px;border-radius:50%;background:#C4533A;display:block;"></span>
+                    </div>
+                </div>`
+        },
+        /* ── Minimal (base) ── */
+        {
+            id: 'minimal', name: 'Minimal',
+            cat: ['미니멀', '중립'], meta: 'Inter · radius 4px',
+            html: `
+                <div style="position:absolute;inset:0;background:#111111;"></div>
+                <div style="position:relative;padding:1.5rem;height:100%;display:flex;flex-direction:column;justify-content:center;">
+                    <div style="font-size:0.5rem;font-weight:600;letter-spacing:0.18em;color:#888888;font-family:'Inter',sans-serif;margin-bottom:0.6rem;">MINIMAL</div>
+                    <div style="font-family:'Inter',sans-serif;font-size:1.8rem;font-weight:700;color:#F5F5F5;line-height:1.1;letter-spacing:-0.02em;">절제된 여백<br>타이포 중심</div>
+                    <div style="width:48px;height:1px;background:#555555;margin:0.7rem 0;"></div>
+                    <div style="font-family:'Inter',sans-serif;font-size:0.55rem;color:#888888;">순수 흑백 · 장식 최소</div>
+                </div>`
+        },
+        /* ── Keynote Dark (base) ── */
+        {
+            id: 'keynote-dark', name: 'Keynote Dark',
+            cat: ['투자', '프리미엄'], meta: 'Pretendard · radius 20px',
+            html: `
+                <div style="position:absolute;inset:0;background:#000000;"></div>
+                <div style="position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+                    <div style="font-size:0.5rem;font-weight:700;letter-spacing:0.15em;color:#2997ff;font-family:'Pretendard Variable',Pretendard,sans-serif;margin-bottom:0.6rem;">KEYNOTE DARK</div>
+                    <div style="font-size:1.9rem;font-weight:800;color:#f5f5f7;font-family:'Pretendard Variable',Pretendard,sans-serif;letter-spacing:-0.03em;line-height:1.05;">순수 블랙<br><span style="color:#2997ff;">극장형</span> 무대</div>
+                    <div style="font-size:0.6rem;color:#86868b;font-family:'Pretendard Variable',Pretendard,sans-serif;margin-top:0.5rem;">대형 화면 발표용 · 고대비</div>
+                </div>`
+        }
+    ];
+
+    grid.innerHTML = cards.map(c => `
+        <a href="./${c.id}.html" class="theme-card">
+            <div class="preview">${c.html}</div>
+            <div class="card-footer">
+                <div>
+                    <div class="name">${c.name}</div>
+                    <div class="meta">${c.meta}</div>
+                </div>
+                <div class="tags">${c.cat.map(t => `<span class="cat-tag">${t}</span>`).join('')}</div>
+            </div>
+        </a>
+    `).join('');
+
+    document.getElementById('gallery-subtitle').textContent =
+        cards.length + ' 프리셋 테마 — 클릭하면 풀사이즈 샘플 페이지로 이동';
+    </script>
+</body>
+</html>

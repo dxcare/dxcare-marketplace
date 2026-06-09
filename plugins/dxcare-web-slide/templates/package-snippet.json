@@ -1,0 +1,45 @@
+{
+  "_comment": "Partial package.json merged into target repo by dxcare-web-slide:init. Non-destructive: existing scripts/deps are preserved, conflicts raise a warning for the user to resolve.",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/sync-shared.js && node scripts/aggregate-meta.js && next dev -p 3000",
+    "prebuild": "node scripts/sync-shared.js && node scripts/aggregate-meta.js",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "create-slide": "tsx scripts/create-slide.ts",
+    "milestone": "tsx scripts/snapshot-milestone.ts",
+    "deploy": "tsx scripts/deploy.ts",
+    "generate-theme": "tsx scripts/generate-theme-css.ts",
+    "extract-refs": "tsx scripts/extract-references.ts",
+    "export-pdf": "tsx scripts/export-pdf.ts",
+    "bundle": "tsx scripts/bundle.ts",
+    "deploy-static": "tsx scripts/deploy-static.ts"
+  },
+  "dependencies": {
+    "jose": "^5.9.0",
+    "js-yaml": "^4.1.1",
+    "next": "^15.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "optionalDependencies": {
+    "officeparser": "^6.1.0",
+    "playwright": "^1.52.0",
+    "pdf-lib": "^1.17.1",
+    "gh-pages": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}

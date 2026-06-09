@@ -1,0 +1,24 @@
+{
+  "preset": "corporate",
+  "category": "basic",
+  "description": "밝은 화이트 배경 + 딥 틸 블루. 신뢰감 있는 기본 비즈니스 보고용.",
+  "mood": "정돈됨, 신뢰, 기본",
+  "tokens": {
+    "color": {
+      "bg": "#FFFFFF",
+      "bgDark": "#0A1A24",
+      "fg": "#0A1A24",
+      "fgDark": "#F5F7F9",
+      "primary": "#0B4F6C",
+      "accent": "#01BAEF",
+      "muted": "#94A3B0"
+    },
+    "font": {
+      "heading": "'Pretendard Variable', Pretendard, -apple-system, sans-serif",
+      "body": "'Pretendard Variable', Pretendard, -apple-system, sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "4px", "md": "8px", "lg": "16px" },
+    "motion": { "fast": "150ms", "base": "250ms" }
+  }
+}

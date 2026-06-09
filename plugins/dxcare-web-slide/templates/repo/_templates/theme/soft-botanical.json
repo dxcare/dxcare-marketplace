@@ -1,0 +1,30 @@
+{
+  "preset": "soft-botanical",
+  "category": "education",
+  "description": "소프트 다크 그린 + 크림. 우아하고 차분한 분위기.",
+  "mood": "자연, 웰니스, 지속가능성",
+  "tokens": {
+    "color": {
+      "bg": "#f0fdf4",
+      "bgDark": "#0f1a14",
+      "bgSecondary": "#ecfdf5",
+      "bgSecondaryDark": "#1a2e23",
+      "fg": "#14532d",
+      "fgDark": "#ecfdf5",
+      "muted": "#166534",
+      "mutedDark": "#86efac",
+      "primary": "#16a34a",
+      "primaryDark": "#4ade80",
+      "accent": "#ca8a04",
+      "cardBorder": "rgba(22, 101, 52, 0.15)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.08)"
+    },
+    "font": {
+      "heading": "'Cormorant Garamond', 'Noto Serif KR', serif",
+      "body": "'DM Sans', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "10px", "md": "20px", "lg": "28px" },
+    "motion": { "fast": "200ms", "base": "380ms" }
+  }
+}

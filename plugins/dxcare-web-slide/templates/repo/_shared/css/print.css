@@ -1,0 +1,22 @@
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+
+  body, [data-theme="dark"] body {
+    background: #fff !important;
+    color: #0a1a24 !important;
+    overflow: visible;
+  }
+
+  .deck-controls, .deck-progress { display: none !important; }
+
+  #deck { height: auto; width: auto; }
+
+  .slide {
+    position: static !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    page-break-after: always;
+    height: 100vh;
+    width: 100vw;
+  }
+}

@@ -1,0 +1,296 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE — design-system defaults and STRUCTURAL layout for the skeleton
+   (absolute-fade, single-active) deck model.
+
+   Design tokens (the :root custom properties + [data-theme] overrides) live in
+   ./tokens.css and are pulled in by the @import below. They were split out
+   (B-001 AC-2.4) so a rich, self-contained scroll-snap deck can opt-in to the
+   shared palette/typography WITHOUT inheriting the structural rules in THIS
+   file (`body { overflow: hidden }`, `#deck { height: 100vh }`,
+   `.slide { position: absolute }`) — those rules collapse a scroll-snap deck's
+   scroll container and freeze its nav. Rich decks should link tokens.css, not
+   base.css. See docs/RICH-DECKS.md.
+
+   theme.css (generated from theme.json) overrides the tokens via the normal
+   CSS cascade — load order in the skeleton template is tokens (via this
+   @import) → base structural → theme.css.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('/_shared/css/tokens.css');
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  overflow: hidden;
+  /* Antialiasing — matches the gold-standard deck so Pretendard renders
+     crisply (especially Korean) instead of relying on the platform default. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background var(--motion-base), color var(--motion-base);
+}
+
+#deck {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: var(--slide-padding);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-base);
+}
+
+.slide[data-active="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Entry reveal stagger (B-003 D6 / AC-2.1) ────────────────────────────
+   Direct children of the active slide's content column fade up in sequence
+   when the slide becomes active. Inactive slides hold their children in the
+   pre-reveal state, so re-activating a slide re-plays the reveal. Tokens
+   (--reveal-*) live in tokens.css; values follow the spec range
+   (translateY 8–16px, duration 300–500ms, stagger 40–80ms) and reuse the
+   gold-standard --ease-out-expo curve.
+
+   Scoped to `.slide-content > *` (the scaffold wraps slide body in
+   `.slide-content`) so the reveal targets real content, not the flex wrapper. */
+.slide .slide-content > * {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity var(--reveal-duration) var(--ease-out-expo),
+    transform var(--reveal-duration) var(--ease-out-expo);
+}
+
+.slide[data-active="true"] .slide-content > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger: each successive child waits one --reveal-stagger step longer.
+   Cap at 6 so a content-heavy slide doesn't drag the last item too late. */
+.slide[data-active="true"] .slide-content > *:nth-child(1) { transition-delay: calc(var(--reveal-stagger) * 0); }
+.slide[data-active="true"] .slide-content > *:nth-child(2) { transition-delay: calc(var(--reveal-stagger) * 1); }
+.slide[data-active="true"] .slide-content > *:nth-child(3) { transition-delay: calc(var(--reveal-stagger) * 2); }
+.slide[data-active="true"] .slide-content > *:nth-child(4) { transition-delay: calc(var(--reveal-stagger) * 3); }
+.slide[data-active="true"] .slide-content > *:nth-child(5) { transition-delay: calc(var(--reveal-stagger) * 4); }
+.slide[data-active="true"] .slide-content > *:nth-child(n+6) { transition-delay: calc(var(--reveal-stagger) * 5); }
+
+/* ── nav dots (B-003 D3 / AC-1.3) ────────────────────────────────────────
+   Created by navigation.js and appended to <body>. Fixed vertical rail on the
+   right, mirroring the gold-standard `.nav-dots`. Clicking a dot jumps to that
+   slide; the active dot scales up. */
+.nav-dots {
+  position: fixed;
+  right: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 100;
+}
+
+.nav-dots .nav-dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.5;
+  cursor: pointer;
+  transition: transform var(--motion-fast), opacity var(--motion-fast), background var(--motion-fast);
+}
+
+.nav-dots .nav-dot:hover { opacity: 0.85; }
+
+.nav-dots .nav-dot.active {
+  background: var(--accent);
+  opacity: 1;
+  transform: scale(1.4);
+}
+
+/* The clickable counter (counter → goto, AC-1.3) gets a subtle affordance. */
+.deck-counter { user-select: none; }
+.deck-counter:hover { color: var(--accent); }
+
+/* ── prefers-reduced-motion (B-003 / AC-2.2) ─────────────────────────────
+   Users who ask for reduced motion get content shown immediately — no fade,
+   no translate, no stagger delay. The dot scale transition is also neutralised
+   so nothing animates. */
+@media (prefers-reduced-motion: reduce) {
+  .slide .slide-content > *,
+  .slide[data-active="true"] .slide-content > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0s;
+  }
+  .nav-dots .nav-dot { transition: none; }
+}
+
+/* Bound stage — caps content width and centers it so text (h2/lead) and
+   diagrams share one centered column on large/full-screen displays instead of
+   pinning text to the left edge. Mirrors the gold-standard deck pattern.
+   Diagram blocks keep their own `max-width + margin:auto` (diagrams.css); they
+   nest inside this column, so the two never fight on specificity. */
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 100%;
+  overflow: hidden;
+  width: 100%;
+  max-width: min(1200px, 90vw);
+  margin-inline: auto;
+}
+
+h1, h2, h3 { font-family: var(--font-heading); color: var(--primary); margin: 0 0 0.5em; }
+h1 { font-size: var(--title-size); }
+h2 { font-size: var(--h2-size); }
+h3 { font-size: var(--h3-size); }
+p { font-size: var(--body-size); }
+
+/* ── deck-controls cluster (D5 / B-004 AC-2.1) ───────────────────────────
+   A fixed bottom-right cluster of nav buttons + the counter. `align-items:
+   center` puts the counter text on the same optical baseline as the icon
+   buttons (they have different intrinsic line-heights), and every child is a
+   fixed-height flex row so the cluster never looks ragged. On small screens
+   the cluster shrinks its gap/padding/icon size and is allowed to wrap so it
+   can never overflow the viewport edge. */
+.deck-controls {
+  position: fixed;
+  bottom: 2vmin;
+  right: 2vmin;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100vw - 4vmin);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  /* Neutral translucent — theme-agnostic. html2canvas can't parse color-mix. */
+  background: rgba(255, 255, 255, 0.85);
+  padding: 5px 8px;
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--card-border);
+  z-index: 100;
+}
+
+.deck-controls button {
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  font-size: clamp(15px, 2.2vw, 18px);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: var(--radius-sm);
+  transition: background var(--motion-fast);
+}
+.deck-controls button:hover { background: rgba(0, 0, 0, 0.08); }
+/* The counter shares the row height + centering so its baseline lines up with
+   the buttons rather than floating above them. */
+.deck-controls .deck-counter {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 4px;
+  font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  white-space: nowrap;
+}
+[data-theme="dark"] .deck-controls { background: rgba(10, 10, 10, 0.85); }
+[data-theme="dark"] .deck-controls button:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* ── brand logo auto-swap (D7 / B-004 AC-3.4) ────────────────────────────
+   Two brand assets ship per deck: a dark-on-light mark (.logo-light) and a
+   light-on-dark mark (.logo-dark). Exactly one shows at a time, picked by the
+   active [data-theme]. Default theme is dark → show the light (white) mark.
+   keynote-dark stays dark, so it keeps the light mark; toggling to light swaps
+   to the dark mark. The swap is pure CSS (display), so the visible <img>'s
+   `src` changes with the theme — see navigation/theme-toggle. */
+.brand-mark {
+  position: fixed;
+  bottom: 1.4rem;
+  left: 1.4rem;
+  height: clamp(22px, 3.2vh, 32px);
+  width: auto;
+  opacity: 0.55;
+  z-index: 100;
+}
+.logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: inline-block; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="light"] .logo-dark { display: none; }
+[data-theme="light"] .logo-light { display: inline-block; }
+
+/* Hero brand logo on the cover slide (brand "hero" role). Reuses the
+   .logo-dark/.logo-light theme-swap above, but renders in-flow and larger than
+   the corner .brand-mark. Stays visible during PDF capture (it's cover content,
+   not chrome). */
+.hero-mark {
+  align-self: flex-start; /* .slide-content is a flex column (align-items:stretch);
+                             without this the logo stretches to the full column
+                             width and distorts. Keep it at intrinsic aspect. */
+  height: clamp(40px, 7vh, 72px);
+  width: auto;
+  margin-bottom: clamp(1rem, 3vh, 2rem);
+}
+
+.deck-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+}
+
+.deck-progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width var(--motion-base);
+}
+
+/* Hide UI chrome during PDF capture */
+body.pdf-capture .deck-controls,
+body.pdf-capture .nav-dots,
+body.pdf-capture .brand-mark,
+body.pdf-capture .deck-progress { display: none !important; }
+body.pdf-capture .slide {
+  position: static;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transition: none !important;
+  page-break-after: always;
+}
+/* Force reveal content visible in the static PDF layout — every slide is laid
+   out at once, so the per-slide `[data-active]` reveal would otherwise leave
+   non-active slides' children at opacity:0. */
+body.pdf-capture .slide .slide-content > * {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}

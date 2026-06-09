@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Chart Demo — dxcare-web-slide</title>
+
+<!-- Pretendard webfont (canvas text reads Chart.defaults.font.family, set by charts.js). -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+<!-- Skeleton deck: links the shared layer. tokens.css MUST be present for
+     theme-aware chart colours (AC-3.1) — charts.js reads --accent/--fg/etc. -->
+<link rel="stylesheet" href="/_shared/css/tokens.css">
+<link rel="stylesheet" href="/_shared/css/base.css">
+<link rel="stylesheet" href="/_shared/css/print.css" media="print">
+<link rel="stylesheet" href="/_shared/css/a11y.css">
+<link rel="stylesheet" href="/_shared/css/diagrams.css">
+<link rel="stylesheet" href="/_shared/css/charts.css">
+<link rel="stylesheet" href="./theme.css">
+
+<!-- PDF stack (existing). -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" defer></script>
+
+<!-- Chart.js UMD — pinned 4.4.x. MUST load before charts.js imports it.
+     `defer` keeps it before the module script's first paint; the module also
+     awaits document.fonts.ready, by which point this has executed. -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" defer></script>
+
+<!-- OPTIONAL: data labels (NOT in Chart.js core — opt-in, AC-1.3). Uncomment
+     to draw values ON the chart (survives PDF; tooltips do NOT — see CHARTS.md).
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js" defer></script>
+-->
+</head>
+<body data-theme="dark">
+  <main id="deck" role="main" aria-label="presentation">
+    <section class="slide" data-slide="1" aria-labelledby="s1-title">
+      <div class="slide-content">
+        <h1 id="s1-title">데이터 차트 데모</h1>
+        <p>막대 · 선 · 파이 — 테마 토글과 PDF 캡처에 연동되는 Chart.js opt-in 모듈.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="2" aria-labelledby="s2-title">
+      <div class="slide-content">
+        <h2 id="s2-title">분기 매출 (막대)</h2>
+        <div class="chart-box"><canvas id="chart-bar" aria-label="분기 매출 막대 차트" role="img"></canvas></div>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="3" aria-labelledby="s3-title">
+      <div class="slide-content">
+        <h2 id="s3-title">사용자 추세 (선)</h2>
+        <div class="chart-box"><canvas id="chart-line" aria-label="사용자 추세 선 차트" role="img"></canvas></div>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="4" aria-labelledby="s4-title">
+      <div class="slide-content">
+        <h2 id="s4-title">채널 비중 (파이)</h2>
+        <div class="chart-box"><canvas id="chart-pie" aria-label="채널 비중 파이 차트" role="img"></canvas></div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="deck-controls" aria-label="slide controls">
+    <button data-action="prev" aria-label="previous slide">‹</button>
+    <span class="deck-counter"><span data-current>1</span> / <span data-total>4</span></span>
+    <button data-action="next" aria-label="next slide">›</button>
+    <button data-action="fullscreen" aria-label="toggle fullscreen">⛶</button>
+    <button data-action="theme" aria-label="toggle theme (T)">☾</button>
+    <button data-action="pdf" data-theme="dark" aria-label="download PDF (dark)" title="PDF 다운로드 (다크)">⬇︎</button>
+    <button data-action="pdf" data-theme="light" aria-label="download PDF (light)" title="PDF 다운로드 (라이트)">⬇︎☀</button>
+  </aside>
+
+  <div class="deck-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+
+  <script type="module">
+    import '/_shared/js/slide-core.js';
+    import { initPdfButton } from '/_shared/js/pdf.js';
+    import { initCharts, bar, line, pie, resizeCharts } from '/_shared/js/charts.js';
+
+    initPdfButton();
+
+    // initCharts() awaits document.fonts.ready and the Chart UMD global.
+    await initCharts();
+
+    bar('chart-bar', {
+      labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+      datasets: [{ label: '매출 (억)', data: [42, 55, 61, 78] }],
+    });
+
+    line('chart-line', {
+      labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
+      datasets: [{ label: 'MAU (만)', data: [12, 18, 25, 31, 44, 59], fill: true }],
+    });
+
+    pie('chart-pie', {
+      labels: ['검색', '소셜', '직접', '추천'],
+      datasets: [{ data: [45, 25, 20, 10] }],
+    });
+
+    // Skeleton decks stack slides absolutely; a chart drawn while its slide is
+    // hidden lays out at 0×0. Resize charts on slide activation (R1-C3).
+    document.addEventListener('deck:slidechange', () => resizeCharts());
+    // Fallback: resize after first paint in case the deck has no slidechange event.
+    requestAnimationFrame(() => resizeCharts());
+  </script>
+</body>
+</html>

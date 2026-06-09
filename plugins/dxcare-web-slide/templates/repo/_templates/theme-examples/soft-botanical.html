@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Soft Botanical — Theme Sample</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0f1a14;
+            --bg2: #1a2e23;
+            --text: #ecfdf5;
+            --text2: #86efac;
+            --accent: #4ade80;
+            --radius: 20px;
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --card-bg: rgba(26,46,35,0.7);
+            --card-border: rgba(74,222,128,0.1);
+        }
+        [data-theme="light"] {
+            --bg: #f0fdf4;
+            --bg2: #ecfdf5;
+            --text: #14532d;
+            --text2: #166534;
+            --accent: #16a34a;
+            --card-bg: rgba(236,253,245,0.85);
+            --card-border: rgba(22,163,74,0.15);
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.15s !important;
+            }
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.5s, color 0.5s;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 80%, rgba(74,222,128,0.06), transparent),
+                radial-gradient(ellipse 40% 60% at 80% 20%, rgba(74,222,128,0.04), transparent);
+            pointer-events: none;
+        }
+        [data-theme="light"] body::before {
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 80%, rgba(22,163,74,0.05), transparent),
+                radial-gradient(ellipse 40% 60% at 80% 20%, rgba(22,163,74,0.03), transparent);
+        }
+
+        /* ── Slide base ── */
+        .slide {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: clamp(2rem, 5vw, 5rem);
+            position: relative;
+        }
+        .slide > * { position: relative; z-index: 1; }
+
+        /* ── Reveal animation ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide.visible .reveal:nth-child(2) { transition-delay: 0.12s; }
+        .slide.visible .reveal:nth-child(3) { transition-delay: 0.24s; }
+        .slide.visible .reveal:nth-child(4) { transition-delay: 0.36s; }
+        .slide.visible .reveal:nth-child(5) { transition-delay: 0.48s; }
+        .slide.visible .reveal:nth-child(6) { transition-delay: 0.6s; }
+
+        /* ── Typography ── */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.4rem, 7vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1.08;
+            color: var(--text);
+        }
+        h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.6rem, 4.5vw, 3.2rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--text);
+        }
+        p, li {
+            font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+            line-height: 1.7;
+            color: var(--text2);
+        }
+
+        /* =============================================
+           Slide 1 — Title
+           ============================================= */
+        .slide-title { gap: clamp(0.4rem, 1vw, 0.8rem); }
+        .slide-title .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4em;
+            font-size: clamp(0.7rem, 1.2vw, 0.88rem);
+            font-weight: 600;
+            color: var(--accent);
+            padding: 0.4em 1.3em;
+            border: 1px solid var(--accent);
+            border-radius: 999px;
+            background: rgba(74,222,128,0.08);
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+        }
+        [data-theme="light"] .slide-title .pill {
+            background: rgba(22,163,74,0.08);
+        }
+        .slide-title h1 {
+            margin-bottom: clamp(0.4rem, 1vw, 0.8rem);
+            max-width: 18ch;
+        }
+        .slide-title .subtitle {
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            color: var(--text2);
+            max-width: 42ch;
+            font-weight: 400;
+        }
+        .slide-title .glow {
+            position: absolute;
+            width: 50vw; height: 50vw;
+            max-width: 520px; max-height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(74,222,128,0.07), transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        [data-theme="light"] .slide-title .glow {
+            background: radial-gradient(circle, rgba(22,163,74,0.05), transparent 70%);
+        }
+        /* Decorative organic rings */
+        .deco-ring {
+            position: absolute;
+            border: 1.5px solid var(--accent);
+            border-radius: 50%;
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .deco-ring-1 { width: 140px; height: 140px; top: 8%; right: 10%; }
+        .deco-ring-2 { width: 80px; height: 80px; bottom: 12%; left: 7%; }
+        .deco-ring-3 { width: 50px; height: 50px; top: 18%; left: 15%; opacity: 0.08; }
+
+        /* =============================================
+           Slide 2 — Section Divider
+           ============================================= */
+        .slide-divider { gap: clamp(0.6rem, 1.2vw, 1.2rem); }
+        .slide-divider .big-num {
+            font-family: var(--font-heading);
+            font-size: clamp(6rem, 18vw, 14rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.08;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -58%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .slide-divider h2 {
+            font-size: clamp(2rem, 5.5vw, 4.2rem);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        .slide-divider .green-line {
+            width: clamp(60px, 12vw, 120px);
+            height: 1.5px;
+            background: var(--accent);
+            border: none;
+            border-radius: 2px;
+            opacity: 0.5;
+        }
+        .slide-divider .section-desc {
+            font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+            color: var(--text2);
+            max-width: 38ch;
+        }
+        /* Organic circle decoration */
+        .slide-divider .organic-circle {
+            position: absolute;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(74,222,128,0.1);
+            bottom: 10%; right: 8%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        [data-theme="light"] .slide-divider .organic-circle {
+            border-color: rgba(22,163,74,0.1);
+        }
+
+        /* =============================================
+           Slide 3 — Content (Leaf-dot list)
+           ============================================= */
+        .slide-content {
+            align-items: flex-start;
+            text-align: left;
+            padding: clamp(2rem, 6vw, 8rem);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .slide-content h2 {
+            margin-bottom: clamp(1.2rem, 2.5vw, 2rem);
+        }
+        .leaf-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 2.2vw, 1.6rem);
+            width: 100%;
+        }
+        .leaf-list li {
+            padding-left: 2em;
+            position: relative;
+            line-height: 1.65;
+        }
+        .leaf-list li::before {
+            content: '\25CF'; /* ● */
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--accent);
+            font-size: 0.7em;
+            line-height: 2.4;
+        }
+        .leaf-list li strong {
+            color: var(--text);
+            font-weight: 600;
+            display: block;
+            font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+            margin-bottom: 0.15em;
+        }
+        .leaf-list li span {
+            font-size: clamp(0.85rem, 1.4vw, 1rem);
+            color: var(--text2);
+        }
+
+        /* =============================================
+           Slide 4 — Two-Column
+           ============================================= */
+        .slide-twocol {
+            text-align: left;
+            padding: clamp(2rem, 5vw, 6rem);
+        }
+        .twocol-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(2rem, 4vw, 4rem);
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+        .twocol-left h2 {
+            font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+            line-height: 1.15;
+            margin-bottom: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+        .twocol-left p {
+            color: var(--text2);
+            line-height: 1.7;
+            margin-bottom: clamp(0.5rem, 1vw, 0.8rem);
+        }
+        .twocol-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius);
+            padding: clamp(2rem, 4vw, 3.5rem);
+            text-align: center;
+        }
+        .twocol-card .stat-label {
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+        .twocol-card .stat-value {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.1;
+        }
+        .twocol-card .stat-sub {
+            font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+            color: var(--text2);
+            margin-top: 0.6rem;
+            font-weight: 500;
+        }
+        @media (max-width: 640px) {
+            .twocol-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+        }
+
+        /* =============================================
+           Slide 5 — Data / Metrics
+           ============================================= */
+        .slide-metrics h2 {
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+        }
+        .metrics-row {
+            display: flex;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius);
+            padding: clamp(1.5rem, 3vw, 2.8rem);
+            min-width: clamp(160px, 26vw, 280px);
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+        }
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(74,222,128,0.08);
+        }
+        .metric-card .metric-icon {
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            margin-bottom: 0.7rem;
+        }
+        .metric-card .metric-val {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.1;
+        }
+        .metric-card .metric-change {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 0.35rem;
+        }
+        .metric-card .metric-label {
+            font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+            color: var(--text2);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* =============================================
+           Slide 6 — Organic Flow Diagram
+           ============================================= */
+        .slide-flow {
+            padding: clamp(2rem, 5vw, 5rem);
+        }
+        .slide-flow h2 {
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+        }
+        .flow-arc {
+            display: flex;
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-end;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1;
+            min-width: clamp(120px, 18vw, 200px);
+            max-width: 220px;
+        }
+        /* Arc offsets for organic feel */
+        .flow-step:nth-child(1) { transform: translateY(0); }
+        .flow-step:nth-child(2) { transform: translateY(-20px); }
+        .flow-step:nth-child(3) { transform: translateY(-28px); }
+        .flow-step:nth-child(4) { transform: translateY(-12px); }
+
+        .flow-circle {
+            width: clamp(64px, 10vw, 90px);
+            height: clamp(64px, 10vw, 90px);
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+        }
+        .flow-circle:hover {
+            transform: scale(1.06);
+            box-shadow: 0 8px 30px rgba(74,222,128,0.1);
+        }
+        .flow-circle .step-num {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+        .flow-label {
+            font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+            font-weight: 600;
+            color: var(--text);
+            text-align: center;
+        }
+        .flow-desc {
+            font-size: clamp(0.72rem, 1.1vw, 0.82rem);
+            color: var(--text2);
+            text-align: center;
+            max-width: 16ch;
+        }
+        /* Connecting green lines */
+        .flow-connector {
+            width: clamp(24px, 4vw, 50px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: center;
+            transform: translateY(-14px);
+        }
+        .flow-connector svg {
+            width: 100%;
+            height: auto;
+        }
+        .flow-connector line {
+            stroke: var(--accent);
+            stroke-width: 1.5;
+            opacity: 0.3;
+        }
+
+        /* =============================================
+           Slide 7 — Quote
+           ============================================= */
+        .slide-quote {
+            gap: clamp(0.8rem, 1.5vw, 1.5rem);
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .slide-quote .quote-mark {
+            font-family: var(--font-heading);
+            font-size: clamp(5rem, 12vw, 9rem);
+            color: var(--accent);
+            opacity: 0.15;
+            line-height: 0.6;
+            margin-bottom: -0.2em;
+        }
+        .slide-quote blockquote {
+            font-family: var(--font-heading);
+            font-style: italic;
+            font-size: clamp(1.3rem, 3.2vw, 2.2rem);
+            font-weight: 500;
+            line-height: 1.45;
+            color: var(--text);
+            max-width: 28ch;
+        }
+        .slide-quote .quote-line {
+            width: clamp(40px, 8vw, 80px);
+            height: 1.5px;
+            background: var(--accent);
+            border: none;
+            border-radius: 2px;
+            opacity: 0.4;
+        }
+        .slide-quote .attribution {
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+            color: var(--text2);
+            font-weight: 500;
+        }
+        .slide-quote .attribution strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* =============================================
+           Slide 8 — Closing
+           ============================================= */
+        .slide-closing {
+            gap: clamp(0.8rem, 1.5vw, 1.5rem);
+        }
+        .slide-closing h1 {
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+        }
+        .slide-closing .closing-desc {
+            font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+            color: var(--text2);
+            max-width: 36ch;
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+        }
+        .closing-items {
+            display: flex;
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .closing-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius);
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1.2rem, 2.5vw, 2rem);
+            font-size: clamp(0.85rem, 1.4vw, 1rem);
+            color: var(--text);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .closing-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(74,222,128,0.1);
+        }
+        .closing-item .closing-icon { color: var(--accent); }
+        /* Decorative circles for closing */
+        .closing-deco-1 {
+            position: absolute;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(74,222,128,0.08);
+            top: 10%; left: 8%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .closing-deco-2 {
+            position: absolute;
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(74,222,128,0.06);
+            bottom: 12%; right: 10%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .closing-deco-3 {
+            position: absolute;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: rgba(74,222,128,0.04);
+            top: 22%; right: 18%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        [data-theme="light"] .closing-deco-1 { border-color: rgba(22,163,74,0.1); }
+        [data-theme="light"] .closing-deco-2 { border-color: rgba(22,163,74,0.08); }
+        [data-theme="light"] .closing-deco-3 { background: rgba(22,163,74,0.05); }
+
+        /* =============================================
+           UI Controls
+           ============================================= */
+        .back-link {
+            position: fixed;
+            top: 1.5rem; left: 1.5rem;
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--text2);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            text-decoration: none;
+            z-index: 100;
+            transition: color 0.2s, background 0.2s;
+        }
+        .back-link:hover { color: var(--text); background: var(--accent); }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem; right: 1.5rem;
+            font-size: 1.15rem;
+            cursor: pointer;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.4rem 0.65rem;
+            border-radius: 8px;
+            line-height: 1;
+            transition: background 0.2s;
+        }
+        .theme-toggle:hover { background: var(--accent); }
+
+        .nav-dots {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+        .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--text2);
+            opacity: 0.35;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        .dot.active {
+            background: var(--accent);
+            opacity: 1;
+            transform: scale(1.5);
+        }
+        .dot:hover { opacity: 0.7; }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem; right: 1.5rem;
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            color: var(--text2);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            z-index: 100;
+        }
+
+        @media (max-height: 500px) { .nav-dots { display: none; } }
+        @media (max-width: 480px) {
+            .flow-step:nth-child(1),
+            .flow-step:nth-child(2),
+            .flow-step:nth-child(3),
+            .flow-step:nth-child(4) { transform: translateY(0); }
+            .flow-connector { display: none; }
+            .flow-arc { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+    <a href="./" class="back-link">← Gallery</a>
+    <div class="theme-toggle" onclick="toggleTheme()"><span id="themeIcon">☀️</span></div>
+    <nav class="nav-dots" id="navDots"></nav>
+    <div class="slide-counter"><span id="counterCurrent">1</span> / <span id="counterTotal">8</span></div>
+
+    <!-- ==========================================
+         Slide 1: Title
+         ========================================== -->
+    <section class="slide slide-title" id="slide-0">
+        <div class="glow"></div>
+        <div class="deco-ring deco-ring-1"></div>
+        <div class="deco-ring deco-ring-2"></div>
+        <div class="deco-ring deco-ring-3"></div>
+        <div class="reveal pill">🌿 Botanical Theme</div>
+        <h1 class="reveal">자연에서 찾은 디자인의 본질</h1>
+        <p class="reveal subtitle">부드러운 초록빛 팔레트와 우아한 세리프 타이포그래피가 만들어내는 고요하고 세련된 프레젠테이션 경험</p>
+    </section>
+
+    <!-- ==========================================
+         Slide 2: Section Divider
+         ========================================== -->
+    <section class="slide slide-divider" id="slide-1">
+        <div class="big-num">01</div>
+        <div class="organic-circle"></div>
+        <h2 class="reveal">핵심 전략</h2>
+        <hr class="reveal green-line">
+        <p class="reveal section-desc">지속 가능한 성장을 위한 로드맵과 실행 계획을 살펴봅니다</p>
+    </section>
+
+    <!-- ==========================================
+         Slide 3: Content (4 items with leaf-dots)
+         ========================================== -->
+    <section class="slide slide-content" id="slide-2">
+        <h2 class="reveal">전략적 접근 방법</h2>
+        <ul class="leaf-list">
+            <li class="reveal">
+                <strong>사용자 중심 리서치</strong>
+                <span>정성적·정량적 데이터를 결합하여 사용자의 실제 니즈와 행동 패턴을 깊이 있게 파악합니다</span>
+            </li>
+            <li class="reveal">
+                <strong>지속 가능한 디자인 시스템</strong>
+                <span>재사용 가능한 컴포넌트와 일관된 토큰 체계로 장기적 확장성을 확보합니다</span>
+            </li>
+            <li class="reveal">
+                <strong>데이터 기반 의사결정</strong>
+                <span>A/B 테스트와 분석 지표를 활용하여 객관적 근거에 기반한 개선을 추진합니다</span>
+            </li>
+            <li class="reveal">
+                <strong>애자일 실행 프로세스</strong>
+                <span>빠른 프로토타이핑과 반복적 검증을 통해 리스크를 최소화하며 가치를 전달합니다</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ==========================================
+         Slide 4: Two-Column
+         ========================================== -->
+    <section class="slide slide-twocol" id="slide-3">
+        <div class="twocol-grid">
+            <div class="twocol-left">
+                <h2 class="reveal">성장의 핵심 동력</h2>
+                <p class="reveal">디지털 전환과 고객 경험 혁신을 통해 시장에서의 경쟁 우위를 확보하고 있습니다. 데이터 인프라 고도화로 실시간 인사이트를 도출합니다.</p>
+                <p class="reveal">팀 역량 강화와 프로세스 자동화를 병행하여 조직 전체의 생산성을 극대화하는 데 주력하고 있습니다.</p>
+            </div>
+            <div class="twocol-card reveal">
+                <div class="stat-label">연간 성장률</div>
+                <div class="stat-value">47%</div>
+                <div class="stat-sub">전년 대비 +12%p 상승</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         Slide 5: Data / Metrics (3 cards)
+         ========================================== -->
+    <section class="slide slide-metrics" id="slide-4">
+        <h2 class="reveal">핵심 성과 지표</h2>
+        <div class="metrics-row">
+            <div class="metric-card reveal">
+                <div class="metric-icon">🌱</div>
+                <div class="metric-val">94.2%</div>
+                <div class="metric-change">↑ 8.3%</div>
+                <div class="metric-label">고객 만족도 (CSAT)</div>
+            </div>
+            <div class="metric-card reveal">
+                <div class="metric-icon">🍃</div>
+                <div class="metric-val">2.4x</div>
+                <div class="metric-change">↑ 1.2x</div>
+                <div class="metric-label">사용자 참여율 향상</div>
+            </div>
+            <div class="metric-card reveal">
+                <div class="metric-icon">🌿</div>
+                <div class="metric-val">156</div>
+                <div class="metric-change">+42건</div>
+                <div class="metric-label">신규 파트너십 체결</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         Slide 6: Organic Flow Diagram (4 steps)
+         ========================================== -->
+    <section class="slide slide-flow" id="slide-5">
+        <h2 class="reveal">프로세스 흐름</h2>
+        <div class="flow-arc">
+            <div class="flow-step reveal">
+                <div class="flow-circle">
+                    <span class="step-num">01</span>
+                </div>
+                <span class="flow-label">리서치</span>
+                <span class="flow-desc">사용자 니즈 파악 및 시장 분석</span>
+            </div>
+            <div class="flow-connector reveal">
+                <svg viewBox="0 0 50 12" fill="none"><line x1="2" y1="6" x2="48" y2="6" stroke-linecap="round"/></svg>
+            </div>
+            <div class="flow-step reveal">
+                <div class="flow-circle">
+                    <span class="step-num">02</span>
+                </div>
+                <span class="flow-label">설계</span>
+                <span class="flow-desc">전략 수립과 프로토타입 제작</span>
+            </div>
+            <div class="flow-connector reveal">
+                <svg viewBox="0 0 50 12" fill="none"><line x1="2" y1="6" x2="48" y2="6" stroke-linecap="round"/></svg>
+            </div>
+            <div class="flow-step reveal">
+                <div class="flow-circle">
+                    <span class="step-num">03</span>
+                </div>
+                <span class="flow-label">실행</span>
+                <span class="flow-desc">애자일 개발과 반복 검증</span>
+            </div>
+            <div class="flow-connector reveal">
+                <svg viewBox="0 0 50 12" fill="none"><line x1="2" y1="6" x2="48" y2="6" stroke-linecap="round"/></svg>
+            </div>
+            <div class="flow-step reveal">
+                <div class="flow-circle">
+                    <span class="step-num">04</span>
+                </div>
+                <span class="flow-label">성장</span>
+                <span class="flow-desc">데이터 기반 최적화 및 확장</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         Slide 7: Quote
+         ========================================== -->
+    <section class="slide slide-quote" id="slide-6">
+        <div class="reveal quote-mark">"</div>
+        <blockquote class="reveal">좋은 디자인은 자연처럼 보이지 않는 곳에서 조용히 작동한다</blockquote>
+        <hr class="reveal quote-line">
+        <p class="reveal attribution"><strong>디터 람스</strong> — 산업 디자인의 거장</p>
+    </section>
+
+    <!-- ==========================================
+         Slide 8: Closing
+         ========================================== -->
+    <section class="slide slide-closing" id="slide-7">
+        <div class="closing-deco-1"></div>
+        <div class="closing-deco-2"></div>
+        <div class="closing-deco-3"></div>
+        <h1 class="reveal">감사합니다</h1>
+        <p class="reveal closing-desc">Soft Botanical 테마의 핵심 내용을 정리합니다</p>
+        <div class="closing-items">
+            <div class="closing-item reveal">
+                <span class="closing-icon">&#127807;</span> 자연에서 영감 받은 그린 톤 컬러 시스템으로 편안한 시각 경험을 설계했습니다
+            </div>
+            <div class="closing-item reveal">
+                <span class="closing-icon">&#127808;</span> 유기적인 곡선과 보태니컬 장식 요소로 부드러운 브랜드 아이덴티티를 구현했습니다
+            </div>
+            <div class="closing-item reveal">
+                <span class="closing-icon">&#127793;</span> 여백과 호흡이 있는 레이아웃으로 콘텐츠에 집중할 수 있는 구조를 완성했습니다
+            </div>
+        </div>
+    </section>
+
+    <script>
+    /* ── Theme Toggle ── */
+    function setTheme(t) {
+        document.documentElement.setAttribute('data-theme', t);
+        document.getElementById('themeIcon').textContent = t === 'light' ? '🌙' : '☀️';
+        localStorage.setItem('theme-soft-botanical', t);
+    }
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        setTheme(current === 'light' ? 'dark' : 'light');
+    }
+    (function initTheme() {
+        const saved = localStorage.getItem('theme-soft-botanical');
+        if (saved) { setTheme(saved); }
+        else if (window.matchMedia('(prefers-color-scheme: light)').matches) { setTheme('light'); }
+        else { setTheme('dark'); }
+    })();
+
+    /* ── SlidePresentation Class ── */
+    class SlidePresentation {
+        constructor() {
+            this.slides = [...document.querySelectorAll('.slide')];
+            this.current = 0;
+            this.total = this.slides.length;
+            this.wheelAcc = 0;
+            this.wheelTimer = null;
+            this.touchY = 0;
+            this.isAnimating = false;
+            this.init();
+        }
+
+        init() {
+            this.buildDots();
+            this.updateUI();
+            this.slides[0].classList.add('visible');
+            document.getElementById('counterTotal').textContent = this.total;
+
+            /* Keyboard */
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault(); this.next();
+                }
+                if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    e.preventDefault(); this.prev();
+                }
+                if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
+                if (e.key === 'End') { e.preventDefault(); this.goTo(this.total - 1); }
+            });
+
+            /* Wheel */
+            document.addEventListener('wheel', e => {
+                e.preventDefault();
+                this.wheelAcc += e.deltaY;
+                clearTimeout(this.wheelTimer);
+                this.wheelTimer = setTimeout(() => {
+                    if (Math.abs(this.wheelAcc) > 50) {
+                        this.wheelAcc > 0 ? this.next() : this.prev();
+                    }
+                    this.wheelAcc = 0;
+                }, 80);
+            }, { passive: false });
+
+            /* Touch */
+            document.addEventListener('touchstart', e => {
+                this.touchY = e.touches[0].clientY;
+            }, { passive: true });
+            document.addEventListener('touchend', e => {
+                const d = this.touchY - e.changedTouches[0].clientY;
+                if (Math.abs(d) > 50) {
+                    d > 0 ? this.next() : this.prev();
+                }
+            }, { passive: true });
+        }
+
+        buildDots() {
+            const nav = document.getElementById('navDots');
+            this.slides.forEach((_, i) => {
+                const d = document.createElement('button');
+                d.className = 'dot' + (i === 0 ? ' active' : '');
+                d.setAttribute('aria-label', `슬라이드 ${i + 1}`);
+                d.addEventListener('click', () => this.goTo(i));
+                nav.appendChild(d);
+            });
+        }
+
+        goTo(i) {
+            if (i < 0 || i >= this.total || i === this.current || this.isAnimating) return;
+            this.isAnimating = true;
+            this.slides[this.current].classList.remove('visible');
+            this.current = i;
+            this.slides[this.current].classList.add('visible');
+            this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+            this.updateUI();
+            setTimeout(() => { this.isAnimating = false; }, 700);
+        }
+
+        next() { this.goTo(this.current + 1); }
+        prev() { this.goTo(this.current - 1); }
+
+        updateUI() {
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === this.current));
+            document.getElementById('counterCurrent').textContent = this.current + 1;
+        }
+    }
+
+    new SlidePresentation();
+    </script>
+</body>
+</html>

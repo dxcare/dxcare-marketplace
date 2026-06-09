@@ -1,0 +1,479 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   DIAGRAM / BOX COMPONENT SET — §D4 (B-004 / AC-1.1)
+
+   The §D4 pattern set, generalized from the gold-standard deck
+   (SecondBrain/.../presentation-v1.html). Every pattern reads the shared
+   design tokens (tokens.css → theme.css cascade) so radius / border / accent
+   stay consistent across all 16 presets and both themes.
+
+   ── Diagram-scoped tokens ───────────────────────────────────────────────
+   These alias the global design tokens to a single diagram vocabulary so the
+   nine patterns never hard-code a radius or a border width. Authors who want
+   a tighter or looser look swap ONE variable rather than every rule.
+
+   The radius LITERALS below intentionally match the gold standard so the
+   AC-1.3 computed-value comparison is exact:
+     layer / flow / gain ........ 12px   (--diagram-radius)
+     coverage card .............. 11px   (--diagram-radius-tight)
+     comparison frame ........... 14px   (--diagram-radius-frame)
+     card / role-grid card ...... 16px   (--diagram-radius-card)
+     pill / loop-note pill ...... 999px  (--diagram-radius-pill)
+   The accent FILL uses the accent token at low alpha; because the accent token
+   resolves to the preset hex (e.g. keynote-dark dark = #2997ff = rgb(41,151,255))
+   the rendered fill equals the gold rgba(41,151,255,…). The border colour reads
+   `--accent` directly, so its hex is identical to the gold accent.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+    --diagram-radius: 12px;
+    --diagram-radius-tight: 11px;
+    --diagram-radius-frame: 14px;
+    --diagram-radius-card: 16px;
+    --diagram-radius-pill: 999px;
+    --diagram-border-width: 1px;
+    --diagram-card-bg: var(--bg-secondary);
+    /* Accent tint — the highlighted-state fill shared by .hot / .flag / .gain.
+       FALLBACK ONLY: the generated theme.css (theme-css.ts) overrides this
+       per-preset with an rgba() derived from the preset's own --accent so the
+       fill shares the accent's hue (B-004 cross-preset fix). A plain rgba()
+       (not color-mix) keeps html2canvas v1.4.1 happy — see tokens.css. This
+       literal is the legacy keynote-blue and only applies to decks whose
+       theme.css predates the per-preset derivation. */
+    --diagram-accent-tint: rgba(41, 151, 255, 0.1);
+}
+
+/* B-010: --diagram-card-bg must re-resolve against the dark --bg-secondary on
+   themed decks. In :root it resolves against html (light), and since data-theme
+   lives on <body>, diagram cards (.layer/.cov-card/.data-table) would render
+   light-on-light (invisible) in dark decks without this re-declaration. */
+[data-theme="dark"] {
+    --diagram-card-bg: var(--bg-secondary);
+}
+
+/* ─── 1. LAYER STACK (레이어 스택) ──────────────────────────────────────────
+   Stacked horizontal rows (e.g. an L0→L4 capability stack). `.flag` lifts a
+   row with an accent border + glow. Gold: .layer / .layer.flag. */
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5px, 1vh, 11px);
+    width: 100%;
+    max-width: 840px;
+    margin: 0 auto;
+}
+.layer {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 1.5vw, 1.2rem);
+    background: var(--diagram-card-bg);
+    border: var(--diagram-border-width) solid var(--card-border);
+    border-radius: var(--diagram-radius);
+    padding: clamp(0.5rem, 1.4vh, 0.95rem) clamp(0.8rem, 2vw, 1.4rem);
+}
+.layer .lv {
+    font-weight: 800;
+    color: var(--accent);
+    font-size: clamp(0.85rem, 1.5vw, 1.15rem);
+    min-width: clamp(1.6rem, 3.4vw, 2.4rem);
+}
+.layer .nm {
+    font-weight: 700;
+    font-size: var(--body-size);
+    color: var(--fg);
+    flex: 0 0 auto;
+    min-width: clamp(6.5rem, 15vw, 10.5rem);
+}
+.layer .ds {
+    font-size: var(--small-size);
+    color: var(--muted);
+}
+.layer.flag {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 26px var(--accent-glow);
+    background: var(--diagram-accent-tint);
+}
+.layer.flag .ds { color: var(--fg); }
+
+/* ─── 2. FLOW / CYCLE (플로우·사이클 + loop-note) ──────────────────────────
+   A horizontal sequence of steps joined by arrows. `.loop-note` is the
+   dashed "cycle repeats" pill the gold deck appends under a cyclic flow. */
+.flow-diagram {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: clamp(0.3rem, 1vw, 0.9rem);
+    flex-wrap: wrap;
+}
+.flow-step {
+    background: var(--diagram-card-bg);
+    border: var(--diagram-border-width) solid var(--card-border);
+    border-radius: var(--diagram-radius);
+    padding: clamp(0.6rem, 1.4vh, 1.1rem) clamp(0.5rem, 1.2vw, 1rem);
+    text-align: center;
+    width: clamp(106px, 13.2vw, 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.flow-step.hot {
+    border-color: var(--accent);
+    background: var(--diagram-accent-tint);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+.flow-number {
+    font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 0.15rem;
+}
+.flow-label {
+    font-size: var(--body-size);
+    font-weight: 700;
+    color: var(--fg);
+}
+.flow-desc {
+    font-size: var(--small-size);
+    color: var(--muted);
+    margin-top: 0.15rem;
+}
+.flow-arrow {
+    display: flex;
+    align-items: center;
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    color: var(--accent);
+    font-weight: 300;
+}
+.loop-note {
+    margin-top: clamp(0.8rem, 2vh, 1.4rem);
+    text-align: center;
+    font-size: var(--body-size);
+    color: var(--accent);
+    font-weight: 600;
+}
+.loop-note span {
+    display: inline-block;
+    border: 1px dashed var(--accent);
+    border-radius: var(--diagram-radius-pill);
+    padding: 0.3rem 1rem;
+}
+@media (max-width: 680px) {
+    .flow-diagram { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); justify-content: center; }
+}
+
+/* ─── 3. COVERAGE GRID (커버리지 — 3열 카드) ───────────────────────────────
+   A dense 3-column card grid that collapses to 2-up then 1-up. Gold: .cov-grid
+   / .cov-card. */
+.cov-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.5rem, 1.2vw, 0.95rem);
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+}
+.cov-card {
+    background: var(--diagram-card-bg);
+    border: var(--diagram-border-width) solid var(--card-border);
+    border-radius: var(--diagram-radius-tight);
+    padding: clamp(0.5rem, 1.2vh, 0.85rem) clamp(0.6rem, 1.3vw, 1rem);
+}
+.cov-card .cc-t {
+    font-size: var(--small-size);
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+}
+.cov-card .cc-i {
+    font-size: var(--small-size);
+    color: var(--muted);
+    margin-top: 0.22rem;
+    line-height: 1.42;
+}
+@media (max-width: 760px) { .cov-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .cov-grid { grid-template-columns: 1fr; } }
+
+/* ─── 4. COMPARISON (비교표 — before/after) ────────────────────────────────
+   Two-column framed comparison. The 1px grid gap on a card-border background
+   draws the divider lines. Gold: .comparison-grid / .comp-*. */
+.comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--card-border);
+    border-radius: var(--diagram-radius-frame);
+    overflow: hidden;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+}
+.comp-header {
+    padding: clamp(0.6rem, 1.3vh, 1rem);
+    font-weight: 700;
+    font-size: var(--body-size);
+    text-align: center;
+}
+.comp-before { background: var(--bg-secondary); }
+.comp-after {
+    background: var(--diagram-accent-tint);
+    color: var(--accent);
+}
+.comp-cell {
+    padding: clamp(0.7rem, 1.6vh, 1.2rem);
+    font-size: var(--body-size);
+    background: var(--bg);
+    text-align: center;
+    color: var(--muted);
+}
+.comp-cell.hot {
+    color: var(--accent);
+    font-weight: 700;
+}
+/* Back-compat aliases for the pre-B-004 comparison markup (.comp-item). */
+.comp-item {
+    padding: clamp(0.5rem, 1vw, 0.8rem);
+    font-size: var(--small-size);
+    color: var(--muted);
+    background: var(--bg);
+}
+.comp-item.highlight { color: var(--accent); font-weight: 600; }
+
+/* ─── 5. GAIN / CALLOUT STRIP (gain·callout 스트립) ────────────────────────
+   An accent-bordered "so-what" strip that sits under a diagram. Gold: .gain. */
+.gain,
+.callout {
+    margin-top: clamp(0.7rem, 1.7vh, 1.2rem);
+    background: var(--diagram-accent-tint);
+    border: var(--diagram-border-width) solid var(--accent);
+    border-radius: var(--diagram-radius);
+    padding: clamp(0.6rem, 1.4vh, 1rem) clamp(0.8rem, 1.8vw, 1.3rem);
+}
+.gain .g-label,
+.callout .g-label {
+    font-size: var(--small-size);
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+    margin-bottom: 0.25rem;
+}
+.gain .g-text,
+.callout .g-text {
+    font-size: var(--body-size);
+    color: var(--fg);
+    line-height: 1.45;
+}
+.gain .g-text b,
+.callout .g-text b { color: var(--accent); font-weight: 700; }
+
+/* ─── 6. BOUNDARY TAG (경계 구분) ───────────────────────────────────────────
+   A centered label that marks a boundary between groups of stacked rows.
+   `.hot` adds dashed rules above and below. Gold: .boundary-tag. */
+.boundary-tag {
+    text-align: center;
+    font-size: var(--small-size);
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    padding: clamp(0.25rem, 0.7vh, 0.5rem) 0;
+}
+.boundary-tag.hot {
+    color: var(--accent);
+    border-top: 1px dashed var(--accent);
+    border-bottom: 1px dashed var(--accent);
+    margin: clamp(0.2rem, 0.5vh, 0.4rem) 0;
+}
+
+/* ─── 7. DATA TABLE (데이터 테이블) ────────────────────────────────────────
+   Borderless rule-separated table with an accent-coloured header row and a
+   `.flag` row highlight. Gold: .data-table. */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--small-size);
+    max-width: 900px;
+    margin: 0 auto;
+}
+.data-table th,
+.data-table td {
+    padding: clamp(0.4rem, 1vh, 0.75rem) clamp(0.45rem, 0.9vw, 0.8rem);
+    border-bottom: var(--diagram-border-width) solid var(--card-border);
+    text-align: left;
+    vertical-align: top;
+}
+.data-table th {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.72em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.data-table td { color: var(--muted); }
+.data-table td b { color: var(--fg); font-weight: 700; }
+.data-table tr.flag td { background: var(--diagram-accent-tint); }
+.data-table .lv { color: var(--accent); font-weight: 800; }
+
+/* ─── 8. PULL QUOTE (pull-quote) ───────────────────────────────────────────
+   A large statement line. `.accent` colours the emphasized fragment. Gold:
+   .pull. */
+.pull {
+    font-size: clamp(1.3rem, 3.2vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    max-width: 20ch;
+}
+.pull .accent { color: var(--accent); }
+
+/* ─── 9. ROLE / CRUX GRID (role·crux 그리드) ───────────────────────────────
+   3-up card grids. `.role-grid` lists actors; `.crux` lists numbered key
+   points with an accent left rule. Both reuse the shared `.card` primitive.
+   Gold: .role-grid / .crux. */
+.role-grid,
+.crux {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.7rem, 1.8vw, 1.4rem);
+    max-width: 920px;
+    margin: 0 auto;
+    width: 100%;
+}
+.role-grid .card .tag { display: block; margin-bottom: 0.4rem; }
+.crux .card { border-left: 3px solid var(--accent); }
+.crux .num {
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    font-weight: 800;
+    color: var(--accent);
+}
+@media (max-width: 760px) {
+    .role-grid,
+    .crux { grid-template-columns: 1fr; }
+}
+
+/* ─── Shared card primitive ────────────────────────────────────────────────
+   The base box used by role-grid / crux / general two-up rows. Gold: .card. */
+.card {
+    background: var(--diagram-card-bg);
+    border: var(--diagram-border-width) solid var(--card-border);
+    border-radius: var(--diagram-radius-card);
+    padding: clamp(1rem, 2.4vh, 1.8rem);
+}
+.card .tag {
+    font-size: var(--small-size);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+}
+.card h3 { font-size: var(--h3-size); }
+.cards2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.8rem, 2vw, 1.6rem);
+    max-width: 880px;
+    margin: 0 auto;
+    width: 100%;
+}
+@media (max-width: 680px) { .cards2 { grid-template-columns: 1fr; } }
+
+/* ─── Pill flow (compact inline sequence) ──────────────────────────────────
+   A lighter alternative to .flow-diagram for inline term sequences. */
+.pill-flow {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.3rem, 0.9vw, 0.6rem);
+    flex-wrap: wrap;
+}
+.pill {
+    background: var(--diagram-card-bg);
+    border: var(--diagram-border-width) solid var(--card-border);
+    border-radius: var(--diagram-radius-pill);
+    padding: clamp(0.35rem, 0.9vh, 0.55rem) clamp(0.6rem, 1.3vw, 1rem);
+    font-size: var(--small-size);
+    font-weight: 600;
+    color: var(--fg);
+    white-space: nowrap;
+}
+.pill.hot {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--diagram-accent-tint);
+}
+.pill-arrow { color: var(--accent); font-size: var(--small-size); }
+
+/* ─── Legacy patterns retained from the pre-B-004 set ──────────────────────
+   timeline / inline-svg / data-cards stay so existing skeleton decks that use
+   them keep rendering. They share the diagram radius/border vocabulary. */
+
+/* timeline */
+.timeline {
+    position: relative;
+    padding-left: clamp(2rem, 3vw, 3rem);
+    max-width: 600px;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--card-border);
+}
+.timeline-item { position: relative; margin-bottom: clamp(1rem, 2vw, 1.5rem); }
+.timeline-marker {
+    position: absolute;
+    left: calc(-1 * clamp(2rem, 3vw, 3rem) + 2px);
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 2px solid var(--muted);
+}
+.timeline-marker.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+.timeline-date {
+    font-size: var(--small-size);
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+.timeline-content h4 { font-size: var(--body-size); font-weight: 600; color: var(--fg); }
+.timeline-content p { font-size: var(--small-size); color: var(--muted); }
+
+/* inline SVG */
+.arch-diagram, .cycle-diagram {
+    width: 100%;
+    max-width: 800px;
+    max-height: min(50vh, 350px);
+    margin: 0 auto;
+    display: block;
+}
+
+/* data cards (KPI tiles) */
+.data-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+    gap: clamp(0.5rem, 1vw, 1rem);
+    max-width: 800px;
+    margin: 0 auto;
+}
+.data-card {
+    background: var(--diagram-card-bg);
+    border: var(--diagram-border-width) solid var(--card-border);
+    border-radius: var(--diagram-radius);
+    padding: clamp(0.8rem, 1.5vw, 1.5rem);
+    text-align: center;
+}
+.data-value {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--fg);
+    letter-spacing: -0.02em;
+}
+.data-label { font-size: var(--small-size); color: var(--muted); margin-top: 0.2rem; }
+.data-change { font-size: var(--small-size); font-weight: 600; margin-top: 0.3rem; }
+.data-change.positive { color: #30d158; }
+.data-change.negative { color: #ff453a; }

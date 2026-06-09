@@ -1,0 +1,15 @@
+{
+  "name": "@dxcare/dxcare-web-slide-plugin-dev",
+  "version": "0.2.4",
+  "private": true,
+  "description": "Plugin-internal dev harness — runs tests for bin/init.mjs etc. Not shipped to consumers; the marketplace/consumer surface is plugin.json.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "vitest": "^4.1.0"
+  }
+}

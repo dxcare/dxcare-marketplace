@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Neon Terminal — Sample Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0d1117;
+            --bg2: #161b22;
+            --bg3: #21262d;
+            --text: #e6edf3;
+            --text2: #7d8590;
+            --text3: #484f58;
+            --accent: #3fb950;
+            --accent-dim: rgba(63,185,80,0.15);
+            --orange: #f0883e;
+            --cyan: #79c0ff;
+            --purple: #d2a8ff;
+            --red: #ff7b72;
+            --border: #30363d;
+            --border2: #21262d;
+            --gutter: #2d333b;
+            --radius: 8px;
+            --dot-color: rgba(63,185,80,0.07);
+            --scanline-color: rgba(0,0,0,0.03);
+            --glow: rgba(63,185,80,0.5);
+            --glow-soft: rgba(63,185,80,0.2);
+            --window-bg: #0d1117;
+            --titlebar-bg: #161b22;
+        }
+
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --bg2: #f6f8fa;
+            --bg3: #eaeef2;
+            --text: #1f2328;
+            --text2: #656d76;
+            --text3: #8b949e;
+            --accent: #1a7f37;
+            --accent-dim: rgba(26,127,55,0.1);
+            --orange: #bc4c00;
+            --cyan: #0550ae;
+            --purple: #8250df;
+            --red: #cf222e;
+            --border: #d0d7de;
+            --border2: #e3e8ee;
+            --gutter: #eaeef2;
+            --dot-color: rgba(128,128,128,0.06);
+            --scanline-color: rgba(0,0,0,0.015);
+            --glow: rgba(26,127,55,0.3);
+            --glow-soft: rgba(26,127,55,0.1);
+            --window-bg: #ffffff;
+            --titlebar-bg: #f6f8fa;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE BASE
+           ═══════════════════════════════════════════════ */
+        .slide {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(1.5rem, 4vw, 4rem);
+            position: relative;
+            /* Dot grid background */
+            background-color: var(--bg);
+            background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Scanline overlay */
+        .slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                var(--scanline-color) 2px,
+                var(--scanline-color) 4px
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ═══════════════════════════════════════════════
+           TERMINAL WINDOW FRAME
+           ═══════════════════════════════════════════════ */
+        .terminal-frame {
+            width: min(92vw, 900px);
+            background: var(--window-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px var(--border2),
+                0 16px 48px rgba(0,0,0,0.3),
+                0 0 80px var(--glow-soft);
+        }
+
+        [data-theme="light"] .terminal-frame {
+            box-shadow:
+                0 0 0 1px var(--border2),
+                0 8px 32px rgba(0,0,0,0.08);
+        }
+
+        .terminal-titlebar {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+            padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
+            background: var(--titlebar-bg);
+            border-bottom: 1px solid var(--border);
+            user-select: none;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .terminal-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dots span:nth-child(1) { background: #ff5f57; }
+        .terminal-dots span:nth-child(2) { background: #febc2e; }
+        .terminal-dots span:nth-child(3) { background: #28c840; }
+
+        .terminal-titlebar-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            color: var(--text2);
+            flex: 1;
+            text-align: center;
+            margin-right: 42px; /* offset for dots to visually center */
+        }
+
+        .terminal-body {
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            text-align: left;
+        }
+
+        /* ═══════════════════════════════════════════════
+           BLINKING CURSOR
+           ═══════════════════════════════════════════════ */
+        @keyframes cursorBlink {
+            0%, 49.9% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .cursor {
+            display: inline-block;
+            color: var(--accent);
+            animation: cursorBlink 0.8s step-end infinite;
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--glow);
+        }
+
+        /* ═══════════════════════════════════════════════
+           TYPEWRITER EFFECT (title only)
+           ═══════════════════════════════════════════════ */
+        @keyframes typewriter {
+            from { max-width: 0; }
+            to { max-width: 100%; }
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 10px var(--glow); }
+            50% { text-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow-soft); }
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* ═══════════════════════════════════════════════
+           PROMPT PREFIX
+           ═══════════════════════════════════════════════ */
+        .prompt-prefix {
+            color: var(--accent);
+            font-weight: 600;
+            text-shadow: 0 0 10px var(--glow);
+            user-select: none;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SYNTAX HIGHLIGHTING UTILITY CLASSES
+           ═══════════════════════════════════════════════ */
+        .syn-keyword { color: var(--orange); }
+        .syn-string { color: var(--cyan); }
+        .syn-function { color: var(--purple); }
+        .syn-comment { color: var(--text2); font-style: italic; }
+        .syn-accent { color: var(--accent); text-shadow: 0 0 10px var(--glow); }
+        .syn-red { color: var(--red); }
+
+        /* ═══════════════════════════════════════════════
+           ASCII DIVIDER
+           ═══════════════════════════════════════════════ */
+        .ascii-divider {
+            color: var(--text3);
+            font-size: clamp(0.6rem, 1vw, 0.8rem);
+            letter-spacing: 0.05em;
+            margin: clamp(0.8rem, 1.5vw, 1.2rem) 0;
+            user-select: none;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 1 — BOOT SEQUENCE TITLE
+           ═══════════════════════════════════════════════ */
+        .slide-title .terminal-body {
+            padding: clamp(2rem, 4vw, 3rem);
+        }
+
+        .boot-line {
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+            line-height: 1.9;
+            color: var(--text2);
+            animation: fadeSlideUp 0.4s ease both;
+        }
+
+        .boot-line:nth-child(1) { animation-delay: 0.1s; }
+        .boot-line:nth-child(2) { animation-delay: 0.4s; }
+        .boot-line:nth-child(3) { animation-delay: 0.7s; }
+        .boot-line:nth-child(4) { animation-delay: 1.0s; }
+
+        .boot-line .ok-tag {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .boot-line .warn-tag {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        .boot-line .path {
+            color: var(--cyan);
+        }
+
+        .title-section {
+            margin-top: clamp(1rem, 2vw, 1.5rem);
+            animation: fadeSlideUp 0.5s ease 1.3s both;
+        }
+
+        .title-section h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: clamp(0.3rem, 0.8vw, 0.5rem);
+        }
+
+        .title-section h1 .hl {
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--glow);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        .title-prompt {
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+        }
+
+        .title-prompt .prompt-user {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+        }
+
+        .title-prompt .prompt-path {
+            color: var(--cyan);
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+        }
+
+        .subtitle-line {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: clamp(0.75rem, 1.3vw, 1rem);
+            color: var(--text2);
+            font-weight: 400;
+            margin-top: clamp(0.4rem, 0.8vw, 0.6rem);
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 2 — CODE EDITOR CONTENT
+           ═══════════════════════════════════════════════ */
+        .slide-content .terminal-frame {
+            width: min(92vw, 960px);
+        }
+
+        .code-editor {
+            display: flex;
+            min-height: 0;
+        }
+
+        .line-numbers {
+            display: flex;
+            flex-direction: column;
+            padding: clamp(1.2rem, 2.5vw, 2rem) 0;
+            padding-right: clamp(0.6rem, 1vw, 1rem);
+            padding-left: clamp(1rem, 2vw, 1.5rem);
+            border-right: 1px solid var(--border);
+            background: var(--gutter);
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .line-num {
+            font-size: clamp(0.6rem, 1vw, 0.8rem);
+            line-height: 2.1;
+            color: var(--text3);
+            text-align: right;
+            min-width: 1.5em;
+        }
+
+        .code-content {
+            flex: 1;
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            padding-left: clamp(1rem, 2vw, 1.5rem);
+            overflow: hidden;
+        }
+
+        .code-heading {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 700;
+            line-height: 2.1;
+            letter-spacing: -0.01em;
+        }
+
+        .code-comment {
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            color: var(--text2);
+            font-style: italic;
+            line-height: 2.1;
+        }
+
+        .code-blank {
+            line-height: 2.1;
+            height: 1em;
+        }
+
+        .code-line {
+            font-size: clamp(0.75rem, 1.3vw, 0.95rem);
+            line-height: 2.1;
+            color: var(--text);
+            display: flex;
+            align-items: baseline;
+            gap: 0.6em;
+        }
+
+        .code-line .prompt-prefix {
+            flex-shrink: 0;
+        }
+
+        .code-line .line-text {
+            color: var(--text2);
+            line-height: 1.7;
+        }
+
+        .code-line .line-text strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 3 — SYSTEM MONITOR DASHBOARD
+           ═══════════════════════════════════════════════ */
+        .slide-dashboard .terminal-frame {
+            width: min(95vw, 1060px);
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1em;
+            margin-bottom: clamp(0.5rem, 1vw, 0.8rem);
+        }
+
+        .dashboard-header h2 {
+            font-size: clamp(1rem, 2.2vw, 1.5rem);
+            font-weight: 700;
+        }
+
+        .dashboard-header .status-text {
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            color: var(--accent);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            margin-top: clamp(0.8rem, 1.5vw, 1rem);
+        }
+
+        .metric-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            animation: cardFadeIn 0.5s ease both;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 0.1s; }
+        .metric-card:nth-child(2) { animation-delay: 0.25s; }
+        .metric-card:nth-child(3) { animation-delay: 0.4s; }
+
+        .metric-titlebar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: clamp(0.35rem, 0.7vw, 0.5rem) clamp(0.6rem, 1vw, 0.8rem);
+            background: var(--titlebar-bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .metric-titlebar .mini-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .metric-titlebar .mini-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .metric-titlebar .mini-dots span:nth-child(1) { background: #ff5f57; }
+        .metric-titlebar .mini-dots span:nth-child(2) { background: #febc2e; }
+        .metric-titlebar .mini-dots span:nth-child(3) { background: #28c840; }
+
+        .metric-titlebar .mini-title {
+            font-size: clamp(0.5rem, 0.85vw, 0.65rem);
+            color: var(--text2);
+        }
+
+        .metric-body {
+            padding: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+
+        .metric-value {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: clamp(0.2rem, 0.5vw, 0.3rem);
+        }
+
+        .metric-value.good { color: var(--accent); text-shadow: 0 0 10px var(--glow); }
+        .metric-value.warn { color: var(--orange); text-shadow: 0 0 10px rgba(240,136,62,0.4); }
+        .metric-value.info { color: var(--cyan); text-shadow: 0 0 10px rgba(121,192,255,0.3); }
+
+        .metric-label {
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            color: var(--text2);
+            margin-bottom: clamp(0.5rem, 1vw, 0.8rem);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .progress-bar-ascii {
+            font-size: clamp(0.6rem, 1vw, 0.78rem);
+            line-height: 1.5;
+            letter-spacing: 0.02em;
+        }
+
+        .progress-filled { color: var(--accent); }
+        .progress-empty { color: var(--text3); }
+        .progress-percent {
+            color: var(--text2);
+            margin-left: 0.3em;
+            font-size: 0.9em;
+        }
+
+        .metric-detail {
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            color: var(--text3);
+            line-height: 1.8;
+            margin-top: clamp(0.4rem, 0.7vw, 0.6rem);
+        }
+
+        .metric-detail .key { color: var(--text2); }
+        .metric-detail .val-good { color: var(--accent); }
+        .metric-detail .val-warn { color: var(--orange); }
+        .metric-detail .val-info { color: var(--cyan); }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 4 — DIFF TWO-COLUMN
+           ═══════════════════════════════════════════════ */
+        .slide-diff .terminal-frame {
+            width: min(95vw, 1060px);
+        }
+
+        .diff-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .diff-pane {
+            overflow: hidden;
+        }
+
+        .diff-pane:first-child {
+            border-right: 1px solid var(--border);
+        }
+
+        .diff-pane-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            font-size: clamp(0.6rem, 1vw, 0.78rem);
+            color: var(--text2);
+        }
+
+        .diff-pane-header .prompt-prefix {
+            font-size: clamp(0.6rem, 1vw, 0.78rem);
+        }
+
+        .diff-lines {
+            padding: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+
+        .diff-line {
+            font-size: clamp(0.6rem, 1.05vw, 0.82rem);
+            line-height: 2;
+            padding: 0 clamp(0.3rem, 0.6vw, 0.5rem);
+            border-radius: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .diff-line.unchanged {
+            color: var(--text2);
+        }
+
+        .diff-line.added {
+            color: var(--accent);
+            background: rgba(63,185,80,0.1);
+            border-left: 3px solid var(--accent);
+            padding-left: clamp(0.5rem, 0.8vw, 0.7rem);
+        }
+
+        .diff-line.removed {
+            color: var(--red);
+            background: rgba(255,123,114,0.1);
+            border-left: 3px solid var(--red);
+            padding-left: clamp(0.5rem, 0.8vw, 0.7rem);
+            text-decoration: line-through;
+            text-decoration-color: rgba(255,123,114,0.4);
+        }
+
+        .diff-line .diff-prefix {
+            user-select: none;
+            margin-right: 0.5em;
+            font-weight: 700;
+        }
+
+        .diff-line.added .diff-prefix { color: var(--accent); }
+        .diff-line.removed .diff-prefix { color: var(--red); }
+
+        .diff-stat {
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            border-top: 1px solid var(--border);
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            color: var(--text3);
+            display: flex;
+            gap: 1.5em;
+        }
+
+        .diff-stat .stat-add { color: var(--accent); }
+        .diff-stat .stat-del { color: var(--red); }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 5 — HTOP SYSTEM MONITOR
+           ═══════════════════════════════════════════════ */
+        .slide-htop .terminal-frame {
+            width: min(92vw, 900px);
+        }
+
+        .htop-row {
+            display: grid;
+            grid-template-columns: clamp(80px, 12vw, 140px) 1fr clamp(40px, 6vw, 60px);
+            gap: clamp(0.5rem, 1vw, 1rem);
+            align-items: center;
+            padding: clamp(0.6rem, 1.2vw, 1rem) 0;
+            border-bottom: 1px solid var(--border2);
+            animation: fadeSlideUp 0.4s ease both;
+        }
+
+        .htop-row:last-child {
+            border-bottom: none;
+        }
+
+        .htop-row:nth-child(1) { animation-delay: 0.1s; }
+        .htop-row:nth-child(2) { animation-delay: 0.25s; }
+        .htop-row:nth-child(3) { animation-delay: 0.4s; }
+        .htop-row:nth-child(4) { animation-delay: 0.55s; }
+
+        .htop-label {
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        .htop-bar {
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .htop-bar.status-green .progress-filled { color: var(--accent); }
+        .htop-bar.status-orange .progress-filled { color: var(--orange); }
+        .htop-bar.status-red .progress-filled { color: var(--red); }
+
+        .htop-pct {
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .htop-pct.status-green { color: var(--accent); text-shadow: 0 0 8px var(--glow); }
+        .htop-pct.status-orange { color: var(--orange); text-shadow: 0 0 8px rgba(240,136,62,0.4); }
+        .htop-pct.status-red { color: var(--red); text-shadow: 0 0 8px rgba(255,123,114,0.4); }
+
+        .htop-header-row {
+            display: grid;
+            grid-template-columns: clamp(80px, 12vw, 140px) 1fr clamp(40px, 6vw, 60px);
+            gap: clamp(0.5rem, 1vw, 1rem);
+            padding-bottom: clamp(0.4rem, 0.8vw, 0.6rem);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: clamp(0.2rem, 0.4vw, 0.3rem);
+        }
+
+        .htop-header-row span {
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .htop-header-row span:last-child {
+            text-align: right;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 6 — GIT LOG TIMELINE
+           ═══════════════════════════════════════════════ */
+        .slide-gitlog .terminal-frame {
+            width: min(92vw, 900px);
+        }
+
+        .git-log-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        .git-log-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.6rem, 1.2vw, 1rem);
+            position: relative;
+            padding: clamp(0.5rem, 1vw, 0.8rem) 0;
+            animation: fadeSlideUp 0.4s ease both;
+        }
+
+        .git-log-entry:nth-child(1) { animation-delay: 0.1s; }
+        .git-log-entry:nth-child(2) { animation-delay: 0.25s; }
+        .git-log-entry:nth-child(3) { animation-delay: 0.4s; }
+        .git-log-entry:nth-child(4) { animation-delay: 0.55s; }
+        .git-log-entry:nth-child(5) { animation-delay: 0.7s; }
+        .git-log-entry:nth-child(6) { animation-delay: 0.85s; }
+
+        .git-graph {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            width: 20px;
+            position: relative;
+        }
+
+        .git-node {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--glow);
+            z-index: 2;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .git-log-entry:not(:last-child) .git-graph::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: calc(100% + clamp(0.5rem, 1vw, 0.8rem));
+            background: var(--accent);
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .git-log-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .git-log-hash {
+            font-size: clamp(0.6rem, 1vw, 0.78rem);
+            color: var(--orange);
+            font-weight: 600;
+            margin-right: 0.6em;
+        }
+
+        .git-log-date {
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            color: var(--text3);
+            margin-right: 0.6em;
+        }
+
+        .git-log-tag {
+            font-size: clamp(0.5rem, 0.85vw, 0.65rem);
+            color: var(--cyan);
+            background: rgba(121,192,255,0.1);
+            padding: 0.1em 0.5em;
+            border-radius: 3px;
+            border: 1px solid rgba(121,192,255,0.2);
+        }
+
+        .git-log-msg {
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            color: var(--text);
+            margin-top: clamp(0.2rem, 0.4vw, 0.3rem);
+            line-height: 1.6;
+        }
+
+        .git-log-author {
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            color: var(--text3);
+            margin-top: 0.15em;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 7 — ECHO QUOTE
+           ═══════════════════════════════════════════════ */
+        .slide-quote .terminal-frame {
+            width: min(92vw, 860px);
+        }
+
+        .quote-prompt {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            color: var(--text2);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            line-height: 1.8;
+        }
+
+        .quote-prompt .prompt-prefix {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+        }
+
+        .quote-output {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: clamp(1.3rem, 3.5vw, 2.2rem);
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text);
+            padding: clamp(1rem, 2vw, 1.5rem) 0;
+            border-left: 3px solid var(--accent);
+            padding-left: clamp(1rem, 2vw, 1.5rem);
+            margin: clamp(0.5rem, 1vw, 0.8rem) 0;
+            text-shadow: 0 0 30px var(--glow-soft);
+        }
+
+        .quote-attribution {
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+            color: var(--text2);
+            font-style: italic;
+            margin-top: clamp(0.8rem, 1.5vw, 1.2rem);
+            line-height: 1.8;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE 8 — README Closing
+           ═══════════════════════════════════════════════ */
+        .slide-readme .terminal-frame {
+            width: min(92vw, 880px);
+        }
+
+        .readme-body {
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .readme-h1 {
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+            padding-bottom: clamp(0.5rem, 1vw, 0.8rem);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .readme-description {
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            color: var(--text2);
+            line-height: 1.8;
+            margin: clamp(0.6rem, 1.2vw, 1rem) 0;
+        }
+
+        .readme-h2 {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-top: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+            padding-bottom: clamp(0.3rem, 0.5vw, 0.4rem);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .readme-h2::before {
+            content: '## ';
+            color: var(--text3);
+        }
+
+        .readme-command {
+            display: block;
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+            line-height: 2.2;
+            color: var(--text2);
+            padding: clamp(0.15rem, 0.3vw, 0.25rem) 0;
+        }
+
+        .readme-command .prompt-prefix {
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+        }
+
+        .readme-command .cmd-text {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .readme-command .cmd-desc {
+            color: var(--text3);
+            font-style: italic;
+            margin-left: 0.8em;
+        }
+
+        .readme-enter {
+            margin-top: clamp(1.2rem, 2.5vw, 2rem);
+            font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            color: var(--text2);
+            padding-top: clamp(0.6rem, 1vw, 0.8rem);
+            border-top: 1px solid var(--border);
+        }
+
+        /* ═══════════════════════════════════════════════
+           TOP BAR
+           ═══════════════════════════════════════════════ */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1rem, 2vw, 2rem);
+        }
+
+        .back-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+            transition: text-shadow 0.2s;
+        }
+
+        .back-link:hover {
+            text-shadow: 0 0 10px var(--glow);
+        }
+
+        .theme-toggle {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg2);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s, box-shadow 0.2s;
+            color: var(--text2);
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.8;
+            box-shadow: 0 0 12px var(--glow-soft);
+        }
+
+        /* ═══════════════════════════════════════════════
+           NAV DOTS
+           ═══════════════════════════════════════════════ */
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--text3);
+            opacity: 0.4;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+
+        .nav-dot.active {
+            opacity: 1;
+            background: var(--accent);
+            transform: scale(1.3);
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .nav-dot:hover:not(.active) {
+            opacity: 0.7;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SLIDE COUNTER
+           ═══════════════════════════════════════════════ */
+        .slide-counter {
+            position: fixed;
+            bottom: clamp(0.8rem, 2vw, 1.5rem);
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            z-index: 100;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            color: var(--text3);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .slide-counter .counter-current {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ═══════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════ */
+        @media (max-width: 640px) {
+            .terminal-frame {
+                width: 96vw;
+                border-radius: 6px;
+            }
+
+            .terminal-dots span {
+                width: 10px;
+                height: 10px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .line-numbers {
+                padding-left: clamp(0.5rem, 1vw, 0.8rem);
+                padding-right: clamp(0.3rem, 0.6vw, 0.5rem);
+            }
+
+            .nav-dots {
+                right: 0.4rem;
+            }
+
+            .nav-dot {
+                width: 8px;
+                height: 8px;
+            }
+
+            .diff-container {
+                grid-template-columns: 1fr;
+            }
+
+            .diff-pane:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .quote-output {
+                font-size: clamp(1.1rem, 3vw, 1.6rem);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ TOP BAR ═══ -->
+    <div class="top-bar">
+        <a href="./" class="back-link"><span>&larr;</span> cd ../gallery</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">&#9728;&#65039;</button>
+    </div>
+
+    <!-- ═══ NAV ═══ -->
+    <div class="nav-dots" id="navDots"></div>
+    <div class="slide-counter" id="counter"><span class="counter-current">1</span> / 8</div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 1 — BOOT SEQUENCE TITLE
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-title">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation &mdash; bash</div>
+            </div>
+            <div class="terminal-body">
+                <div class="boot-line"><span class="ok-tag">[OK]</span> Loading presentation engine...</div>
+                <div class="boot-line"><span class="ok-tag">[OK]</span> Theme: <span class="path">neon-terminal</span> v2.0 initialized</div>
+                <div class="boot-line"><span class="ok-tag">[OK]</span> Slides loaded: <span style="color:var(--text)">8</span> &mdash; Ready</div>
+                <div class="boot-line"><span class="warn-tag">[&&]</span> Starting presentation...</div>
+
+                <div class="ascii-divider">════════════════════════════════════════════════════════</div>
+
+                <div class="title-section">
+                    <div class="title-prompt">
+                        <span class="prompt-user">noel@slides</span><span style="color:var(--text2)">:</span><span class="prompt-path">~</span><span style="color:var(--text2)"> $</span>
+                    </div>
+                    <h1><span class="hl">Neon</span> Terminal</h1>
+                    <p class="subtitle-line"># GitHub 스타일 개발자 미학의 프레젠테이션<span class="cursor"> █</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 2 — CODE EDITOR CONTENT
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-content">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation/features.sh &mdash; bash</div>
+            </div>
+            <div class="code-editor">
+                <div class="line-numbers">
+                    <div class="line-num">1</div>
+                    <div class="line-num">2</div>
+                    <div class="line-num">3</div>
+                    <div class="line-num">4</div>
+                    <div class="line-num">5</div>
+                    <div class="line-num">6</div>
+                    <div class="line-num">7</div>
+                    <div class="line-num">8</div>
+                    <div class="line-num">9</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-comment"># ── 테마 특징 ──────────────────────────</div>
+                    <div class="code-heading"><span class="syn-keyword">function</span> <span class="syn-function">features</span><span class="syn-keyword">()</span> {</div>
+                    <div class="code-blank">&nbsp;</div>
+                    <div class="code-line">
+                        <span class="prompt-prefix">$</span>
+                        <span class="line-text"><span class="syn-string">JetBrains Mono</span> 전용 — 진정한 <strong>터미널 미학</strong>의 타이포그래피</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="prompt-prefix">$</span>
+                        <span class="line-text"><span class="syn-function">그린 악센트</span> + <span class="syn-keyword">구문 강조</span> 컬러로 시각적 계층 구성</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="prompt-prefix">$</span>
+                        <span class="line-text">터미널 윈도우 프레임 · <span class="syn-string">스캔라인</span> · <span class="syn-function">도트 그리드</span> 배경</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="prompt-prefix">$</span>
+                        <span class="line-text"><span class="syn-keyword">ASCII</span> 프로그레스 바와 <span class="syn-accent">깜빡이는 커서</span>로 몰입감 극대화</span>
+                    </div>
+                    <div class="code-blank">&nbsp;</div>
+                    <div class="code-line">
+                        <span style="color:var(--text3)">}</span>
+                        <span class="cursor"> █</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 3 — SYSTEM MONITOR DASHBOARD
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-dashboard">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation/monitor &mdash; htop</div>
+            </div>
+            <div class="terminal-body">
+                <div class="dashboard-header">
+                    <h2><span class="prompt-prefix">&gt; </span>시스템 상태</h2>
+                    <span class="status-text">● LIVE</span>
+                </div>
+                <div class="ascii-divider">════════════════════════════════════════════════════════</div>
+
+                <div class="dashboard-grid">
+                    <!-- Card 1 — CPU -->
+                    <div class="metric-card">
+                        <div class="metric-titlebar">
+                            <div class="mini-dots"><span></span><span></span><span></span></div>
+                            <div class="mini-title">performance.sh</div>
+                        </div>
+                        <div class="metric-body">
+                            <div class="metric-value good">23%</div>
+                            <div class="metric-label">cpu usage</div>
+                            <div class="progress-bar-ascii">
+                                <span class="progress-filled">[██████</span><span class="progress-empty">░░░░░░░░░░░░░░]</span><span class="progress-percent">23%</span>
+                            </div>
+                            <div class="metric-detail">
+                                <div><span class="key">memory</span> = <span class="val-good">8.2 GB</span></div>
+                                <div><span class="key">status</span> = <span class="val-good">healthy</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 — Deploy -->
+                    <div class="metric-card">
+                        <div class="metric-titlebar">
+                            <div class="mini-dots"><span></span><span></span><span></span></div>
+                            <div class="mini-title">deploy.log</div>
+                        </div>
+                        <div class="metric-body">
+                            <div class="metric-value info">94.7%</div>
+                            <div class="metric-label">test coverage</div>
+                            <div class="progress-bar-ascii">
+                                <span class="progress-filled">[██████████████████</span><span class="progress-empty">░░]</span><span class="progress-percent">94%</span>
+                            </div>
+                            <div class="metric-detail">
+                                <div><span class="key">build</span> = <span class="val-good">passing</span></div>
+                                <div><span class="key">uptime</span> = <span class="val-info">99.99%</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 — Traffic -->
+                    <div class="metric-card">
+                        <div class="metric-titlebar">
+                            <div class="mini-dots"><span></span><span></span><span></span></div>
+                            <div class="mini-title">metrics.json</div>
+                        </div>
+                        <div class="metric-body">
+                            <div class="metric-value warn">42ms</div>
+                            <div class="metric-label">p99 latency</div>
+                            <div class="progress-bar-ascii">
+                                <span class="progress-filled">[████████</span><span class="progress-empty">░░░░░░░░░░░░]</span><span class="progress-percent">42ms</span>
+                            </div>
+                            <div class="metric-detail">
+                                <div><span class="key">requests</span> = <span class="val-info">1.2M/day</span></div>
+                                <div><span class="key">errors</span> = <span class="val-good">0.01%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 4 — DIFF TWO-COLUMN
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-diff">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation &mdash; diff old.conf new.conf</div>
+            </div>
+            <div class="diff-container">
+                <!-- Left pane — old.conf -->
+                <div class="diff-pane">
+                    <div class="diff-pane-header">
+                        <span class="prompt-prefix">$</span> cat old.conf
+                    </div>
+                    <div class="diff-lines">
+                        <div class="diff-line unchanged">[server]</div>
+                        <div class="diff-line removed"><span class="diff-prefix">-</span>host = 192.168.1.100</div>
+                        <div class="diff-line removed"><span class="diff-prefix">-</span>port = 8080</div>
+                        <div class="diff-line unchanged">workers = 4</div>
+                        <div class="diff-line unchanged">&nbsp;</div>
+                        <div class="diff-line unchanged">[database]</div>
+                        <div class="diff-line removed"><span class="diff-prefix">-</span>engine = sqlite</div>
+                        <div class="diff-line removed"><span class="diff-prefix">-</span>pool_size = 5</div>
+                        <div class="diff-line unchanged">timeout = 30</div>
+                        <div class="diff-line unchanged">&nbsp;</div>
+                        <div class="diff-line unchanged">[logging]</div>
+                        <div class="diff-line removed"><span class="diff-prefix">-</span>level = DEBUG</div>
+                    </div>
+                    <div class="diff-stat">
+                        <span class="stat-del">-5 deletions</span>
+                    </div>
+                </div>
+                <!-- Right pane — new.conf -->
+                <div class="diff-pane">
+                    <div class="diff-pane-header">
+                        <span class="prompt-prefix">$</span> cat new.conf
+                    </div>
+                    <div class="diff-lines">
+                        <div class="diff-line unchanged">[server]</div>
+                        <div class="diff-line added"><span class="diff-prefix">+</span>host = 0.0.0.0</div>
+                        <div class="diff-line added"><span class="diff-prefix">+</span>port = 443</div>
+                        <div class="diff-line unchanged">workers = 4</div>
+                        <div class="diff-line added"><span class="diff-prefix">+</span>ssl = true</div>
+                        <div class="diff-line unchanged">[database]</div>
+                        <div class="diff-line added"><span class="diff-prefix">+</span>engine = postgresql</div>
+                        <div class="diff-line added"><span class="diff-prefix">+</span>pool_size = 20</div>
+                        <div class="diff-line unchanged">timeout = 30</div>
+                        <div class="diff-line added"><span class="diff-prefix">+</span>replicas = 3</div>
+                        <div class="diff-line unchanged">[logging]</div>
+                        <div class="diff-line added"><span class="diff-prefix">+</span>level = WARN</div>
+                    </div>
+                    <div class="diff-stat">
+                        <span class="stat-add">+7 additions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 5 — HTOP SYSTEM MONITOR
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-htop">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation &mdash; htop</div>
+            </div>
+            <div class="terminal-body">
+                <div class="dashboard-header">
+                    <h2><span class="prompt-prefix">&gt; </span>System Dashboard</h2>
+                    <span class="status-text">● MONITORING</span>
+                </div>
+                <div class="ascii-divider">════════════════════════════════════════════════════════</div>
+
+                <div class="htop-header-row">
+                    <span>RESOURCE</span>
+                    <span>USAGE</span>
+                    <span>%</span>
+                </div>
+
+                <!-- CPU — healthy -->
+                <div class="htop-row">
+                    <div class="htop-label">CPU</div>
+                    <div class="htop-bar status-green">
+                        <span class="progress-filled">[████████</span><span class="progress-empty">░░░░░░░░░░░░]</span>
+                    </div>
+                    <div class="htop-pct status-green">38%</div>
+                </div>
+
+                <!-- Memory — warning -->
+                <div class="htop-row">
+                    <div class="htop-label">Memory</div>
+                    <div class="htop-bar status-orange">
+                        <span class="progress-filled" style="color:var(--orange)">[██████████████</span><span class="progress-empty">░░░░░░]</span>
+                    </div>
+                    <div class="htop-pct status-orange">72%</div>
+                </div>
+
+                <!-- Disk — critical -->
+                <div class="htop-row">
+                    <div class="htop-label">Disk</div>
+                    <div class="htop-bar status-red">
+                        <span class="progress-filled" style="color:var(--red)">[██████████████████</span><span class="progress-empty">░░]</span>
+                    </div>
+                    <div class="htop-pct status-red">91%</div>
+                </div>
+
+                <!-- Network — healthy -->
+                <div class="htop-row">
+                    <div class="htop-label">Network</div>
+                    <div class="htop-bar status-green">
+                        <span class="progress-filled">[████</span><span class="progress-empty">░░░░░░░░░░░░░░░░]</span>
+                    </div>
+                    <div class="htop-pct status-green">18%</div>
+                </div>
+
+                <div class="ascii-divider">────────────────────────────────────────────────────────</div>
+                <div style="font-size:clamp(0.55rem,0.9vw,0.7rem);color:var(--text3);display:flex;gap:2em;">
+                    <span><span class="syn-accent">●</span> healthy &lt;60%</span>
+                    <span><span style="color:var(--orange)">●</span> warning 60-85%</span>
+                    <span><span style="color:var(--red)">●</span> critical &gt;85%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 6 — GIT LOG TIMELINE
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-gitlog">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation &mdash; git log --graph --oneline</div>
+            </div>
+            <div class="terminal-body">
+                <div style="font-size:clamp(0.65rem,1.1vw,0.85rem);color:var(--text2);margin-bottom:clamp(0.8rem,1.5vw,1.2rem);">
+                    <span class="prompt-prefix">$</span> git log --graph --oneline --all
+                </div>
+
+                <div class="git-log-list">
+                    <div class="git-log-entry">
+                        <div class="git-graph"><div class="git-node"></div></div>
+                        <div class="git-log-content">
+                            <div>
+                                <span class="git-log-hash">f7a2c91</span>
+                                <span class="git-log-date">(2024-Q4)</span>
+                                <span class="git-log-tag">HEAD</span>
+                            </div>
+                            <div class="git-log-msg">Production release v1.0</div>
+                            <div class="git-log-author">Author: noel &lt;noel@team.dev&gt;</div>
+                        </div>
+                    </div>
+
+                    <div class="git-log-entry">
+                        <div class="git-graph"><div class="git-node"></div></div>
+                        <div class="git-log-content">
+                            <div>
+                                <span class="git-log-hash">e3b8d47</span>
+                                <span class="git-log-date">(2024-Q3)</span>
+                                <span class="git-log-tag">rc-1</span>
+                            </div>
+                            <div class="git-log-msg">Performance optimization &amp; load testing</div>
+                            <div class="git-log-author">Author: noel &lt;noel@team.dev&gt;</div>
+                        </div>
+                    </div>
+
+                    <div class="git-log-entry">
+                        <div class="git-graph"><div class="git-node"></div></div>
+                        <div class="git-log-content">
+                            <div>
+                                <span class="git-log-hash">a1c5f02</span>
+                                <span class="git-log-date">(2024-Q3)</span>
+                                <span class="git-log-tag">beta</span>
+                            </div>
+                            <div class="git-log-msg">Launch public beta</div>
+                            <div class="git-log-author">Author: noel &lt;noel@team.dev&gt;</div>
+                        </div>
+                    </div>
+
+                    <div class="git-log-entry">
+                        <div class="git-graph"><div class="git-node"></div></div>
+                        <div class="git-log-content">
+                            <div>
+                                <span class="git-log-hash">def5678</span>
+                                <span class="git-log-date">(2024-Q2)</span>
+                            </div>
+                            <div class="git-log-msg">Core feature implementation</div>
+                            <div class="git-log-author">Author: noel &lt;noel@team.dev&gt;</div>
+                        </div>
+                    </div>
+
+                    <div class="git-log-entry">
+                        <div class="git-graph"><div class="git-node"></div></div>
+                        <div class="git-log-content">
+                            <div>
+                                <span class="git-log-hash">89ab012</span>
+                                <span class="git-log-date">(2024-Q1)</span>
+                            </div>
+                            <div class="git-log-msg">Architecture design &amp; tech stack selection</div>
+                            <div class="git-log-author">Author: noel &lt;noel@team.dev&gt;</div>
+                        </div>
+                    </div>
+
+                    <div class="git-log-entry">
+                        <div class="git-graph"><div class="git-node"></div></div>
+                        <div class="git-log-content">
+                            <div>
+                                <span class="git-log-hash">abc1234</span>
+                                <span class="git-log-date">(2024-Q1)</span>
+                                <span class="git-log-tag">init</span>
+                            </div>
+                            <div class="git-log-msg">Initialize project repository</div>
+                            <div class="git-log-author">Author: noel &lt;noel@team.dev&gt;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 7 — ECHO QUOTE
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-quote">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation &mdash; bash</div>
+            </div>
+            <div class="terminal-body">
+                <div class="quote-prompt">
+                    <span class="prompt-prefix">$</span> echo <span class="syn-string">"The best way to predict the future is to implement it."</span>
+                </div>
+
+                <div class="quote-output">
+                    The best way to predict the future is to implement it.
+                </div>
+
+                <div class="quote-attribution">
+                    <span class="syn-comment"># &mdash; David Heinemeier Hansson, Creator of Ruby on Rails</span>
+                </div>
+
+                <div class="ascii-divider">────────────────────────────────────────────────────────</div>
+
+                <div style="font-size:clamp(0.65rem,1.1vw,0.85rem);color:var(--text2);line-height:2;">
+                    <span class="prompt-prefix">$</span> <span class="syn-comment"># Great software is built one commit at a time.</span><br>
+                    <span class="prompt-prefix">$</span> <span class="syn-comment"># Ship early. Ship often. Iterate.</span><br>
+                    <span class="prompt-prefix">$</span> <span class="cursor"> █</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SLIDE 8 — README Closing
+         ═══════════════════════════════════════════════════════ -->
+    <section class="slide slide-readme">
+        <div class="terminal-frame">
+            <div class="terminal-titlebar">
+                <div class="terminal-dots"><span></span><span></span><span></span></div>
+                <div class="terminal-titlebar-text">noel@slides:~/presentation/README.md &mdash; less</div>
+            </div>
+            <div class="readme-body">
+                <div class="readme-h1"><span class="syn-accent">#</span> Summary</div>
+                <div class="readme-description">
+                    프레젠테이션에서 다룬 핵심 내용을 정리합니다.<br>
+                    터미널 스타일의 개발자 친화적 테마를 살펴보았습니다.
+                </div>
+
+                <div class="readme-h2">What We Covered</div>
+                <div class="readme-command">
+                    <span class="prompt-prefix">&#10003;</span> <span class="cmd-text">Neon Terminal 테마의 디자인 시스템</span>
+                    <span class="cmd-desc"># 터미널 UI 기반 레이아웃</span>
+                </div>
+                <div class="readme-command">
+                    <span class="prompt-prefix">&#10003;</span> <span class="cmd-text">모노스페이스 타이포그래피와 구문 강조</span>
+                    <span class="cmd-desc"># 코드 에디터 미학 적용</span>
+                </div>
+                <div class="readme-command">
+                    <span class="prompt-prefix">&#10003;</span> <span class="cmd-text">네온 컬러 악센트와 다크 모드 최적화</span>
+                    <span class="cmd-desc"># 개발자 경험 중심 설계</span>
+                </div>
+
+                <div class="readme-h2">Key Takeaways</div>
+                <div class="readme-command">
+                    <span class="prompt-prefix">&#10003;</span> <span class="cmd-text">개발 문화에 맞는 프레젠테이션 스타일</span>
+                    <span class="cmd-desc"># 기술팀 커뮤니케이션 최적화</span>
+                </div>
+                <div class="readme-command">
+                    <span class="prompt-prefix">&#10003;</span> <span class="cmd-text">인터랙티브 슬라이드 내비게이션</span>
+                    <span class="cmd-desc"># 키보드 및 터치 지원</span>
+                </div>
+                <div class="readme-command">
+                    <span class="prompt-prefix">&#10003;</span> <span class="cmd-text">라이트/다크 테마 자동 전환</span>
+                    <span class="cmd-desc"># 환경 설정 반영</span>
+                </div>
+
+                <div class="readme-enter">
+                    Press <span style="color:var(--accent);font-weight:600;">ENTER</span> to continue...<span class="cursor"> █</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SCRIPTS
+         ═══════════════════════════════════════════════════════ -->
+    <script>
+        /* ── Theme Toggle ── */
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme-neon-terminal', t);
+            const btn = document.querySelector('.theme-toggle');
+            if (btn) btn.textContent = t === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+        }
+        function toggleTheme() {
+            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            setTheme(cur === 'dark' ? 'light' : 'dark');
+        }
+        (function() {
+            const saved = localStorage.getItem('theme-neon-terminal');
+            if (saved) setTheme(saved);
+            else if (window.matchMedia('(prefers-color-scheme: light)').matches) setTheme('light');
+        })();
+
+        /* ── Slide Presentation Engine ── */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.current = 0;
+                this.total = this.slides.length;
+                this.isAnimating = false;
+                this.wheelAccum = 0;
+                this.wheelThreshold = 50;
+                this.touchStartY = 0;
+                this.init();
+            }
+
+            init() {
+                this.buildDots();
+                this.updateUI();
+
+                document.addEventListener('keydown', e => this.onKey(e));
+                window.addEventListener('wheel', e => this.onWheel(e), { passive: false });
+
+                window.addEventListener('touchstart', e => {
+                    this.touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+
+                window.addEventListener('touchend', e => {
+                    const dy = this.touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(dy) > 50) {
+                        dy > 0 ? this.next() : this.prev();
+                    }
+                }, { passive: true });
+
+                const obs = new IntersectionObserver(entries => {
+                    entries.forEach(en => {
+                        if (en.isIntersecting) {
+                            this.current = [...this.slides].indexOf(en.target);
+                            this.updateUI();
+                        }
+                    });
+                }, { threshold: 0.6 });
+
+                this.slides.forEach(s => obs.observe(s));
+            }
+
+            buildDots() {
+                const c = document.getElementById('navDots');
+                for (let i = 0; i < this.total; i++) {
+                    const d = document.createElement('button');
+                    d.className = 'nav-dot';
+                    d.setAttribute('aria-label', 'Slide ' + (i + 1));
+                    d.onclick = () => this.goTo(i);
+                    c.appendChild(d);
+                }
+            }
+
+            updateUI() {
+                document.querySelectorAll('.nav-dot').forEach((d, i) =>
+                    d.classList.toggle('active', i === this.current)
+                );
+                const counter = document.getElementById('counter');
+                counter.innerHTML = '<span class="counter-current">' + (this.current + 1) + '</span> / ' + this.total;
+            }
+
+            goTo(i) {
+                if (i < 0 || i >= this.total || this.isAnimating) return;
+                this.isAnimating = true;
+                this.current = i;
+                this.slides[i].scrollIntoView({ behavior: 'smooth' });
+                this.updateUI();
+                setTimeout(() => { this.isAnimating = false; }, 600);
+            }
+
+            next() { this.goTo(this.current + 1); }
+            prev() { this.goTo(this.current - 1); }
+
+            onKey(e) {
+                if (['ArrowDown', 'ArrowRight', 'Space', ' ', 'PageDown'].includes(e.key)) {
+                    e.preventDefault(); this.next();
+                }
+                if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                    e.preventDefault(); this.prev();
+                }
+                if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
+                if (e.key === 'End') { e.preventDefault(); this.goTo(this.total - 1); }
+            }
+
+            onWheel(e) {
+                e.preventDefault();
+                this.wheelAccum += e.deltaY;
+                if (Math.abs(this.wheelAccum) >= this.wheelThreshold) {
+                    this.wheelAccum > 0 ? this.next() : this.prev();
+                    this.wheelAccum = 0;
+                }
+            }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "preset": "keynote-dark",
+  "category": "investor",
+  "description": "Apple Keynote 다크. 다크 무대는 순수 블랙(#000), 액센트는 밝은 블루(#2997ff) — 다크·라이트 양쪽 모두 동일한 밝은 블루. 대형 화면 발표·키노트용, 수동 오버라이드 없이 바로 적용.",
+  "mood": "프리미엄, 극장형, 고대비",
+  "tokens": {
+    "color": {
+      "bg": "#ffffff",
+      "bgDark": "#000000",
+      "bgSecondary": "#f5f5f7",
+      "bgSecondaryDark": "#1d1d1f",
+      "fg": "#1d1d1f",
+      "fgDark": "#f5f5f7",
+      "muted": "#6e6e73",
+      "mutedDark": "#86868b",
+      "primary": "#2997ff",
+      "primaryDark": "#2997ff",
+      "accent": "#2997ff",
+      "accentDark": "#2997ff",
+      "accentGlow": "rgba(41, 151, 255, 0.12)",
+      "accentGlowDark": "rgba(41, 151, 255, 0.3)",
+      "cardBorder": "rgba(0, 0, 0, 0.1)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.1)"
+    },
+    "font": {
+      "heading": "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif",
+      "body": "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "6px", "md": "12px", "lg": "20px" },
+    "motion": { "fast": "150ms", "base": "250ms" }
+  }
+}

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Apple Keynote — Sample Presentation</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000; --bg2: #1d1d1f; --text: #f5f5f7; --text2: #86868b;
+            --accent: #2997ff; --radius: 12px;
+            --card-bg: rgba(29,29,31,0.7); --card-border: rgba(255,255,255,0.10);
+            --row-alt: rgba(255,255,255,0.03);
+        }
+        [data-theme="light"] {
+            --bg: #ffffff; --bg2: #f5f5f7; --text: #1d1d1f; --text2: #5C5C61;
+            --accent: #2997ff;
+            --card-bg: rgba(245,245,247,0.7); --card-border: rgba(0,0,0,0.10);
+            --row-alt: rgba(0,0,0,0.03);
+        }
+
+        html { scroll-snap-type: y mandatory; overflow-y: scroll; overflow-x: hidden; scroll-behavior: smooth; }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+        body {
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg); color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image: repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,255,255,0.01) 40px, rgba(255,255,255,0.01) 41px);
+        }
+
+        h1, h2, h3, h4, h5, h6, .heading-font {
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .slide {
+            height: 100vh; height: 100dvh;
+            overflow: hidden; scroll-snap-align: start;
+            display: flex; flex-direction: column;
+            justify-content: center;
+            padding: clamp(2rem, 5vw, 6rem);
+            position: relative;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide > * {
+            opacity: 0; animation: fadeUp 0.5s ease forwards;
+        }
+        .slide > *:nth-child(1) { animation-delay: 0.1s; }
+        .slide > *:nth-child(2) { animation-delay: 0.2s; }
+        .slide > *:nth-child(3) { animation-delay: 0.3s; }
+        .slide > *:nth-child(4) { animation-delay: 0.4s; }
+        .slide > *:nth-child(5) { animation-delay: 0.5s; }
+        .slide > *:nth-child(6) { animation-delay: 0.6s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .slide > * { opacity: 1; animation: none !important; }
+            * { transition: none !important; }
+        }
+
+        /* ===== SLIDE 1: TITLE ===== */
+        .slide-title { align-items: flex-start; text-align: left; }
+        .slide-title .meta-row {
+            display: flex; align-items: center; gap: clamp(0.8rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .slide-title .meta-date {
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem); color: var(--text2);
+            font-weight: 500; letter-spacing: 0.05em;
+        }
+        .slide-title .badge-confidential {
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem); font-weight: 700;
+            color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em;
+            border: 1px solid var(--accent); border-radius: 4px;
+            padding: 0.2em 0.6em;
+        }
+        .slide-title h1 {
+            font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.08;
+            margin-bottom: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+        .slide-title .accent-line {
+            width: 80px; height: 3px; background: var(--accent);
+            border-radius: 2px; margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+        .slide-title .subtitle {
+            font-size: clamp(1rem, 2.2vw, 1.4rem); color: var(--text2);
+            font-weight: 500; line-height: 1.5; max-width: 600px;
+        }
+        .slide-title .brand {
+            font-size: clamp(0.65rem, 1vw, 0.8rem); color: var(--accent);
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        /* ===== SLIDE 2: SECTION DIVIDER ===== */
+        .slide-divider { align-items: flex-start; text-align: left; }
+        .slide-divider .section-number {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(3rem, 8vw, 7rem); font-weight: 800;
+            color: var(--accent); line-height: 1; letter-spacing: -0.04em;
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+        }
+        .slide-divider h2 {
+            font-size: clamp(1.8rem, 4.5vw, 3.5rem); font-weight: 700;
+            letter-spacing: -0.02em; line-height: 1.15;
+            margin-bottom: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+        .slide-divider .divider-line {
+            width: 60px; height: 2px; background: var(--accent); border-radius: 1px;
+        }
+        .slide-divider .section-desc {
+            font-size: clamp(0.9rem, 1.8vw, 1.1rem); color: var(--text2);
+            margin-top: clamp(1rem, 2vw, 1.5rem); max-width: 500px; line-height: 1.6;
+        }
+
+        /* ===== SLIDE 3: CONTENT (agenda items) ===== */
+        .slide-content { align-items: flex-start; text-align: left; }
+        .slide-content h2 {
+            font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .slide-content h2 .hl { color: var(--accent); }
+        .agenda-list {
+            list-style: none; display: flex; flex-direction: column;
+            gap: clamp(1rem, 2vw, 1.5rem); width: 100%; max-width: 800px;
+        }
+        .agenda-item {
+            display: flex; align-items: flex-start; gap: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+        .agenda-marker {
+            color: var(--accent); font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+            flex-shrink: 0; margin-top: 0.25em; font-weight: 700;
+        }
+        .agenda-body .agenda-title {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(1rem, 2vw, 1.3rem); font-weight: 700;
+            margin-bottom: 0.2em;
+        }
+        .agenda-body .agenda-desc {
+            font-size: clamp(0.8rem, 1.4vw, 1rem); color: var(--text2); line-height: 1.6;
+        }
+
+        /* ===== SLIDE 4: TWO-COLUMN COMPARISON ===== */
+        .slide-compare { align-items: flex-start; text-align: left; }
+        .slide-compare h2 {
+            font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            width: 100%;
+        }
+        .compare-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 2.5vw, 2rem); width: 100%; max-width: 900px;
+        }
+        .compare-col {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius); overflow: hidden;
+        }
+        .compare-header {
+            padding: clamp(0.6rem, 1.2vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(0.75rem, 1.3vw, 0.95rem); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em;
+        }
+        .compare-header-gray { background: var(--bg2); color: var(--text2); }
+        .compare-header-red { background: var(--accent); color: #fff; }
+        .compare-items { padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem); }
+        .compare-item {
+            font-size: clamp(0.8rem, 1.4vw, 1rem); color: var(--text);
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) 0;
+            border-bottom: 1px solid var(--card-border); line-height: 1.5;
+        }
+        .compare-item:last-child { border-bottom: none; }
+        .compare-item .item-bullet { color: var(--text2); margin-right: 0.5em; }
+        .compare-col-highlight .compare-item .item-bullet { color: var(--accent); }
+
+        @media (max-width: 600px) {
+            .compare-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== SLIDE 5: KPI METRICS ===== */
+        .slide-metrics { align-items: flex-start; text-align: left; }
+        .slide-metrics h2 {
+            font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            width: 100%;
+        }
+        .kpi-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem); width: 100%; max-width: 800px;
+        }
+        .kpi-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius); padding: clamp(1.2rem, 2vw, 1.8rem);
+            position: relative; overflow: hidden;
+        }
+        .kpi-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--accent);
+        }
+        .kpi-label {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem); color: var(--text2);
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+            margin-bottom: clamp(0.4rem, 0.8vw, 0.6rem);
+        }
+        .kpi-value {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.1;
+            margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+        }
+        .kpi-trend {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem); font-weight: 600;
+        }
+        .kpi-trend.up { color: #2ec4b6; }
+        .kpi-trend.down { color: var(--accent); }
+
+        @media (max-width: 500px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== SLIDE 6: PROCESS FLOW ===== */
+        .slide-flow { align-items: flex-start; text-align: left; }
+        .slide-flow h2 {
+            font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: clamp(1.5rem, 3vw, 3rem);
+            width: 100%;
+        }
+        .flow-pipeline {
+            display: flex; align-items: stretch;
+            gap: 0; width: 100%; max-width: 950px;
+            position: relative;
+        }
+        .flow-connector {
+            position: absolute; top: 50%; left: 0; right: 0;
+            height: 2px; background: var(--accent); z-index: 0;
+            transform: translateY(-50%); opacity: 0.4;
+        }
+        .flow-step {
+            flex: 1; position: relative; z-index: 1;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: clamp(1rem, 1.8vw, 1.5rem);
+            text-align: center;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .flow-step + .flow-step { margin-left: clamp(0.6rem, 1.5vw, 1.2rem); }
+        .flow-step.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(41,151,255,0.15);
+        }
+        .flow-step .step-num {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(1.2rem, 2.5vw, 2rem); font-weight: 800;
+            color: var(--accent); margin-bottom: 0.3rem; line-height: 1;
+        }
+        .flow-step .step-title {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(0.85rem, 1.5vw, 1.1rem); font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        .flow-step .step-desc {
+            font-size: clamp(0.65rem, 1vw, 0.8rem); color: var(--text2); line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .flow-pipeline { flex-direction: column; }
+            .flow-connector { display: none; }
+            .flow-step + .flow-step { margin-left: 0; margin-top: 0.8rem; }
+        }
+
+        /* ===== SLIDE 7: QUOTE/TESTIMONIAL ===== */
+        .slide-quote {
+            align-items: flex-start; text-align: left;
+            justify-content: center;
+        }
+        .quote-block {
+            border-left: 4px solid var(--accent);
+            padding-left: clamp(1.2rem, 3vw, 2.5rem);
+            max-width: 750px;
+        }
+        .quote-text {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(1.3rem, 3vw, 2.2rem); font-weight: 600;
+            line-height: 1.5; letter-spacing: -0.01em;
+            margin-bottom: clamp(1.2rem, 2.5vw, 2rem);
+        }
+        .quote-attribution {
+            display: flex; flex-direction: column; gap: 0.2rem;
+        }
+        .quote-author {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(0.9rem, 1.6vw, 1.1rem); font-weight: 700;
+        }
+        .quote-role {
+            font-size: clamp(0.75rem, 1.2vw, 0.9rem); color: var(--text2);
+        }
+
+        /* ===== SLIDE 8: Next Steps ===== */
+        .slide-next { align-items: flex-start; text-align: left; }
+        .slide-next h2 {
+            font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 700;
+            letter-spacing: -0.02em; margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            width: 100%;
+        }
+        .action-list {
+            display: flex; flex-direction: column;
+            gap: clamp(1rem, 2vw, 1.5rem); width: 100%; max-width: 750px;
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .action-item {
+            display: flex; align-items: flex-start; gap: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+        .action-num {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem); font-weight: 800;
+            color: var(--accent); flex-shrink: 0; line-height: 1.2;
+            min-width: 2em; text-align: right;
+        }
+        .action-body .action-title {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(1rem, 1.8vw, 1.2rem); font-weight: 700;
+            margin-bottom: 0.15em;
+        }
+        .action-body .action-desc {
+            font-size: clamp(0.8rem, 1.3vw, 0.95rem); color: var(--text2); line-height: 1.5;
+        }
+        .summary-box {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius); padding: clamp(1rem, 2vw, 1.5rem);
+            border-left: 4px solid var(--accent); max-width: 750px; width: 100%;
+        }
+        .summary-box .summary-label {
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+            font-size: clamp(0.65rem, 1vw, 0.75rem); font-weight: 700;
+            color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em;
+            margin-bottom: 0.4em;
+        }
+        .summary-box .summary-text {
+            font-size: clamp(0.85rem, 1.4vw, 1rem); color: var(--text2); line-height: 1.6;
+        }
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1rem, 2vw, 2rem);
+        }
+        .back-link {
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem); color: var(--accent);
+            text-decoration: none; font-weight: 600;
+            display: flex; align-items: center; gap: 0.3em;
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .theme-toggle {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 1px solid rgba(128,128,128,0.3); background: var(--bg2);
+            cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.2s;
+        }
+        .theme-toggle:hover { opacity: 0.7; }
+
+        /* ===== NAV DOTS ===== */
+        .nav-dots {
+            position: fixed; right: clamp(0.8rem, 2vw, 1.5rem);
+            top: 50%; transform: translateY(-50%); z-index: 100;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .nav-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--text2); opacity: 0.3; cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+            border: none;
+        }
+        .nav-dot.active { opacity: 1; background: var(--accent); transform: scale(1.3); }
+
+        /* ===== SLIDE COUNTER ===== */
+        .slide-counter {
+            position: fixed; bottom: clamp(0.8rem, 2vw, 1.5rem);
+            right: clamp(0.8rem, 2vw, 1.5rem); z-index: 100;
+            font-size: clamp(0.65rem, 1vw, 0.8rem); color: var(--text2);
+            font-variant-numeric: tabular-nums;
+            font-family: 'Pretendard Variable', Pretendard, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="./" class="back-link">&#8592; Gallery</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">&#9728;&#65039;</button>
+    </div>
+
+    <div class="nav-dots" id="navDots"></div>
+    <div class="slide-counter" id="counter">1 / 8</div>
+
+    <!-- ==================== SLIDE 1: TITLE ==================== -->
+    <section class="slide slide-title">
+        <div class="meta-row">
+            <span class="meta-date">2026.03.26</span>
+            <span class="badge-confidential">Confidential</span>
+        </div>
+        <h1>2026 전략 보고서</h1>
+        <div class="accent-line"></div>
+        <p class="subtitle">디지털 전환 가속화를 위한 핵심 전략과 실행 로드맵</p>
+        <div class="brand">Apple Keynote</div>
+    </section>
+
+    <!-- ==================== SLIDE 2: SECTION DIVIDER ==================== -->
+    <section class="slide slide-divider">
+        <div class="section-number">01</div>
+        <h2>경영 현황 분석</h2>
+        <div class="divider-line"></div>
+        <p class="section-desc">지난 분기 성과를 기반으로 한 현재 경영 환경 진단과 핵심 이슈 도출</p>
+    </section>
+
+    <!-- ==================== SLIDE 3: CONTENT (Agenda) ==================== -->
+    <section class="slide slide-content">
+        <h2><span class="hl">주요</span> 안건</h2>
+        <ul class="agenda-list">
+            <li class="agenda-item">
+                <span class="agenda-marker">&#9670;</span>
+                <div class="agenda-body">
+                    <div class="agenda-title">디지털 전환 전략 수립</div>
+                    <div class="agenda-desc">레거시 시스템 현대화 및 클라우드 마이그레이션 로드맵 검토</div>
+                </div>
+            </li>
+            <li class="agenda-item">
+                <span class="agenda-marker">&#9670;</span>
+                <div class="agenda-body">
+                    <div class="agenda-title">조직 역량 강화 방안</div>
+                    <div class="agenda-desc">핵심 인재 확보 전략 및 기술 역량 개발 프로그램 운영 계획</div>
+                </div>
+            </li>
+            <li class="agenda-item">
+                <span class="agenda-marker">&#9670;</span>
+                <div class="agenda-body">
+                    <div class="agenda-title">고객 경험 혁신</div>
+                    <div class="agenda-desc">AI 기반 개인화 서비스 도입 및 옴니채널 통합 플랫폼 구축</div>
+                </div>
+            </li>
+            <li class="agenda-item">
+                <span class="agenda-marker">&#9670;</span>
+                <div class="agenda-body">
+                    <div class="agenda-title">ESG 경영 실행 계획</div>
+                    <div class="agenda-desc">탄소 중립 목표 달성을 위한 단계별 이행 과제 및 모니터링 체계</div>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ==================== SLIDE 4: TWO-COLUMN COMPARISON ==================== -->
+    <section class="slide slide-compare">
+        <h2>현황 vs 목표</h2>
+        <div class="compare-grid">
+            <div class="compare-col">
+                <div class="compare-header compare-header-gray">AS-IS</div>
+                <div class="compare-items">
+                    <div class="compare-item"><span class="item-bullet">&#8212;</span>수동 프로세스 중심 운영</div>
+                    <div class="compare-item"><span class="item-bullet">&#8212;</span>부서별 사일로 데이터</div>
+                    <div class="compare-item"><span class="item-bullet">&#8212;</span>온프레미스 인프라 의존</div>
+                    <div class="compare-item"><span class="item-bullet">&#8212;</span>반응적 고객 대응 체계</div>
+                </div>
+            </div>
+            <div class="compare-col compare-col-highlight">
+                <div class="compare-header compare-header-red">TO-BE</div>
+                <div class="compare-items">
+                    <div class="compare-item"><span class="item-bullet">&#9654;</span>자동화 및 AI 기반 운영</div>
+                    <div class="compare-item"><span class="item-bullet">&#9654;</span>통합 데이터 플랫폼 구축</div>
+                    <div class="compare-item"><span class="item-bullet">&#9654;</span>하이브리드 클라우드 전환</div>
+                    <div class="compare-item"><span class="item-bullet">&#9654;</span>선제적 고객 경험 설계</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 5: KPI METRICS ==================== -->
+    <section class="slide slide-metrics">
+        <h2>핵심 <span style="color:var(--accent)">성과 지표</span></h2>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">매출 성장률</div>
+                <div class="kpi-value">+23.4%</div>
+                <div class="kpi-trend up">&#9650; 전년 대비 5.2%p 증가</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">고객 만족도 (NPS)</div>
+                <div class="kpi-value">78점</div>
+                <div class="kpi-trend up">&#9650; 목표 대비 8점 초과</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">운영 비용 절감</div>
+                <div class="kpi-value">&#8361;4.2B</div>
+                <div class="kpi-trend up">&#9650; 자동화 도입 효과 반영</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">시스템 장애율</div>
+                <div class="kpi-value">0.03%</div>
+                <div class="kpi-trend down">&#9660; 전 분기 대비 0.12%p 감소</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 6: PROCESS FLOW ==================== -->
+    <section class="slide slide-flow">
+        <h2>실행 <span style="color:var(--accent)">로드맵</span></h2>
+        <div class="flow-pipeline">
+            <div class="flow-connector"></div>
+            <div class="flow-step">
+                <div class="step-num">01</div>
+                <div class="step-title">진단</div>
+                <div class="step-desc">현황 분석 및<br>문제점 도출</div>
+            </div>
+            <div class="flow-step active">
+                <div class="step-num">02</div>
+                <div class="step-title">설계</div>
+                <div class="step-desc">전략 수립 및<br>아키텍처 설계</div>
+            </div>
+            <div class="flow-step">
+                <div class="step-num">03</div>
+                <div class="step-title">구축</div>
+                <div class="step-desc">시스템 개발 및<br>파일럿 운영</div>
+            </div>
+            <div class="flow-step">
+                <div class="step-num">04</div>
+                <div class="step-title">확산</div>
+                <div class="step-desc">전사 적용 및<br>지속 개선</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 7: QUOTE ==================== -->
+    <section class="slide slide-quote">
+        <div class="quote-block">
+            <p class="quote-text">"디지털 전환은 단순한 기술 도입이 아니라, 조직 문화와 일하는 방식의 근본적인 변화입니다. 우리는 이 변화의 중심에서 새로운 가치를 만들어 가고 있습니다."</p>
+            <div class="quote-attribution">
+                <span class="quote-author">김영수 대표이사</span>
+                <span class="quote-role">CEO, 주식회사 미래기술</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SLIDE 8: 결론 ==================== -->
+    <section class="slide slide-next">
+        <h2>결론</h2>
+        <div class="action-list">
+            <div class="action-item">
+                <span class="action-num">01.</span>
+                <div class="action-body">
+                    <div class="action-title">디지털 전환의 방향성</div>
+                    <div class="action-desc">자동화와 데이터 기반 의사결정을 통한 운영 효율화 전략을 검토했습니다</div>
+                </div>
+            </div>
+            <div class="action-item">
+                <span class="action-num">02.</span>
+                <div class="action-body">
+                    <div class="action-title">핵심 성과 지표 확인</div>
+                    <div class="action-desc">30% 매출 성장 목표와 고객 경험 혁신을 위한 KPI 체계를 정리했습니다</div>
+                </div>
+            </div>
+            <div class="action-item">
+                <span class="action-num">03.</span>
+                <div class="action-body">
+                    <div class="action-title">실행 로드맵 개요</div>
+                    <div class="action-desc">단계별 추진 전략과 전사적 참여 구조의 중요성을 확인했습니다</div>
+                </div>
+            </div>
+        </div>
+        <div class="summary-box">
+            <div class="summary-label">전략기획실</div>
+            <div class="summary-text">본 프레젠테이션에서 디지털 전환 전략의 핵심 요소와 기대 효과를 살펴보았습니다. 감사합니다.</div>
+        </div>
+    </section>
+
+    <script>
+        /* ===== THEME TOGGLE ===== */
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme-keynote-dark', t);
+        }
+        function toggleTheme() {
+            var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            setTheme(cur === 'dark' ? 'light' : 'dark');
+        }
+        (function() {
+            var saved = localStorage.getItem('theme-keynote-dark');
+            if (saved) setTheme(saved);
+        })();
+
+        /* ===== SLIDE PRESENTATION ===== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.current = 0;
+                this.total = this.slides.length;
+                this.isAnimating = false;
+                this.wheelAccum = 0;
+                this.wheelThreshold = 50;
+                this.touchStartY = 0;
+                this.init();
+            }
+            init() {
+                this.buildDots();
+                this.updateUI();
+                document.addEventListener('keydown', function(e) { this.onKey(e); }.bind(this));
+                window.addEventListener('wheel', function(e) { this.onWheel(e); }.bind(this), { passive: false });
+                window.addEventListener('touchstart', function(e) {
+                    this.touchStartY = e.touches[0].clientY;
+                }.bind(this), { passive: true });
+                window.addEventListener('touchend', function(e) {
+                    var dy = this.touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(dy) > 50) { dy > 0 ? this.next() : this.prev(); }
+                }.bind(this), { passive: true });
+                var self = this;
+                var obs = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(en) {
+                        if (en.isIntersecting) {
+                            self.current = Array.prototype.indexOf.call(self.slides, en.target);
+                            self.updateUI();
+                        }
+                    });
+                }, { threshold: 0.6 });
+                this.slides.forEach(function(s) { obs.observe(s); });
+            }
+            buildDots() {
+                var c = document.getElementById('navDots');
+                for (var i = 0; i < this.total; i++) {
+                    var d = document.createElement('button');
+                    d.className = 'nav-dot';
+                    d.setAttribute('aria-label', 'Slide ' + (i + 1));
+                    d.onclick = (function(idx) { return function() { this.goTo(idx); }.bind(this); }.bind(this))(i);
+                    c.appendChild(d);
+                }
+            }
+            updateUI() {
+                var self = this;
+                document.querySelectorAll('.nav-dot').forEach(function(d, i) {
+                    d.classList.toggle('active', i === self.current);
+                });
+                document.getElementById('counter').textContent = (this.current + 1) + ' / ' + this.total;
+            }
+            goTo(i) {
+                if (i < 0 || i >= this.total || this.isAnimating) return;
+                this.isAnimating = true;
+                this.current = i;
+                this.slides[i].scrollIntoView({ behavior: 'smooth' });
+                this.updateUI();
+                var self = this;
+                setTimeout(function() { self.isAnimating = false; }, 600);
+            }
+            next() { this.goTo(this.current + 1); }
+            prev() { this.goTo(this.current - 1); }
+            onKey(e) {
+                if (['ArrowDown','ArrowRight','Space',' ','PageDown'].includes(e.key)) { e.preventDefault(); this.next(); }
+                if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key)) { e.preventDefault(); this.prev(); }
+                if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
+                if (e.key === 'End') { e.preventDefault(); this.goTo(this.total - 1); }
+            }
+            onWheel(e) {
+                e.preventDefault();
+                this.wheelAccum += e.deltaY;
+                if (Math.abs(this.wheelAccum) >= this.wheelThreshold) {
+                    this.wheelAccum > 0 ? this.next() : this.prev();
+                    this.wheelAccum = 0;
+                }
+            }
+        }
+        new SlidePresentation();
+    </script>
+</body>
+</html>

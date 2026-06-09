@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Stormy Night — Sample Presentation</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #111111;
+            --bg2: #1a1a1a;
+            --text: #f0f0f0;
+            --text2: #888888;
+            --accent: #2dd4bf;
+            --accent2: #f43f5e;
+            --radius: 14px;
+            --font-heading: 'General Sans', sans-serif;
+            --font-body: 'Source Sans 3', sans-serif;
+            --card-bg: rgba(26,26,26,0.8);
+            --card-border: rgba(255,255,255,0.08);
+        }
+        .light-theme {
+            --bg: #ffffff;
+            --bg2: #f5f5f5;
+            --text: #111111;
+            --text2: #666666;
+            --accent: #0d9488;
+            --accent2: #e11d48;
+            --card-bg: rgba(245,245,245,0.9);
+            --card-border: rgba(0,0,0,0.08);
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.15s !important; }
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(180deg, #111111 0%, #0f1413 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.4s, color 0.4s;
+        }
+        .light-theme body,
+        body.light-theme-bg {
+            background: linear-gradient(180deg, #ffffff 0%, #f7fafa 100%);
+        }
+        .light-theme {
+            background: linear-gradient(180deg, #ffffff 0%, #f7fafa 100%);
+        }
+
+        /* ── Slide base ── */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: clamp(2rem, 5vw, 5rem);
+        }
+
+        /* ── Typography ── */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 6vw, 4.2rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: var(--text);
+        }
+        h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 4vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text);
+        }
+        h3 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+            color: var(--text);
+        }
+        p, li {
+            font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+            line-height: 1.7;
+            color: var(--text2);
+        }
+
+        /* ── Reveal Animation ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide.visible .reveal:nth-child(2) { transition-delay: 0.08s; }
+        .slide.visible .reveal:nth-child(3) { transition-delay: 0.16s; }
+        .slide.visible .reveal:nth-child(4) { transition-delay: 0.24s; }
+        .slide.visible .reveal:nth-child(5) { transition-delay: 0.32s; }
+        .slide.visible .reveal:nth-child(6) { transition-delay: 0.40s; }
+        .slide.visible .reveal:nth-child(7) { transition-delay: 0.48s; }
+        .slide.visible .reveal:nth-child(8) { transition-delay: 0.56s; }
+
+        /* ══════════════════════════════════════
+           Slide 1 — Title
+           ══════════════════════════════════════ */
+        .slide-title {
+            align-items: center;
+            text-align: center;
+        }
+        .slide-title .teal-glow {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(45,212,191,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .light-theme .slide-title .teal-glow {
+            background: radial-gradient(circle, rgba(13,148,136,0.08) 0%, transparent 70%);
+        }
+        .slide-title > * { position: relative; z-index: 1; }
+        .pill-badge {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.6rem, 1vw, 0.72rem);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            background: rgba(45,212,191,0.12);
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+        .light-theme .pill-badge {
+            background: rgba(13,148,136,0.1);
+        }
+        .slide-title h1 { margin-bottom: 1rem; max-width: 700px; }
+        .slide-title h1 .crimson { color: var(--accent2); }
+        .slide-title .subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--text2);
+            max-width: 550px;
+        }
+        .slide-title .dual-line {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        .slide-title .dual-line span {
+            height: 3px;
+            width: 40px;
+            border-radius: 2px;
+        }
+
+        /* ══════════════════════════════════════
+           Slide 2 — Section Divider
+           ══════════════════════════════════════ */
+        .slide-divider {
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .divider-number {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.25;
+            margin-bottom: 1rem;
+        }
+        .divider-line {
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+            margin-bottom: 1.5rem;
+        }
+        .slide-divider p {
+            font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+            color: var(--text2);
+            max-width: 480px;
+            margin-top: 0.75rem;
+        }
+
+        /* ══════════════════════════════════════
+           Slide 3 — Status Checklist
+           ══════════════════════════════════════ */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.5vw, 1rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+            max-width: 700px;
+        }
+        .status-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 2.5vw, 1.5rem);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            transition: transform 0.3s;
+        }
+        .status-item:hover { transform: translateX(6px); }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.35rem;
+        }
+        .status-dot.teal { background: var(--accent); box-shadow: 0 0 6px rgba(45,212,191,0.4); }
+        .status-dot.crimson { background: var(--accent2); box-shadow: 0 0 6px rgba(244,63,94,0.4); }
+        .status-item strong {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.15rem;
+        }
+        .status-item span {
+            font-size: clamp(0.78rem, 1.3vw, 0.92rem);
+            color: var(--text2);
+        }
+
+        /* ══════════════════════════════════════
+           Slide 4 — Two Column Status Comparison
+           ══════════════════════════════════════ */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 3vw, 2rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+        }
+        @media (max-width: 680px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+        .col-section { display: flex; flex-direction: column; gap: 0.75rem; }
+        .col-header {
+            font-family: var(--font-heading);
+            font-size: clamp(0.7rem, 1.2vw, 0.82rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .col-header.teal { color: var(--accent); border-bottom: 2px solid var(--accent); }
+        .col-header.crimson { color: var(--accent2); border-bottom: 2px solid var(--accent2); }
+        .col-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.8rem, 2vw, 1.2rem);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: calc(var(--radius) - 2px);
+        }
+        .col-marker {
+            width: 4px;
+            height: 100%;
+            min-height: 32px;
+            border-radius: 2px;
+            flex-shrink: 0;
+            align-self: stretch;
+        }
+        .col-marker.teal { background: var(--accent); }
+        .col-marker.crimson { background: var(--accent2); }
+        .col-item strong {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.82rem, 1.4vw, 0.95rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.1rem;
+        }
+        .col-item span {
+            font-size: clamp(0.72rem, 1.2vw, 0.85rem);
+            color: var(--text2);
+        }
+
+        /* ══════════════════════════════════════
+           Slide 5 — Data/Metrics Dashboard
+           ══════════════════════════════════════ */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(0.6rem, 1.5vw, 1rem);
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+            max-width: 800px;
+        }
+        @media (max-width: 560px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: clamp(1rem, 2.5vw, 1.8rem);
+            border-top: 3px solid transparent;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .metric-card:hover { transform: translateY(-4px); }
+        .metric-card.teal { border-top-color: var(--accent); }
+        .metric-card.crimson {
+            border-top-color: var(--accent2);
+            box-shadow: 0 4px 24px rgba(244,63,94,0.08);
+        }
+        .light-theme .metric-card.crimson {
+            box-shadow: 0 4px 24px rgba(225,29,72,0.08);
+        }
+        .metric-label {
+            font-family: var(--font-heading);
+            font-size: clamp(0.65rem, 1.1vw, 0.78rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+        .metric-card.teal .metric-label { color: var(--accent); }
+        .metric-card.crimson .metric-label { color: var(--accent2); }
+        .metric-value {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+            line-height: 1.1;
+        }
+        .metric-desc {
+            font-size: clamp(0.72rem, 1.2vw, 0.85rem);
+            color: var(--text2);
+            margin-bottom: 0.6rem;
+        }
+        .metric-trend {
+            font-family: var(--font-heading);
+            font-size: clamp(0.68rem, 1.1vw, 0.8rem);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+        .metric-trend.up {
+            color: var(--accent);
+            background: rgba(45,212,191,0.1);
+        }
+        .metric-trend.down {
+            color: var(--accent2);
+            background: rgba(244,63,94,0.1);
+        }
+        .light-theme .metric-trend.up { background: rgba(13,148,136,0.08); }
+        .light-theme .metric-trend.down { background: rgba(225,29,72,0.08); }
+
+        /* ══════════════════════════════════════
+           Slide 6 — Process/Pipeline
+           ══════════════════════════════════════ */
+        .pipeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-top: clamp(1rem, 2.5vw, 2rem);
+            max-width: 640px;
+        }
+        .pipeline-step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            position: relative;
+        }
+        .pipeline-track {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            width: 36px;
+        }
+        .pipeline-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .pipeline-dot.teal { background: var(--accent); box-shadow: 0 0 8px rgba(45,212,191,0.4); }
+        .pipeline-dot.crimson { background: var(--accent2); box-shadow: 0 0 8px rgba(244,63,94,0.4); }
+        .pipeline-connector {
+            width: 2px;
+            flex-grow: 1;
+            min-height: 40px;
+        }
+        .pipeline-connector.teal { background: var(--accent); opacity: 0.4; }
+        .pipeline-connector.crimson { background: var(--accent2); opacity: 0.4; }
+        .pipeline-content {
+            padding-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+        .pipeline-content strong {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.2rem;
+        }
+        .pipeline-content span {
+            font-size: clamp(0.78rem, 1.3vw, 0.9rem);
+            color: var(--text2);
+        }
+        .pipeline-badge {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.58rem, 0.9vw, 0.68rem);
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-top: 0.4rem;
+        }
+        .pipeline-badge.complete { background: rgba(45,212,191,0.12); color: var(--accent); }
+        .pipeline-badge.blocked { background: rgba(244,63,94,0.12); color: var(--accent2); }
+        .light-theme .pipeline-badge.complete { background: rgba(13,148,136,0.1); }
+        .light-theme .pipeline-badge.blocked { background: rgba(225,29,72,0.1); }
+
+        /* ══════════════════════════════════════
+           Slide 7 — Quote
+           ══════════════════════════════════════ */
+        .slide-quote {
+            align-items: center;
+            text-align: center;
+        }
+        .quote-block {
+            border-left: 4px solid var(--accent);
+            padding-left: clamp(1.2rem, 3vw, 2rem);
+            text-align: left;
+            max-width: 620px;
+        }
+        .quote-text {
+            font-family: var(--font-heading);
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+        .quote-attr {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .quote-attr-line {
+            width: 24px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+        }
+        .quote-attr-name {
+            font-family: var(--font-heading);
+            font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+            font-weight: 600;
+            color: var(--text);
+        }
+        .quote-attr-role {
+            font-size: clamp(0.72rem, 1.1vw, 0.85rem);
+            color: var(--text2);
+            margin-left: 0.5rem;
+        }
+
+        /* ══════════════════════════════════════
+           Slide 8 — Summary
+           ══════════════════════════════════════ */
+        .summary-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1.2vw, 0.8rem);
+            margin-top: clamp(1rem, 2.5vw, 1.5rem);
+            max-width: 600px;
+        }
+        .summary-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            padding: clamp(0.7rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.3rem);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+        }
+        .summary-icon {
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        .summary-icon.done {
+            color: var(--accent);
+            background: rgba(45,212,191,0.1);
+        }
+        .summary-icon.pending {
+            color: var(--accent2);
+            background: rgba(244,63,94,0.1);
+        }
+        .light-theme .summary-icon.done { background: rgba(13,148,136,0.08); }
+        .light-theme .summary-icon.pending { background: rgba(225,29,72,0.08); }
+        .summary-item strong {
+            font-family: var(--font-heading);
+            font-size: clamp(0.82rem, 1.4vw, 0.95rem);
+            font-weight: 600;
+            color: var(--text);
+        }
+        .summary-item span {
+            font-size: clamp(0.72rem, 1.2vw, 0.85rem);
+            color: var(--text2);
+            margin-left: auto;
+        }
+        .summary-bar {
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 2.5vw, 1.5rem);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 600px;
+        }
+        .summary-bar-track {
+            flex-grow: 1;
+            height: 8px;
+            background: rgba(128,128,128,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .summary-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 66%, var(--accent2) 66%, var(--accent2) 100%);
+        }
+        .summary-bar-label {
+            font-family: var(--font-heading);
+            font-size: clamp(0.7rem, 1.1vw, 0.82rem);
+            font-weight: 600;
+            color: var(--text2);
+            flex-shrink: 0;
+        }
+
+        /* ── UI Controls ── */
+        .back-link {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-family: var(--font-heading);
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--text2);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            z-index: 100;
+            transition: all 0.2s;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .back-link:hover { color: var(--text); border-color: var(--accent); }
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+            line-height: 1;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .theme-toggle:hover { border-color: var(--accent); }
+        .nav-dots {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text2);
+            opacity: 0.35;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+        .dot.active {
+            background: var(--accent);
+            opacity: 1;
+            transform: scale(1.4);
+        }
+        .dot:hover { opacity: 0.7; }
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem;
+            right: 1.5rem;
+            font-family: var(--font-heading);
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            color: var(--text2);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 0.35rem 0.7rem;
+            border-radius: 8px;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        @media (max-height: 500px) { .nav-dots { display: none; } }
+        @media (max-width: 480px) {
+            .slide { padding: clamp(1.5rem, 4vw, 3rem) clamp(1.2rem, 4vw, 2rem); }
+            .nav-dots { right: 0.75rem; gap: 0.35rem; }
+            .dot { width: 6px; height: 6px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="./" class="back-link">&larr; Gallery</a>
+    <div class="theme-toggle" onclick="setTheme(document.body.classList.contains('light-theme')?'dark':'light')"><span id="themeIcon">&#9788;</span></div>
+    <nav class="nav-dots" id="navDots"></nav>
+    <div class="slide-counter"><span id="counterCurrent">1</span> / <span id="counterTotal">8</span></div>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 1: Title
+         ═══════════════════════════════════════════ -->
+    <section class="slide slide-title" id="slide-0">
+        <div class="teal-glow"></div>
+        <div class="reveal pill-badge">STORMY NIGHT</div>
+        <h1 class="reveal">운영 데이터를 위한<br><span class="crimson">실시간</span> 대시보드 테마</h1>
+        <p class="reveal subtitle">틸과 크림슨의 듀얼 액센트로 정상과 경고 상태를 직관적으로 구분하는 미션 컨트롤 디자인</p>
+        <div class="reveal dual-line">
+            <span style="background: var(--accent);"></span>
+            <span style="background: var(--accent2);"></span>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 2: Section Divider
+         ═══════════════════════════════════════════ -->
+    <section class="slide slide-divider" id="slide-1">
+        <div class="reveal divider-number">01</div>
+        <div class="reveal divider-line"></div>
+        <h2 class="reveal">시스템 상태 개요</h2>
+        <p class="reveal">전체 운영 환경의 핵심 지표와 현재 상태를 한눈에 확인합니다</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 3: Status Checklist
+         ═══════════════════════════════════════════ -->
+    <section class="slide" id="slide-2">
+        <h2 class="reveal">운영 상태 점검</h2>
+        <div class="status-list">
+            <div class="status-item reveal">
+                <div class="status-dot teal"></div>
+                <div>
+                    <strong>API 게이트웨이</strong>
+                    <span>응답 시간 45ms, 모든 엔드포인트 정상 작동 중</span>
+                </div>
+            </div>
+            <div class="status-item reveal">
+                <div class="status-dot teal"></div>
+                <div>
+                    <strong>데이터베이스 클러스터</strong>
+                    <span>Primary/Replica 동기화 완료, 쿼리 레이턴시 정상 범위</span>
+                </div>
+            </div>
+            <div class="status-item reveal">
+                <div class="status-dot teal"></div>
+                <div>
+                    <strong>CDN 배포 상태</strong>
+                    <span>글로벌 엣지 노드 98.7% 가용률, 캐시 히트율 94%</span>
+                </div>
+            </div>
+            <div class="status-item reveal">
+                <div class="status-dot crimson"></div>
+                <div>
+                    <strong>메모리 사용량 경고</strong>
+                    <span>Worker 노드 3번 메모리 87% 도달 &mdash; 스케일링 검토 필요</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 4: Two-Column Status Comparison
+         ═══════════════════════════════════════════ -->
+    <section class="slide" id="slide-3">
+        <h2 class="reveal">서비스 운영 현황</h2>
+        <div class="two-col">
+            <div class="col-section reveal">
+                <div class="col-header teal">&#9679; 정상 운영</div>
+                <div class="col-item">
+                    <div class="col-marker teal"></div>
+                    <div>
+                        <strong>결제 시스템</strong>
+                        <span>트랜잭션 성공률 99.97%</span>
+                    </div>
+                </div>
+                <div class="col-item">
+                    <div class="col-marker teal"></div>
+                    <div>
+                        <strong>인증 서비스</strong>
+                        <span>OAuth/SSO 전 구간 정상</span>
+                    </div>
+                </div>
+                <div class="col-item">
+                    <div class="col-marker teal"></div>
+                    <div>
+                        <strong>알림 파이프라인</strong>
+                        <span>푸시/이메일 전송 지연 없음</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-section reveal">
+                <div class="col-header crimson">&#9679; 주의 필요</div>
+                <div class="col-item">
+                    <div class="col-marker crimson"></div>
+                    <div>
+                        <strong>검색 인덱싱</strong>
+                        <span>재인덱싱 지연, ETA 2시간</span>
+                    </div>
+                </div>
+                <div class="col-item">
+                    <div class="col-marker crimson"></div>
+                    <div>
+                        <strong>로그 수집기</strong>
+                        <span>버퍼 큐 85% &mdash; 증설 권고</span>
+                    </div>
+                </div>
+                <div class="col-item">
+                    <div class="col-marker crimson"></div>
+                    <div>
+                        <strong>배치 스케줄러</strong>
+                        <span>야간 배치 2건 재시도 대기 중</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 5: Data/Metrics Dashboard
+         ═══════════════════════════════════════════ -->
+    <section class="slide" id="slide-4">
+        <h2 class="reveal">핵심 운영 지표</h2>
+        <div class="metrics-grid">
+            <div class="metric-card teal reveal">
+                <div class="metric-label">가동률</div>
+                <div class="metric-value">99.95%</div>
+                <div class="metric-desc">30일 기준 서비스 가용성</div>
+                <div class="metric-trend up">&#9650; +0.12%</div>
+            </div>
+            <div class="metric-card teal reveal">
+                <div class="metric-label">처리량</div>
+                <div class="metric-value">1.2M</div>
+                <div class="metric-desc">일일 평균 요청 처리 건수</div>
+                <div class="metric-trend up">&#9650; +18%</div>
+            </div>
+            <div class="metric-card teal reveal">
+                <div class="metric-label">평균 응답</div>
+                <div class="metric-value">52ms</div>
+                <div class="metric-desc">P95 레이턴시 기준</div>
+                <div class="metric-trend up">&#9650; -8ms</div>
+            </div>
+            <div class="metric-card crimson reveal">
+                <div class="metric-label">에러율</div>
+                <div class="metric-value">0.47%</div>
+                <div class="metric-desc">임계치 0.3% 초과 상태</div>
+                <div class="metric-trend down">&#9660; +0.15%</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 6: Process/Pipeline
+         ═══════════════════════════════════════════ -->
+    <section class="slide" id="slide-5">
+        <h2 class="reveal">배포 파이프라인</h2>
+        <div class="pipeline">
+            <div class="pipeline-step reveal">
+                <div class="pipeline-track">
+                    <div class="pipeline-dot teal"></div>
+                    <div class="pipeline-connector teal"></div>
+                </div>
+                <div class="pipeline-content">
+                    <strong>코드 빌드</strong>
+                    <span>TypeScript 컴파일 및 번들링 완료 (2m 14s)</span>
+                    <div><span class="pipeline-badge complete">Complete</span></div>
+                </div>
+            </div>
+            <div class="pipeline-step reveal">
+                <div class="pipeline-track">
+                    <div class="pipeline-dot teal"></div>
+                    <div class="pipeline-connector teal"></div>
+                </div>
+                <div class="pipeline-content">
+                    <strong>테스트 스위트</strong>
+                    <span>단위 342개, 통합 28개 &mdash; 전체 통과 (4m 51s)</span>
+                    <div><span class="pipeline-badge complete">Complete</span></div>
+                </div>
+            </div>
+            <div class="pipeline-step reveal">
+                <div class="pipeline-track">
+                    <div class="pipeline-dot teal"></div>
+                    <div class="pipeline-connector crimson"></div>
+                </div>
+                <div class="pipeline-content">
+                    <strong>스테이징 배포</strong>
+                    <span>스테이징 환경 롤아웃 및 스모크 테스트 통과</span>
+                    <div><span class="pipeline-badge complete">Complete</span></div>
+                </div>
+            </div>
+            <div class="pipeline-step reveal">
+                <div class="pipeline-track">
+                    <div class="pipeline-dot crimson"></div>
+                </div>
+                <div class="pipeline-content">
+                    <strong>프로덕션 배포</strong>
+                    <span>승인 대기 중 &mdash; 보안 리뷰 완료 후 진행 예정</span>
+                    <div><span class="pipeline-badge blocked">Pending</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 7: Quote
+         ═══════════════════════════════════════════ -->
+    <section class="slide slide-quote" id="slide-6">
+        <div class="quote-block reveal">
+            <div class="quote-text">"좋은 모니터링 시스템은 문제가 발생하기 전에 이야기를 시작한다. 데이터는 경고가 아니라 예방의 언어가 되어야 한다."</div>
+            <div class="quote-attr">
+                <span class="quote-attr-line"></span>
+                <span class="quote-attr-name">김서현</span>
+                <span class="quote-attr-role">SRE 팀 리드</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         Slide 8: System Summary
+         ═══════════════════════════════════════════ -->
+    <section class="slide" id="slide-7">
+        <h2 class="reveal">시스템 요약</h2>
+        <div class="summary-list">
+            <div class="summary-item reveal">
+                <div class="summary-icon done">&#10003;</div>
+                <strong>다크 UI와 번개 이펙트 디자인 시스템</strong>
+                <span style="color: var(--accent);">Covered</span>
+            </div>
+            <div class="summary-item reveal">
+                <div class="summary-icon done">&#10003;</div>
+                <strong>시스템 모니터링 스타일 데이터 시각화</strong>
+                <span style="color: var(--accent);">Covered</span>
+            </div>
+            <div class="summary-item reveal">
+                <div class="summary-icon done">&#10003;</div>
+                <strong>스토미 나이트 테마의 인터랙션 패턴</strong>
+                <span style="color: var(--accent);">Covered</span>
+            </div>
+        </div>
+        <div class="summary-bar reveal">
+            <span class="summary-bar-label">발표 완료</span>
+            <div class="summary-bar-track">
+                <div class="summary-bar-fill" style="width: 100%;"></div>
+            </div>
+            <span class="summary-bar-label">100%</span>
+        </div>
+    </section>
+
+    <script>
+    /* ── Theme Toggle ── */
+    function setTheme(t) {
+        document.body.classList.toggle('light-theme', t === 'light');
+        document.documentElement.classList.toggle('light-theme', t === 'light');
+        document.getElementById('themeIcon').textContent = t === 'light' ? '\u263E' : '\u2606';
+        localStorage.setItem('theme-stormy-night', t);
+    }
+    (function() {
+        var s = localStorage.getItem('theme-stormy-night');
+        if (s) setTheme(s);
+        else if (window.matchMedia('(prefers-color-scheme: light)').matches) setTheme('light');
+    })();
+
+    /* ── SlidePresentation ── */
+    class SlidePresentation {
+        constructor() {
+            this.slides = [].slice.call(document.querySelectorAll('.slide'));
+            this.current = 0;
+            this.total = this.slides.length;
+            this.wheelAcc = 0;
+            this.wheelTimer = null;
+            this.touchY = 0;
+            this.init();
+        }
+
+        init() {
+            this.buildDots();
+            this.updateUI();
+            this.slides[0].classList.add('visible');
+
+            var self = this;
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault(); self.next();
+                }
+                if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    e.preventDefault(); self.prev();
+                }
+            });
+
+            document.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                self.wheelAcc += e.deltaY;
+                clearTimeout(self.wheelTimer);
+                self.wheelTimer = setTimeout(function() {
+                    if (Math.abs(self.wheelAcc) > 50) {
+                        self.wheelAcc > 0 ? self.next() : self.prev();
+                    }
+                    self.wheelAcc = 0;
+                }, 80);
+            }, { passive: false });
+
+            document.addEventListener('touchstart', function(e) {
+                self.touchY = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', function(e) {
+                var d = self.touchY - e.changedTouches[0].clientY;
+                if (Math.abs(d) > 50) {
+                    d > 0 ? self.next() : self.prev();
+                }
+            }, { passive: true });
+        }
+
+        buildDots() {
+            var nav = document.getElementById('navDots');
+            var self = this;
+            this.slides.forEach(function(_, i) {
+                var d = document.createElement('div');
+                d.className = 'dot' + (i === 0 ? ' active' : '');
+                d.addEventListener('click', function() { self.goTo(i); });
+                nav.appendChild(d);
+            });
+        }
+
+        goTo(i) {
+            if (i < 0 || i >= this.total || i === this.current) return;
+            this.slides[this.current].classList.remove('visible');
+            this.current = i;
+            this.slides[this.current].classList.add('visible');
+            this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+            this.updateUI();
+        }
+
+        next() { this.goTo(this.current + 1); }
+        prev() { this.goTo(this.current - 1); }
+
+        updateUI() {
+            var current = this.current;
+            [].slice.call(document.querySelectorAll('.dot')).forEach(function(d, i) {
+                d.classList.toggle('active', i === current);
+            });
+            document.getElementById('counterCurrent').textContent = this.current + 1;
+            document.getElementById('counterTotal').textContent = this.total;
+        }
+    }
+
+    new SlidePresentation();
+    </script>
+</body>
+</html>

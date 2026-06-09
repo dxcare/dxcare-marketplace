@@ -1,0 +1,30 @@
+{
+  "preset": "paper-editorial",
+  "category": "education",
+  "description": "클래식 에디토리얼. 세리프 타이포 중심, 최소한의 장식.",
+  "mood": "문학적, 잡지, 스토리텔링",
+  "tokens": {
+    "color": {
+      "bg": "#faf9f6",
+      "bgDark": "#1a1a1a",
+      "bgSecondary": "#f5f3ef",
+      "bgSecondaryDark": "#242424",
+      "fg": "#1a1a1a",
+      "fgDark": "#ededed",
+      "muted": "#666666",
+      "mutedDark": "#999999",
+      "primary": "#1a1a1a",
+      "primaryDark": "#e5e5e5",
+      "accent": "#b45309",
+      "cardBorder": "rgba(0, 0, 0, 0.08)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.08)"
+    },
+    "font": {
+      "heading": "'Playfair Display', 'Noto Serif KR', serif",
+      "body": "'Lato', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "0px", "md": "0px", "lg": "0px" },
+    "motion": { "fast": "150ms", "base": "280ms" }
+  }
+}

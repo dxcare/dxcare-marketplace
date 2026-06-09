@@ -1,0 +1,30 @@
+{
+  "preset": "midnight-jewel",
+  "category": "investor",
+  "description": "딥 네이비 + 에메랄드/골드 보석 톤. 프리미엄 투자 제안.",
+  "mood": "투자, 경영진, 프리미엄",
+  "tokens": {
+    "color": {
+      "bg": "#fafbfc",
+      "bgDark": "#0a0e1a",
+      "bgSecondary": "#f0f2f5",
+      "bgSecondaryDark": "#111827",
+      "fg": "#111827",
+      "fgDark": "#e8eaed",
+      "muted": "#6b7280",
+      "mutedDark": "#9ca3af",
+      "primary": "#059669",
+      "primaryDark": "#34d399",
+      "accent": "#f0b429",
+      "cardBorder": "rgba(0, 0, 0, 0.08)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.08)"
+    },
+    "font": {
+      "heading": "'Playfair Display', 'Noto Serif KR', serif",
+      "body": "'Pretendard Variable', Pretendard, sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "4px", "md": "10px", "lg": "16px" },
+    "motion": { "fast": "200ms", "base": "350ms" }
+  }
+}

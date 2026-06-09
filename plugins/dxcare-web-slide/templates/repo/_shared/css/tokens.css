@@ -1,0 +1,96 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOKENS — design-system CSS custom properties ONLY. No structural layout,
+   no element selectors, no `body`/`#deck`/`.slide` rules. Safe to inherit
+   from ANY deck (skeleton or rich/self-contained) without altering its
+   scroll/layout model.
+
+   Why this file exists (B-001 AC-2.4): `base.css` couples these tokens with
+   structural rules (`body { overflow: hidden }`, `.slide { position: absolute }`)
+   that assume the absolute-fade single-active model. A rich, scroll-snap,
+   self-contained deck that pulls in `base.css` has its scroll container
+   collapsed and its nav dies (counter advances, screen frozen). Splitting the
+   pure tokens out lets a rich deck opt-in to the shared palette/typography via
+   `<link rel="stylesheet" href="/_shared/css/tokens.css">` or `@import` WITHOUT
+   inheriting the layout poison.
+
+   theme.css (generated from theme.json) overrides these :root values via the
+   normal CSS cascade — load theme.css AFTER this file.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Color fallbacks — theme.css overrides these with preset values */
+  --bg: #ffffff;
+  --fg: #0a1a24;
+  --bg-secondary: #f5f5f7;
+  --primary: #0b4f6c;
+  --accent: #01baef;
+  --muted: #94a3b0;
+  --card-border: rgba(0, 0, 0, 0.1);
+
+  /* Design-system typography scale (invariant across themes) */
+  --font-heading: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --title-size: clamp(2rem, 6vw, 4.5rem);
+  --h2-size: clamp(1.5rem, 4vw, 3rem);
+  --h3-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  --subtitle-size: clamp(1rem, 2vw, 1.5rem);
+  --body-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  --small-size: clamp(0.75rem, 1vw, 0.9rem);
+
+  /* Spacing */
+  --slide-padding: clamp(2rem, 5vw, 6rem);
+  --content-gap: clamp(1.5rem, 3vw, 3rem);
+  --element-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* Motion */
+  --motion-fast: 150ms;
+  --motion-base: 250ms;
+  --duration-normal: var(--motion-base);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Entry reveal (B-003 D6) — active-slide content fade-up stagger.
+     Values follow the spec range (8–16px / 300–500ms / 40–80ms) and reuse the
+     gold-standard ease curve. The base.css `.slide-content > *` reveal rules
+     consume these; rich decks that opt into tokens.css inherit the values but
+     own their own reveal markup. */
+  --reveal-distance: 12px;     /* translateY start offset (spec 8–16px) */
+  --reveal-duration: 420ms;    /* per-child transition (spec 300–500ms) */
+  --reveal-stagger: 60ms;      /* delay step between children (spec 40–80ms) */
+
+  /* Compatibility aliases for diagram styles imported from dxcare-web-slide */
+  --text-primary: var(--fg);
+  --text-secondary: var(--muted);
+  --font-display: var(--font-heading);
+  --card-bg: var(--bg-secondary);
+  --bg-primary: var(--bg);
+  /* NOTE: kept as a fixed rgba() rather than color-mix() because html2canvas
+     (used by pdf.js) cannot parse color-mix in v1.4.1. If you upgrade the PDF
+     library to one that supports it, you can swap this for
+     `color-mix(in srgb, var(--accent) 30%, transparent)`. */
+  --accent-glow: rgba(1, 186, 239, 0.3);
+}
+
+[data-theme="dark"] {
+  /* Dark fallbacks — theme.css overrides with preset-specific dark values */
+  --bg: #0a1a24;
+  --fg: #f5f7f9;
+  --bg-secondary: #1d1d1f;
+  --card-border: rgba(255, 255, 255, 0.1);
+  /* B-010: var()-indirection aliases MUST be re-declared under dark.
+     In :root they are `var(--fg)` / `var(--bg-secondary)`, which resolve against
+     the :root (html) element. Because `data-theme` lives on <body>, the :root
+     copies stay pinned to the LIGHT values, so cards/diagram boxes render
+     light-on-light (invisible text) in dark decks. Re-resolving here against the
+     themed subtree fixes it for every deck (skeleton + opt-in rich) at the
+     _shared layer. */
+  --text-primary: var(--fg);
+  --text-secondary: var(--muted);
+  --card-bg: var(--bg-secondary);
+  --bg-primary: var(--bg);
+}

@@ -1,0 +1,31 @@
+{
+  "preset": "stormy-night",
+  "category": "tech",
+  "description": "딥 그레이 + 틸/크림슨 듀얼 액센트. 다이나믹한 균형.",
+  "mood": "다이나믹, 균형, 데이터 중심",
+  "tokens": {
+    "color": {
+      "bg": "#ffffff",
+      "bgDark": "#111111",
+      "bgSecondary": "#f5f5f5",
+      "bgSecondaryDark": "#1a1a1a",
+      "fg": "#111111",
+      "fgDark": "#f0f0f0",
+      "muted": "#666666",
+      "mutedDark": "#888888",
+      "primary": "#0d9488",
+      "primaryDark": "#2dd4bf",
+      "accent": "#f43f5e",
+      "accent2": "#f43f5e",
+      "cardBorder": "rgba(0, 0, 0, 0.08)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.08)"
+    },
+    "font": {
+      "heading": "'General Sans', 'Pretendard Variable', sans-serif",
+      "body": "'Source Sans 3', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "8px", "md": "14px", "lg": "20px" },
+    "motion": { "fast": "150ms", "base": "250ms" }
+  }
+}

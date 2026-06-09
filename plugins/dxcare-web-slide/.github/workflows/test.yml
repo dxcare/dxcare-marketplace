@@ -1,0 +1,89 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  sanity:
+    name: Plugin sanity checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate plugin.json
+        run: node scripts/ci-validate-plugin-json.mjs
+        shell: bash
+
+      - name: Validate every skill has frontmatter
+        shell: bash
+        run: |
+          for f in skills/*/SKILL.md; do
+            head -1 "$f" | grep -q '^---$' || { echo "FAIL: $f missing frontmatter"; exit 1; }
+            grep -q '^name:' "$f" || { echo "FAIL: $f missing name"; exit 1; }
+            grep -q '^description:' "$f" || { echo "FAIL: $f missing description"; exit 1; }
+          done
+          echo "All skills have frontmatter"
+
+      - name: Validate every theme preset parses + has required fields
+        shell: bash
+        run: node scripts/ci-validate-presets.mjs
+
+      - name: bin/locate.mjs errors cleanly outside a slides repo
+        shell: bash
+        run: |
+          mkdir -p /tmp/not-a-slides-repo
+          cd /tmp/not-a-slides-repo
+          if node "$GITHUB_WORKSPACE/bin/locate.mjs"; then
+            echo "FAIL: locate should have exited non-zero"
+            exit 1
+          fi
+          echo "locate.mjs correctly errored outside slides repo"
+
+      - name: bin/init.mjs --dry-run on a fresh tmpdir
+        shell: bash
+        run: |
+          mkdir -p /tmp/dxcare-init-ci
+          cd /tmp/dxcare-init-ci
+          node "$GITHUB_WORKSPACE/bin/init.mjs" --dry-run | tee /tmp/init-output.json
+          grep -q '"dryRun": true' /tmp/init-output.json || { echo "FAIL: dry-run flag not echoed"; exit 1; }
+          grep -q '"copied"' /tmp/init-output.json || { echo "FAIL: copied array missing"; exit 1; }
+          if [ -f /tmp/dxcare-init-ci/package.json ]; then
+            echo "FAIL: dry-run wrote package.json"
+            exit 1
+          fi
+          echo "dry-run contract OK"
+
+  bundled-suite:
+    name: Bundled plugin test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Note: we deliberately skip dependency cache here. The bundled consumer
+      # repo has no committed lockfile; every CI run does a fresh `pnpm install`
+      # in a tmpdir from the plugin's package-snippet.json, which takes a few
+      # seconds. Revisit once we add a reproducible lockfile to templates/repo/.
+      - name: Bootstrap a tmp consumer repo via init
+        shell: bash
+        run: |
+          mkdir /tmp/consumer
+          cd /tmp/consumer
+          node "$GITHUB_WORKSPACE/bin/init.mjs"
+          test -d _shared/js && test -d _templates/theme && test -f package.json \
+            || { echo "FAIL: init did not produce expected layout"; exit 1; }
+      - name: pnpm install + test in bootstrapped repo
+        working-directory: /tmp/consumer
+        shell: bash
+        run: |
+          pnpm install --prefer-offline
+          pnpm test

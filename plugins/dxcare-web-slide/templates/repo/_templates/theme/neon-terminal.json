@@ -1,0 +1,30 @@
+{
+  "preset": "neon-terminal",
+  "category": "tech",
+  "description": "개발자 친화. 터미널 느낌의 어두운 배경 + 밝은 그린.",
+  "mood": "해커, 기술적, 개발자",
+  "tokens": {
+    "color": {
+      "bg": "#ffffff",
+      "bgDark": "#0d1117",
+      "bgSecondary": "#f6f8fa",
+      "bgSecondaryDark": "#161b22",
+      "fg": "#1f2328",
+      "fgDark": "#e6edf3",
+      "muted": "#656d76",
+      "mutedDark": "#7d8590",
+      "primary": "#1a7f37",
+      "primaryDark": "#3fb950",
+      "accent": "#3fb950",
+      "cardBorder": "rgba(0, 0, 0, 0.1)",
+      "cardBorderDark": "rgba(48, 54, 61, 0.8)"
+    },
+    "font": {
+      "heading": "'JetBrains Mono', 'D2Coding', monospace",
+      "body": "'Inter', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', 'D2Coding', monospace"
+    },
+    "radius": { "sm": "4px", "md": "8px", "lg": "12px" },
+    "motion": { "fast": "120ms", "base": "200ms" }
+  }
+}

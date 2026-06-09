@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Bento Pastel — Theme Sample</title>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        /* ======================================================
+           BENTO PASTEL 2.0 — Apple-style Bento Grid Theme
+           ====================================================== */
+
+        :root {
+            /* Dark mode (default) */
+            --bg: #18181b;
+            --bg-gradient: linear-gradient(135deg, #18181b 0%, #1e1b2e 50%, #1b1e18 100%);
+            --surface: rgba(255,255,255,0.04);
+            --surface-hover: rgba(255,255,255,0.07);
+            --text: #fafafa;
+            --text2: #a1a1aa;
+            --text3: #71717a;
+
+            /* Multi-accent palette */
+            --pink: #f472b6;
+            --indigo: #818cf8;
+            --green: #34d399;
+            --amber: #fbbf24;
+
+            /* Tile color channels (for rgba usage) */
+            --pink-rgb: 244,114,182;
+            --indigo-rgb: 129,140,248;
+            --green-rgb: 52,211,153;
+            --amber-rgb: 251,191,36;
+
+            /* Design tokens */
+            --radius: 24px;
+            --radius-sm: 16px;
+            --radius-pill: 100px;
+            --gap: clamp(0.5rem, 1vw, 0.8rem);
+            --shadow: 0 8px 32px rgba(0,0,0,0.12);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.2);
+            --blur: blur(20px);
+            --font-heading: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Blob colors */
+            --blob1: rgba(244,114,182,0.12);
+            --blob2: rgba(129,140,248,0.10);
+            --blob3: rgba(52,211,153,0.08);
+        }
+
+        .light-theme {
+            --bg: #fdf2f8;
+            --bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #f0f0ff 50%, #f0fdf4 100%);
+            --surface: rgba(0,0,0,0.03);
+            --surface-hover: rgba(0,0,0,0.06);
+            --text: #18181b;
+            --text2: #52525b;
+            --text3: #a1a1aa;
+
+            --pink: #ec4899;
+            --indigo: #6366f1;
+            --green: #10b981;
+            --amber: #f59e0b;
+
+            --pink-rgb: 236,72,153;
+            --indigo-rgb: 99,102,241;
+            --green-rgb: 16,185,129;
+            --amber-rgb: 245,158,11;
+
+            --shadow: 0 8px 32px rgba(0,0,0,0.06);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.1);
+
+            --blob1: rgba(236,72,153,0.10);
+            --blob2: rgba(99,102,241,0.08);
+            --blob3: rgba(16,185,129,0.06);
+        }
+
+        /* ── Reset ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html {
+            scroll-snap-type: y mandatory;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            background-image: var(--bg-gradient);
+            color: var(--text);
+            height: 100%;
+            overflow: hidden;
+            transition: background 0.5s ease, color 0.4s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Slides ── */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: clamp(2rem, 5vw, 5rem);
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slide.visible {
+            opacity: 1;
+            pointer-events: auto;
+            position: relative;
+        }
+
+        /* ── Typography ── */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: var(--text);
+        }
+        h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text);
+        }
+        h3 {
+            font-family: var(--font-heading);
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+            color: var(--text);
+        }
+        p, li {
+            font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+            line-height: 1.65;
+            color: var(--text2);
+        }
+        .small {
+            font-size: clamp(0.7rem, 1.1vw, 0.82rem);
+            color: var(--text3);
+        }
+
+        /* ══════════════════════════════════════
+           BACKGROUND GRADIENT BLOBS (Apple-style)
+           ══════════════════════════════════════ */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.8;
+            transition: opacity 0.6s ease;
+        }
+        .blob-pink {
+            background: var(--blob1);
+            width: clamp(200px, 40vw, 500px);
+            height: clamp(200px, 40vw, 500px);
+        }
+        .blob-indigo {
+            background: var(--blob2);
+            width: clamp(250px, 45vw, 550px);
+            height: clamp(250px, 45vw, 550px);
+        }
+        .blob-green {
+            background: var(--blob3);
+            width: clamp(180px, 35vw, 450px);
+            height: clamp(180px, 35vw, 450px);
+        }
+
+        /* ══════════════════════════════════════
+           SLIDE 1 — TITLE
+           ══════════════════════════════════════ */
+        .slide-title {
+            text-align: center;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+        }
+        .slide-title .content-wrap {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+        }
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-heading);
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--pink);
+            background: rgba(var(--pink-rgb), 0.12);
+            border: 1px solid rgba(var(--pink-rgb), 0.2);
+            padding: 0.45rem 1.2rem;
+            border-radius: var(--radius-pill);
+            backdrop-filter: var(--blur);
+        }
+        .slide-title h1 {
+            max-width: 700px;
+        }
+        .slide-title .subtitle {
+            font-size: clamp(0.95rem, 2vw, 1.2rem);
+            color: var(--text2);
+            max-width: 520px;
+            line-height: 1.6;
+        }
+        .color-dots {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+        .color-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .color-dot:hover {
+            transform: scale(1.5);
+        }
+
+        /* ══════════════════════════════════════
+           BENTO TILE SYSTEM (Core Visual Identity)
+           ══════════════════════════════════════ */
+        .bento-grid {
+            display: grid;
+            gap: var(--gap);
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-grid-2x2 {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: auto auto;
+        }
+        .bento-grid-3x2 {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto;
+        }
+
+        .bento-tile {
+            border-radius: var(--radius);
+            padding: clamp(1.1rem, 2.5vw, 1.8rem);
+            backdrop-filter: var(--blur);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.4s ease;
+        }
+        .bento-tile:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: var(--shadow-lg);
+        }
+        .bento-tile.span-2 { grid-column: span 2; }
+        .bento-tile.span-row-2 { grid-row: span 2; }
+
+        /* Tile color variants */
+        .tile-pink {
+            background: linear-gradient(135deg, rgba(var(--pink-rgb), 0.10), rgba(var(--pink-rgb), 0.02));
+            border: 1px solid rgba(var(--pink-rgb), 0.15);
+        }
+        .tile-pink .tile-top-accent { background: var(--pink); }
+        .tile-pink .tile-icon-ring { background: rgba(var(--pink-rgb), 0.15); }
+        .tile-pink .tile-value { color: var(--pink); }
+        .tile-pink .mini-bar-fill { background: var(--pink); }
+        .tile-pink .status-dot { background: var(--pink); }
+
+        .tile-indigo {
+            background: linear-gradient(135deg, rgba(var(--indigo-rgb), 0.10), rgba(var(--indigo-rgb), 0.02));
+            border: 1px solid rgba(var(--indigo-rgb), 0.15);
+        }
+        .tile-indigo .tile-top-accent { background: var(--indigo); }
+        .tile-indigo .tile-icon-ring { background: rgba(var(--indigo-rgb), 0.15); }
+        .tile-indigo .tile-value { color: var(--indigo); }
+        .tile-indigo .mini-bar-fill { background: var(--indigo); }
+        .tile-indigo .status-dot { background: var(--indigo); }
+
+        .tile-green {
+            background: linear-gradient(135deg, rgba(var(--green-rgb), 0.10), rgba(var(--green-rgb), 0.02));
+            border: 1px solid rgba(var(--green-rgb), 0.15);
+        }
+        .tile-green .tile-top-accent { background: var(--green); }
+        .tile-green .tile-icon-ring { background: rgba(var(--green-rgb), 0.15); }
+        .tile-green .tile-value { color: var(--green); }
+        .tile-green .mini-bar-fill { background: var(--green); }
+        .tile-green .status-dot { background: var(--green); }
+
+        .tile-amber {
+            background: linear-gradient(135deg, rgba(var(--amber-rgb), 0.10), rgba(var(--amber-rgb), 0.02));
+            border: 1px solid rgba(var(--amber-rgb), 0.15);
+        }
+        .tile-amber .tile-top-accent { background: var(--amber); }
+        .tile-amber .tile-icon-ring { background: rgba(var(--amber-rgb), 0.15); }
+        .tile-amber .tile-value { color: var(--amber); }
+        .tile-amber .mini-bar-fill { background: var(--amber); }
+        .tile-amber .status-dot { background: var(--amber); }
+
+        /* Tile inner elements */
+        .tile-top-accent {
+            position: absolute;
+            top: 0;
+            left: clamp(1rem, 2vw, 1.5rem);
+            right: clamp(1rem, 2vw, 1.5rem);
+            height: 3px;
+            border-radius: 0 0 3px 3px;
+        }
+        .tile-icon {
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            line-height: 1;
+            margin-bottom: 0.2rem;
+        }
+        .tile-icon-ring {
+            width: clamp(36px, 5vw, 44px);
+            height: clamp(36px, 5vw, 44px);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            margin-bottom: 0.3rem;
+            flex-shrink: 0;
+        }
+        .tile-title {
+            font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.4vw, 1rem);
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+        .tile-desc {
+            font-size: clamp(0.72rem, 1.1vw, 0.85rem);
+            color: var(--text2);
+            line-height: 1.55;
+        }
+        .tile-value {
+            font-family: var(--font-heading);
+            font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+        .tile-value-sm {
+            font-family: var(--font-heading);
+            font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+        .tile-label {
+            font-size: clamp(0.65rem, 1vw, 0.78rem);
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 500;
+        }
+
+        /* Mini progress bar */
+        .mini-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: var(--surface);
+            overflow: hidden;
+            margin-top: auto;
+        }
+        .mini-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Status indicator */
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .status-dot.pulse {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        /* Pill tag inside tiles */
+        .tile-tag {
+            display: inline-flex;
+            align-items: center;
+            font-family: var(--font-heading);
+            font-size: clamp(0.55rem, 0.9vw, 0.68rem);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-pill);
+            width: fit-content;
+        }
+        .tag-pink { color: var(--pink); background: rgba(var(--pink-rgb), 0.12); }
+        .tag-indigo { color: var(--indigo); background: rgba(var(--indigo-rgb), 0.12); }
+        .tag-green { color: var(--green); background: rgba(var(--green-rgb), 0.12); }
+        .tag-amber { color: var(--amber); background: rgba(var(--amber-rgb), 0.12); }
+
+        /* Sparkline mini chart */
+        .sparkline {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 32px;
+            margin-top: auto;
+        }
+        .sparkline-bar {
+            flex: 1;
+            border-radius: 2px;
+            min-width: 4px;
+            transition: height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ══════════════════════════════════════
+           SLIDE 2 — CONTENT BENTO
+           ══════════════════════════════════════ */
+        .slide-content {
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+        .slide-content .section-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ══════════════════════════════════════
+           SLIDE 3 — DASHBOARD BENTO
+           ══════════════════════════════════════ */
+        .slide-dashboard {
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+        .slide-dashboard .section-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ══════════════════════════════════════
+           SLIDE 4 — TWO-COLUMN BENTO
+           ══════════════════════════════════════ */
+        .slide-two-col {
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+        .slide-two-col .section-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-grid-two-col {
+            grid-template-columns: 1.2fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+        .bento-grid-two-col .tile-feature {
+            grid-row: span 2;
+            justify-content: center;
+        }
+
+        /* ══════════════════════════════════════
+           SLIDE 5 — DATA / METRICS BENTO
+           ══════════════════════════════════════ */
+        .slide-metrics {
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+        .slide-metrics .section-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-grid-metrics {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto;
+        }
+
+        /* ══════════════════════════════════════
+           SLIDE 6 — TIMELINE / FLOW BENTO
+           ══════════════════════════════════════ */
+        .slide-timeline {
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+        .slide-timeline .section-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-grid-timeline {
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            position: relative;
+        }
+        /* Gradient connector line between timeline tiles */
+        .timeline-connector {
+            position: absolute;
+            top: 50%;
+            left: calc(var(--gap) * 0.5 + 2%);
+            right: calc(var(--gap) * 0.5 + 2%);
+            height: 2px;
+            background: linear-gradient(90deg, var(--pink), var(--indigo), var(--green), var(--amber));
+            z-index: 0;
+            transform: translateY(-50%);
+            border-radius: 1px;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.3s;
+        }
+        .slide.visible .timeline-connector {
+            opacity: 0.5;
+        }
+        .bento-grid-timeline .bento-tile {
+            z-index: 1;
+            text-align: center;
+            align-items: center;
+        }
+        .step-number {
+            font-family: var(--font-heading);
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 700;
+            line-height: 1;
+            opacity: 0.2;
+            letter-spacing: -0.03em;
+        }
+        .tile-pink .step-number { color: var(--pink); }
+        .tile-indigo .step-number { color: var(--indigo); }
+        .tile-green .step-number { color: var(--green); }
+        .tile-amber .step-number { color: var(--amber); }
+
+        /* ══════════════════════════════════════
+           SLIDE 7 — QUOTE BENTO
+           ══════════════════════════════════════ */
+        .slide-quote {
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+        .slide-quote .section-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-grid-quote {
+            grid-template-columns: 1fr;
+        }
+        .quote-tile {
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 5vw, 4rem);
+            background: var(--surface);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        .quote-tile::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--pink), var(--indigo));
+            z-index: -1;
+            opacity: 0.6;
+        }
+        .quote-tile::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: calc(var(--radius) - 2px);
+            background: linear-gradient(135deg, rgba(var(--pink-rgb), 0.06), rgba(var(--indigo-rgb), 0.06));
+            z-index: -1;
+        }
+        .quote-icon {
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .quote-text {
+            font-family: var(--font-heading);
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+            font-weight: 600;
+            color: var(--text);
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            max-width: 650px;
+        }
+        .quote-attribution {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .quote-attribution .pill-badge {
+            font-size: clamp(0.55rem, 0.9vw, 0.68rem);
+            padding: 0.3rem 0.9rem;
+            color: var(--indigo);
+            background: rgba(var(--indigo-rgb), 0.12);
+            border-color: rgba(var(--indigo-rgb), 0.2);
+        }
+
+        /* ══════════════════════════════════════
+           SLIDE 8 — CLOSING BENTO
+           ══════════════════════════════════════ */
+        .slide-closing {
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+        .slide-closing .section-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+        .bento-grid-closing {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto;
+        }
+        .closing-primary {
+            grid-column: span 2;
+            justify-content: center;
+            min-height: 180px;
+        }
+        /* (arrow element removed — not needed for presentation slides) */
+        .closing-secondary {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 180px;
+        }
+        .closing-secondary .tile-icon-ring {
+            margin-bottom: 0.5rem;
+        }
+
+        /* ══════════════════════════════════════
+           ANIMATIONS — Tile Reveal
+           ══════════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: scale(0.95) translateY(12px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+        /* Stagger delays for grid tiles */
+        .slide.visible .reveal:nth-child(1) { transition-delay: 0.00s; }
+        .slide.visible .reveal:nth-child(2) { transition-delay: 0.08s; }
+        .slide.visible .reveal:nth-child(3) { transition-delay: 0.16s; }
+        .slide.visible .reveal:nth-child(4) { transition-delay: 0.24s; }
+        .slide.visible .reveal:nth-child(5) { transition-delay: 0.32s; }
+        .slide.visible .reveal:nth-child(6) { transition-delay: 0.40s; }
+        .slide.visible .reveal:nth-child(7) { transition-delay: 0.48s; }
+
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .slide.visible .reveal-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide.visible .reveal-up:nth-child(1) { transition-delay: 0.0s; }
+        .slide.visible .reveal-up:nth-child(2) { transition-delay: 0.1s; }
+        .slide.visible .reveal-up:nth-child(3) { transition-delay: 0.15s; }
+
+        /* Bar fill animation */
+        .slide:not(.visible) .mini-bar-fill { width: 0 !important; }
+        .slide:not(.visible) .sparkline-bar { height: 2px !important; }
+
+        /* ══════════════════════════════════════
+           UI CHROME — Back link, Toggle, Dots, Counter
+           ══════════════════════════════════════ */
+        .back-link {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-family: var(--font-body);
+            font-size: clamp(0.68rem, 1.1vw, 0.82rem);
+            font-weight: 500;
+            color: var(--text2);
+            background: var(--surface);
+            border: 1px solid rgba(var(--pink-rgb), 0.1);
+            padding: 0.4rem 0.85rem;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            z-index: 100;
+            backdrop-filter: var(--blur);
+            transition: all 0.25s ease;
+        }
+        .back-link:hover {
+            color: var(--text);
+            background: rgba(var(--pink-rgb), 0.15);
+            border-color: rgba(var(--pink-rgb), 0.3);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid rgba(var(--pink-rgb), 0.1);
+            padding: 0.4rem 0.6rem;
+            border-radius: var(--radius-sm);
+            line-height: 1;
+            backdrop-filter: var(--blur);
+            transition: all 0.25s ease;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .theme-toggle:hover {
+            background: rgba(var(--pink-rgb), 0.15);
+            border-color: rgba(var(--pink-rgb), 0.3);
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            z-index: 100;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text3);
+            opacity: 0.35;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: none;
+            padding: 0;
+        }
+        .dot.active {
+            background: var(--pink);
+            opacity: 1;
+            transform: scale(1.5);
+            box-shadow: 0 0 8px rgba(var(--pink-rgb), 0.4);
+        }
+        .dot:hover {
+            opacity: 0.7;
+            transform: scale(1.3);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem;
+            right: 1.5rem;
+            font-family: var(--font-heading);
+            font-size: clamp(0.62rem, 0.9vw, 0.75rem);
+            font-weight: 600;
+            color: var(--text3);
+            background: var(--surface);
+            border: 1px solid rgba(var(--pink-rgb), 0.1);
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-sm);
+            z-index: 100;
+            backdrop-filter: var(--blur);
+            letter-spacing: 0.04em;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .bento-grid-2x2 {
+                grid-template-columns: 1fr;
+            }
+            .bento-grid-3x2,
+            .bento-grid-metrics,
+            .bento-grid-closing {
+                grid-template-columns: 1fr 1fr;
+            }
+            .bento-grid-two-col {
+                grid-template-columns: 1fr;
+            }
+            .bento-grid-two-col .tile-feature {
+                grid-row: span 1;
+            }
+            .bento-grid-timeline {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+            }
+            .timeline-connector { display: none; }
+            .bento-tile.span-2,
+            .closing-primary { grid-column: span 1; }
+            .slide {
+                padding: clamp(1.5rem, 4vw, 3rem);
+                padding-top: clamp(3rem, 6vw, 4rem);
+            }
+        }
+        @media (max-width: 480px) {
+            .bento-grid-3x2,
+            .bento-grid-metrics,
+            .bento-grid-timeline,
+            .bento-grid-closing {
+                grid-template-columns: 1fr;
+            }
+            .closing-primary { grid-column: span 1; }
+            .nav-dots { display: none; }
+        }
+        @media (max-height: 500px) {
+            .nav-dots { display: none; }
+        }
+
+        /* ── Reduced Motion ── */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.15s !important;
+            }
+            html { scroll-behavior: auto; }
+            .reveal, .reveal-up {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            .status-dot.pulse { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── UI Chrome ── -->
+    <a href="./" class="back-link">&larr; Gallery</a>
+    <div class="theme-toggle" role="button" tabindex="0" aria-label="Toggle theme"
+         onclick="setTheme(document.body.classList.contains('light-theme')?'dark':'light')">
+        <span id="themeIcon">☀️</span>
+    </div>
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+    <div class="slide-counter"><span id="counterCurrent">1</span> / <span id="counterTotal">8</span></div>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 1 — TITLE
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-title" id="slide-0">
+        <!-- Background blobs -->
+        <div class="blob blob-pink" style="top: -15%; left: -10%;"></div>
+        <div class="blob blob-indigo" style="bottom: -20%; right: -8%;"></div>
+        <div class="blob blob-green" style="top: 40%; right: -15%; opacity: 0.5;"></div>
+
+        <div class="content-wrap">
+            <div class="reveal-up pill-badge">✨ Bento Pastel</div>
+            <h1 class="reveal-up">모던 벤토 그리드로<br>만드는 프레젠테이션</h1>
+            <p class="reveal-up subtitle">파스텔 멀티 액센트와 글래스모피즘 타일이 어우러진 Apple 스타일 벤토 레이아웃 테마</p>
+            <div class="reveal-up color-dots">
+                <div class="color-dot" style="background: var(--pink);"></div>
+                <div class="color-dot" style="background: var(--indigo);"></div>
+                <div class="color-dot" style="background: var(--green);"></div>
+                <div class="color-dot" style="background: var(--amber);"></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 2 — CONTENT BENTO GRID
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-content" id="slide-1">
+        <!-- Background blobs -->
+        <div class="blob blob-indigo" style="top: -10%; right: -12%;"></div>
+        <div class="blob blob-pink" style="bottom: -15%; left: -10%; opacity: 0.6;"></div>
+
+        <div class="section-header">
+            <span class="reveal-up tile-tag tag-indigo">Features</span>
+            <h2 class="reveal-up">테마 특성</h2>
+        </div>
+
+        <div class="bento-grid bento-grid-2x2">
+            <!-- Tile 1: Pink — spans 2 columns -->
+            <div class="bento-tile tile-pink span-2 reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">🎨</div>
+                <h3 class="tile-title">멀티 액센트 컬러 시스템</h3>
+                <p class="tile-desc">핑크, 인디고, 그린, 앰버 — 네 가지 파스텔 액센트로 각 타일마다 고유한 컬러 아이덴티티를 부여합니다. 다채로우면서도 조화로운 비주얼을 완성합니다.</p>
+                <div class="color-dots" style="margin-top: 0.3rem;">
+                    <div class="color-dot" style="background: var(--pink);"></div>
+                    <div class="color-dot" style="background: var(--indigo);"></div>
+                    <div class="color-dot" style="background: var(--green);"></div>
+                    <div class="color-dot" style="background: var(--amber);"></div>
+                </div>
+            </div>
+
+            <!-- Tile 2: Indigo -->
+            <div class="bento-tile tile-indigo reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">✦</div>
+                <h3 class="tile-title">24px 슈퍼 라운드</h3>
+                <p class="tile-desc">벤토 2.0 트렌드의 핵심, 매우 둥근 모서리로 친근하고 현대적인 UI</p>
+            </div>
+
+            <!-- Tile 3: Green -->
+            <div class="bento-tile tile-green reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">🔤</div>
+                <h3 class="tile-title">Satoshi + DM Sans</h3>
+                <p class="tile-desc">Fontshare의 모던 산세리프로 깔끔하고 트렌디한 타이포그래피</p>
+            </div>
+
+            <!-- Tile 4: Amber — spans 2 columns -->
+            <div class="bento-tile tile-amber span-2 reveal">
+                <div class="tile-top-accent"></div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="tile-icon-ring">💎</div>
+                    <div>
+                        <h3 class="tile-title">글래스모피즘 & 그래디언트 블롭</h3>
+                        <p class="tile-desc">backdrop-filter 블러와 부드러운 그래디언트 블롭이 Apple 마케팅 페이지 같은 프리미엄 느낌을 만듭니다</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 3 — DASHBOARD BENTO
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-dashboard" id="slide-2">
+        <!-- Background blobs -->
+        <div class="blob blob-green" style="top: -12%; left: -8%;"></div>
+        <div class="blob blob-amber" style="bottom: -18%; right: -12%; background: rgba(var(--amber-rgb), 0.08); width: clamp(200px, 40vw, 500px); height: clamp(200px, 40vw, 500px);"></div>
+
+        <div class="section-header">
+            <span class="reveal-up tile-tag tag-green">Dashboard</span>
+            <h2 class="reveal-up">대시보드</h2>
+        </div>
+
+        <div class="bento-grid bento-grid-3x2">
+            <!-- Tile 1: Pink — Large metric, spans 2 cols -->
+            <div class="bento-tile tile-pink span-2 reveal">
+                <div class="tile-top-accent"></div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="tile-label">월간 활성 사용자</div>
+                        <div class="tile-value" style="margin-top: 0.3rem;">2,847</div>
+                    </div>
+                    <span class="tile-tag tag-pink">+12.4%</span>
+                </div>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width: 78%;"></div></div>
+            </div>
+
+            <!-- Tile 2: Indigo — Small metric -->
+            <div class="bento-tile tile-indigo reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-label">만족도</div>
+                <div class="tile-value">94%</div>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width: 94%;"></div></div>
+            </div>
+
+            <!-- Tile 3: Green — Status -->
+            <div class="bento-tile tile-green reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-label">시스템 상태</div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.4rem;">
+                    <div class="status-row">
+                        <div class="status-dot pulse"></div>
+                        <span class="small" style="color: var(--text);">API 서버</span>
+                        <span class="tile-tag tag-green" style="margin-left: auto;">정상</span>
+                    </div>
+                    <div class="status-row">
+                        <div class="status-dot pulse"></div>
+                        <span class="small" style="color: var(--text);">데이터베이스</span>
+                        <span class="tile-tag tag-green" style="margin-left: auto;">정상</span>
+                    </div>
+                    <div class="status-row">
+                        <div class="status-dot pulse"></div>
+                        <span class="small" style="color: var(--text);">CDN</span>
+                        <span class="tile-tag tag-green" style="margin-left: auto;">정상</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tile 4: Amber — Sparkline chart -->
+            <div class="bento-tile tile-amber reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-label">주간 트래픽</div>
+                <div class="tile-value-sm" style="color: var(--amber);">1.2K</div>
+                <div class="sparkline" id="sparkline1">
+                    <div class="sparkline-bar" style="height: 40%; background: var(--amber); opacity: 0.4;"></div>
+                    <div class="sparkline-bar" style="height: 60%; background: var(--amber); opacity: 0.5;"></div>
+                    <div class="sparkline-bar" style="height: 45%; background: var(--amber); opacity: 0.45;"></div>
+                    <div class="sparkline-bar" style="height: 80%; background: var(--amber); opacity: 0.7;"></div>
+                    <div class="sparkline-bar" style="height: 65%; background: var(--amber); opacity: 0.6;"></div>
+                    <div class="sparkline-bar" style="height: 90%; background: var(--amber); opacity: 0.85;"></div>
+                    <div class="sparkline-bar" style="height: 100%; background: var(--amber); opacity: 1;"></div>
+                </div>
+            </div>
+
+            <!-- Tile 5: Indigo — Revenue, spans 2 cols -->
+            <div class="bento-tile tile-indigo span-2 reveal">
+                <div class="tile-top-accent"></div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="tile-label">분기 매출</div>
+                        <div class="tile-value" style="margin-top: 0.3rem;">₩1.2B</div>
+                    </div>
+                    <span class="tile-tag tag-indigo">목표 85%</span>
+                </div>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width: 85%;"></div></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 4 — TWO-COLUMN BENTO
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-two-col" id="slide-3">
+        <!-- Background blobs -->
+        <div class="blob blob-pink" style="top: -10%; left: -12%;"></div>
+        <div class="blob blob-indigo" style="bottom: -15%; right: -10%; opacity: 0.6;"></div>
+
+        <div class="section-header">
+            <span class="reveal-up tile-tag tag-pink">Architecture</span>
+            <h2 class="reveal-up">핵심 구조</h2>
+        </div>
+
+        <div class="bento-grid bento-grid-two-col">
+            <!-- Left: Large feature tile spanning full height -->
+            <div class="bento-tile tile-pink tile-feature reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">🏗️</div>
+                <h3 class="tile-title">모듈러 컴포넌트 시스템</h3>
+                <p class="tile-desc">각 기능이 독립적인 벤토 타일로 설계되어, 자유롭게 조합하고 확장할 수 있는 유연한 아키텍처를 제공합니다. 재사용 가능한 컴포넌트로 빠른 프로토타이핑을 지원합니다.</p>
+                <div class="color-dots" style="margin-top: 0.5rem;">
+                    <div class="color-dot" style="background: var(--pink);"></div>
+                    <div class="color-dot" style="background: var(--indigo);"></div>
+                    <div class="color-dot" style="background: var(--green);"></div>
+                </div>
+            </div>
+
+            <!-- Right top: Indigo tile -->
+            <div class="bento-tile tile-indigo reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">⚡</div>
+                <h3 class="tile-title">실시간 반응형</h3>
+                <p class="tile-desc">뷰포트 변화에 즉각 반응하며 모든 디바이스에서 최적의 레이아웃을 유지합니다</p>
+            </div>
+
+            <!-- Right bottom: Green tile -->
+            <div class="bento-tile tile-green reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">🔒</div>
+                <h3 class="tile-title">접근성 우선</h3>
+                <p class="tile-desc">키보드 내비게이션, ARIA 속성, 리듀스드 모션 지원으로 모두를 위한 디자인</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 5 — DATA / METRICS BENTO
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-metrics" id="slide-4">
+        <!-- Background blobs -->
+        <div class="blob blob-green" style="top: -15%; right: -10%;"></div>
+        <div class="blob blob-pink" style="bottom: -12%; left: -8%; opacity: 0.5;"></div>
+
+        <div class="section-header">
+            <span class="reveal-up tile-tag tag-amber">Metrics</span>
+            <h2 class="reveal-up">성과 지표</h2>
+        </div>
+
+        <div class="bento-grid bento-grid-metrics">
+            <!-- Large tile: spans 2 columns — Big number + sparkline -->
+            <div class="bento-tile tile-pink span-2 reveal">
+                <div class="tile-top-accent"></div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <div class="tile-label">총 전환율</div>
+                        <div class="tile-value" style="margin-top: 0.3rem;">67.3%</div>
+                    </div>
+                    <div class="status-row">
+                        <div class="status-dot pulse" style="background: var(--pink);"></div>
+                        <span class="tile-tag tag-pink">실시간</span>
+                    </div>
+                </div>
+                <div class="sparkline">
+                    <div class="sparkline-bar" style="height: 30%; background: var(--pink); opacity: 0.3;"></div>
+                    <div class="sparkline-bar" style="height: 50%; background: var(--pink); opacity: 0.4;"></div>
+                    <div class="sparkline-bar" style="height: 40%; background: var(--pink); opacity: 0.35;"></div>
+                    <div class="sparkline-bar" style="height: 65%; background: var(--pink); opacity: 0.5;"></div>
+                    <div class="sparkline-bar" style="height: 55%; background: var(--pink); opacity: 0.45;"></div>
+                    <div class="sparkline-bar" style="height: 72%; background: var(--pink); opacity: 0.6;"></div>
+                    <div class="sparkline-bar" style="height: 68%; background: var(--pink); opacity: 0.55;"></div>
+                    <div class="sparkline-bar" style="height: 85%; background: var(--pink); opacity: 0.75;"></div>
+                    <div class="sparkline-bar" style="height: 90%; background: var(--pink); opacity: 0.85;"></div>
+                    <div class="sparkline-bar" style="height: 100%; background: var(--pink); opacity: 1;"></div>
+                </div>
+            </div>
+
+            <!-- Small tile 1: Indigo — metric + progress bar -->
+            <div class="bento-tile tile-indigo reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-label">응답 시간</div>
+                <div class="tile-value-sm" style="color: var(--indigo);">42ms</div>
+                <div class="status-row" style="margin-top: 0.3rem;">
+                    <div class="status-dot pulse" style="background: var(--indigo);"></div>
+                    <span class="small" style="color: var(--text);">양호</span>
+                </div>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width: 88%;"></div></div>
+            </div>
+
+            <!-- Small tile 2: Green — metric + progress bar -->
+            <div class="bento-tile tile-green reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-label">가동률</div>
+                <div class="tile-value-sm" style="color: var(--green);">99.9%</div>
+                <div class="status-row" style="margin-top: 0.3rem;">
+                    <div class="status-dot pulse" style="background: var(--green);"></div>
+                    <span class="small" style="color: var(--text);">안정</span>
+                </div>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width: 99%;"></div></div>
+            </div>
+
+            <!-- Small tile 3: Amber — metric + progress bar -->
+            <div class="bento-tile tile-amber reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-label">캐시 히트율</div>
+                <div class="tile-value-sm" style="color: var(--amber);">91%</div>
+                <div class="status-row" style="margin-top: 0.3rem;">
+                    <div class="status-dot pulse" style="background: var(--amber);"></div>
+                    <span class="small" style="color: var(--text);">최적화</span>
+                </div>
+                <div class="mini-bar"><div class="mini-bar-fill" style="width: 91%;"></div></div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 6 — TIMELINE / FLOW BENTO
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-timeline" id="slide-5">
+        <!-- Background blobs -->
+        <div class="blob blob-indigo" style="top: -10%; left: -10%;"></div>
+        <div class="blob blob-green" style="bottom: -15%; right: -12%; opacity: 0.6;"></div>
+
+        <div class="section-header">
+            <span class="reveal-up tile-tag tag-indigo">Process</span>
+            <h2 class="reveal-up">워크플로우</h2>
+        </div>
+
+        <div class="bento-grid bento-grid-timeline">
+            <!-- Gradient connector line -->
+            <div class="timeline-connector"></div>
+
+            <!-- Step 1: Pink -->
+            <div class="bento-tile tile-pink reveal">
+                <div class="tile-top-accent"></div>
+                <div class="step-number">01</div>
+                <div class="tile-icon-ring">🔍</div>
+                <h3 class="tile-title">리서치</h3>
+                <p class="tile-desc">사용자 니즈와 시장 트렌드를 분석합니다</p>
+            </div>
+
+            <!-- Step 2: Indigo -->
+            <div class="bento-tile tile-indigo reveal">
+                <div class="tile-top-accent"></div>
+                <div class="step-number">02</div>
+                <div class="tile-icon-ring">✏️</div>
+                <h3 class="tile-title">디자인</h3>
+                <p class="tile-desc">와이어프레임과 프로토타입을 설계합니다</p>
+            </div>
+
+            <!-- Step 3: Green -->
+            <div class="bento-tile tile-green reveal">
+                <div class="tile-top-accent"></div>
+                <div class="step-number">03</div>
+                <div class="tile-icon-ring">🛠️</div>
+                <h3 class="tile-title">개발</h3>
+                <p class="tile-desc">컴포넌트를 구현하고 통합합니다</p>
+            </div>
+
+            <!-- Step 4: Amber -->
+            <div class="bento-tile tile-amber reveal">
+                <div class="tile-top-accent"></div>
+                <div class="step-number">04</div>
+                <div class="tile-icon-ring">🚀</div>
+                <h3 class="tile-title">배포</h3>
+                <p class="tile-desc">테스트 후 프로덕션에 릴리스합니다</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 7 — QUOTE BENTO
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-quote" id="slide-6">
+        <!-- Background blobs -->
+        <div class="blob blob-pink" style="top: -15%; right: -10%;"></div>
+        <div class="blob blob-indigo" style="bottom: -18%; left: -12%; opacity: 0.6;"></div>
+
+        <div class="section-header">
+            <span class="reveal-up tile-tag tag-pink">Philosophy</span>
+            <h2 class="reveal-up">디자인 철학</h2>
+        </div>
+
+        <div class="bento-grid bento-grid-quote">
+            <div class="bento-tile quote-tile reveal">
+                <div class="quote-icon">💬</div>
+                <p class="quote-text">"좋은 디자인은 가능한 한 적게 디자인하는 것이다. 적을수록 더 좋다 — 본질적인 측면에 집중하기 때문이다."</p>
+                <div class="quote-attribution">
+                    <span class="pill-badge">Dieter Rams</span>
+                    <span class="small">— Less, but better</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SLIDE 8 — CLOSING BENTO
+         ══════════════════════════════════════════════════════ -->
+    <section class="slide slide-closing" id="slide-7">
+        <!-- Background blobs -->
+        <div class="blob blob-pink" style="top: -12%; left: -10%;"></div>
+        <div class="blob blob-green" style="bottom: -15%; right: -8%; opacity: 0.5;"></div>
+        <div class="blob blob-indigo" style="top: 30%; right: -15%; opacity: 0.4;"></div>
+
+        <div class="section-header">
+            <span class="reveal-up tile-tag tag-green">Summary</span>
+            <h2 class="reveal-up">핵심 요약</h2>
+        </div>
+
+        <div class="bento-grid bento-grid-closing">
+            <!-- Primary closing: Pink, spans 2 cols -->
+            <div class="bento-tile tile-pink closing-primary reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">&#127912;</div>
+                <h3 class="tile-title" style="font-size: clamp(1.1rem, 2vw, 1.4rem);">벤토 그리드 레이아웃 시스템</h3>
+                <p class="tile-desc">모던한 벤토 그리드와 파스텔 컬러 시스템이 만드는 깔끔하고 유연한 프레젠테이션 구조를 살펴보았습니다</p>
+            </div>
+
+            <!-- Secondary item 1: Indigo -->
+            <div class="bento-tile tile-indigo closing-secondary reveal">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">&#127752;</div>
+                <h3 class="tile-title">파스텔 컬러 팔레트</h3>
+                <p class="tile-desc">핑크, 인디고, 그린, 앰버 톤으로 부드럽고 세련된 비주얼 아이덴티티를 구현했습니다</p>
+            </div>
+
+            <!-- Secondary item 2: Green -->
+            <div class="bento-tile tile-green closing-secondary reveal" style="grid-column: 1 / 2;">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">&#128200;</div>
+                <h3 class="tile-title">데이터 시각화</h3>
+                <p class="tile-desc">타일 기반 레이아웃으로 핵심 지표를 직관적으로 전달하는 구성을 확인했습니다</p>
+            </div>
+
+            <!-- Bonus small tile: Amber -->
+            <div class="bento-tile tile-amber closing-secondary reveal" style="grid-column: 2 / 4;">
+                <div class="tile-top-accent"></div>
+                <div class="tile-icon-ring">&#9733;</div>
+                <h3 class="tile-title">감사합니다</h3>
+                <p class="tile-desc">벤토 파스텔 테마의 디자인 철학과 활용 방법을 함께 살펴보았습니다</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════════
+         SCRIPT — Theme, Navigation, Animations
+         ══════════════════════════════════════════════════════ -->
+    <script>
+    /* ── Theme Toggle ── */
+    function setTheme(t) {
+        document.body.classList.toggle('light-theme', t === 'light');
+        document.getElementById('themeIcon').textContent = t === 'light' ? '🌙' : '☀️';
+        localStorage.setItem('theme-bento-pastel', t);
+    }
+    (function initTheme() {
+        var saved = localStorage.getItem('theme-bento-pastel');
+        if (saved) setTheme(saved);
+        else if (window.matchMedia('(prefers-color-scheme: light)').matches) setTheme('light');
+    })();
+
+    /* Toggle with keyboard */
+    document.querySelector('.theme-toggle').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+        }
+    });
+
+    /* ── Slide Presentation Engine ── */
+    class BentoSlidePresentation {
+        constructor() {
+            this.slides = Array.from(document.querySelectorAll('.slide'));
+            this.current = 0;
+            this.total = this.slides.length;
+            this.isAnimating = false;
+            this.wheelAccumulator = 0;
+            this.wheelTimer = null;
+            this.touchStartY = 0;
+            this.init();
+        }
+
+        init() {
+            this.buildDots();
+            this.goTo(0, true);
+
+            /* Keyboard navigation */
+            document.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'ArrowDown':
+                    case 'ArrowRight':
+                    case ' ':
+                    case 'PageDown':
+                        e.preventDefault();
+                        this.next();
+                        break;
+                    case 'ArrowUp':
+                    case 'ArrowLeft':
+                    case 'PageUp':
+                        e.preventDefault();
+                        this.prev();
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        this.goTo(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        this.goTo(this.total - 1);
+                        break;
+                }
+            });
+
+            /* Wheel navigation (debounced) */
+            document.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                this.wheelAccumulator += e.deltaY;
+                clearTimeout(this.wheelTimer);
+                this.wheelTimer = setTimeout(() => {
+                    if (Math.abs(this.wheelAccumulator) > 40) {
+                        this.wheelAccumulator > 0 ? this.next() : this.prev();
+                    }
+                    this.wheelAccumulator = 0;
+                }, 70);
+            }, { passive: false });
+
+            /* Touch navigation */
+            document.addEventListener('touchstart', (e) => {
+                this.touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                var delta = this.touchStartY - e.changedTouches[0].clientY;
+                if (Math.abs(delta) > 50) {
+                    delta > 0 ? this.next() : this.prev();
+                }
+            }, { passive: true });
+        }
+
+        buildDots() {
+            var nav = document.getElementById('navDots');
+            this.slides.forEach((_, i) => {
+                var btn = document.createElement('button');
+                btn.className = 'dot' + (i === 0 ? ' active' : '');
+                btn.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+                btn.addEventListener('click', () => this.goTo(i));
+                nav.appendChild(btn);
+            });
+        }
+
+        goTo(index, instant) {
+            if (index < 0 || index >= this.total || (index === this.current && !instant)) return;
+            if (this.isAnimating && !instant) return;
+
+            this.isAnimating = true;
+
+            /* Hide current */
+            this.slides[this.current].classList.remove('visible');
+
+            /* Show target */
+            this.current = index;
+            this.slides[this.current].classList.add('visible');
+            this.updateUI();
+
+            /* Release animation lock */
+            setTimeout(() => { this.isAnimating = false; }, instant ? 0 : 650);
+        }
+
+        next() { this.goTo(this.current + 1); }
+        prev() { this.goTo(this.current - 1); }
+
+        updateUI() {
+            /* Dots */
+            document.querySelectorAll('.dot').forEach((d, i) => {
+                d.classList.toggle('active', i === this.current);
+            });
+            /* Counter */
+            document.getElementById('counterCurrent').textContent = this.current + 1;
+            document.getElementById('counterTotal').textContent = this.total;
+        }
+    }
+
+    new BentoSlidePresentation();
+    </script>
+</body>
+</html>

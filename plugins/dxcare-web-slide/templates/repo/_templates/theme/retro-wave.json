@@ -1,0 +1,31 @@
+{
+  "preset": "retro-wave",
+  "category": "creative",
+  "description": "레트로퓨처리즘. 그래디언트 + 빈티지 감성.",
+  "mood": "레트로, 크리에이티브, 대담",
+  "tokens": {
+    "color": {
+      "bg": "#fefce8",
+      "bgDark": "#0f0720",
+      "bgSecondary": "#fef9c3",
+      "bgSecondaryDark": "#1a0f30",
+      "fg": "#1e1b4b",
+      "fgDark": "#f5f0ff",
+      "muted": "#6366f1",
+      "mutedDark": "#c4b5fd",
+      "primary": "#db2777",
+      "primaryDark": "#f472b6",
+      "accent": "#fbbf24",
+      "accent2": "#fbbf24",
+      "cardBorder": "rgba(99, 102, 241, 0.2)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.1)"
+    },
+    "font": {
+      "heading": "'Clash Display', 'Black Han Sans', sans-serif",
+      "body": "'Satoshi', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "6px", "md": "12px", "lg": "20px" },
+    "motion": { "fast": "160ms", "base": "280ms" }
+  }
+}

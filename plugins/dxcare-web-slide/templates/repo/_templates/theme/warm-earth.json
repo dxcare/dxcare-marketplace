@@ -1,0 +1,30 @@
+{
+  "preset": "warm-earth",
+  "category": "education",
+  "description": "따뜻한 뉴트럴 톤. 자연스럽고 편안한 분위기.",
+  "mood": "따뜻함, 자연, 헬스케어, 교육",
+  "tokens": {
+    "color": {
+      "bg": "#fafaf9",
+      "bgDark": "#1c1917",
+      "bgSecondary": "#f5f5f4",
+      "bgSecondaryDark": "#292524",
+      "fg": "#1c1917",
+      "fgDark": "#fafaf9",
+      "muted": "#78716c",
+      "mutedDark": "#a8a29e",
+      "primary": "#d97706",
+      "primaryDark": "#f59e0b",
+      "accent": "#c2410c",
+      "cardBorder": "rgba(0, 0, 0, 0.08)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.08)"
+    },
+    "font": {
+      "heading": "'Lora', 'Noto Serif KR', serif",
+      "body": "'Nunito', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "8px", "md": "16px", "lg": "24px" },
+    "motion": { "fast": "180ms", "base": "300ms" }
+  }
+}

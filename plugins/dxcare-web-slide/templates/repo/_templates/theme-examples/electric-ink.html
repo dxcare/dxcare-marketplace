@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Electric Ink — Sample Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --accent: #3b82f6;
+            --muted: #525252;
+            --faint: #262626;
+        }
+        [data-theme="light"] {
+            --bg: #fafafa;
+            --text: #0a0a0a;
+            --accent: #3b82f6;
+            --muted: #5c5c5c;
+            --faint: #e5e5e5;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+        }
+
+        body {
+            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========== SLIDE BASE ========== */
+        .slide {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding-left: 15vw;
+            padding-right: 10vw;
+        }
+
+        /* ========== CLIP-PATH REVEAL ========== */
+        .reveal {
+            clip-path: inset(0 100% 0 0);
+        }
+        .slide.visible .reveal {
+            clip-path: inset(0 0 0 0);
+            transition: clip-path 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { clip-path: none !important; }
+            .slide.visible .reveal { transition: none !important; }
+        }
+
+        /* ========== SLIDE 1 — TITLE ========== */
+        .slide-title {
+            justify-content: flex-end;
+            padding-bottom: 8vh;
+        }
+        .slide-title .title-block {
+            display: flex;
+            flex-direction: column;
+        }
+        .slide-title .title-line {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 400;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+        .slide-title .title-line.accent {
+            color: var(--accent);
+        }
+        .slide-title .subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+            color: var(--muted);
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: clamp(2rem, 4vh, 4rem);
+        }
+        .slide-title .subtitle .sep {
+            display: inline-block;
+            width: 2em;
+            height: 1px;
+            background: var(--muted);
+            vertical-align: middle;
+            margin: 0 0.8em;
+        }
+
+        /* ========== SLIDE 2 — CONTENT ========== */
+        .slide-content h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 400;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            text-transform: uppercase;
+            margin-bottom: clamp(2rem, 4vh, 3.5rem);
+        }
+        .slide-content .bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.8rem, 3vh, 3rem);
+            max-width: 600px;
+        }
+        .slide-content .bullets li {
+            font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+            color: var(--muted);
+            line-height: 1.7;
+            padding-left: 1.6em;
+            position: relative;
+        }
+        .slide-content .bullets li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+        }
+
+        /* ========== SLIDE 3 — DATA / METRICS ========== */
+        .slide-data {
+            align-items: flex-start;
+        }
+        .slide-data h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 400;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            text-transform: uppercase;
+            margin-bottom: clamp(2.5rem, 5vh, 5rem);
+            color: var(--muted);
+        }
+        .metrics-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            width: 100%;
+            max-width: 900px;
+        }
+        .metric {
+            flex: 1;
+            padding: 0 clamp(1rem, 3vw, 2.5rem);
+            position: relative;
+        }
+        .metric:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--faint);
+        }
+        .metric:first-child {
+            padding-left: 0;
+        }
+        .metric .number {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: var(--text);
+        }
+        .metric .number.accent {
+            color: var(--accent);
+        }
+        .metric .label {
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            margin-top: 0.8rem;
+        }
+
+        /* ========== SLIDE 4 — TWO-COLUMN ========== */
+        .slide-twocol {
+            align-items: flex-start;
+        }
+        .twocol-layout {
+            display: flex;
+            align-items: flex-start;
+            width: 100%;
+            gap: 0;
+        }
+        .twocol-left {
+            width: 50%;
+            padding-right: clamp(2rem, 4vw, 4rem);
+            position: relative;
+        }
+        .twocol-left h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 9vw, 7rem);
+            font-weight: 400;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+        .twocol-divider {
+            width: 1px;
+            align-self: stretch;
+            background: var(--faint);
+            flex-shrink: 0;
+        }
+        .twocol-right {
+            width: 50%;
+            padding-left: clamp(2rem, 4vw, 4rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: clamp(2rem, 4vh, 3.5rem);
+        }
+        .twocol-right .item {
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.8rem, 1.2vw, 1rem);
+            color: var(--muted);
+            line-height: 1.7;
+            letter-spacing: 0.01em;
+        }
+        .twocol-right .item strong {
+            display: block;
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(1rem, 1.8vw, 1.4rem);
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ========== SLIDE 5 — MASSIVE METRICS ========== */
+        .slide-metrics-massive {
+            align-items: flex-start;
+        }
+        .metrics-massive-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 0;
+            width: 100%;
+        }
+        .metric-massive {
+            flex: 1;
+            padding: 0 clamp(1.5rem, 3vw, 3rem);
+            position: relative;
+            text-align: left;
+        }
+        .metric-massive:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--faint);
+        }
+        .metric-massive:first-child {
+            padding-left: 0;
+        }
+        .metric-massive .big-number {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(4rem, 13vw, 11rem);
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            color: var(--text);
+        }
+        .metric-massive .big-number.accent {
+            color: var(--accent);
+        }
+        .metric-massive .tiny-label {
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.5rem, 0.7vw, 0.65rem);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            font-weight: 700;
+            margin-top: 1.2rem;
+        }
+
+        /* ========== SLIDE 6 — SECTION DIVIDER ========== */
+        .slide-section-divider {
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .section-huge-number {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(20rem, 45vw, 40rem);
+            line-height: 0.8;
+            letter-spacing: -0.05em;
+            color: var(--text);
+            opacity: 0.08;
+            position: absolute;
+            top: 50%;
+            left: 15vw;
+            transform: translateY(-55%);
+            user-select: none;
+        }
+        .section-title-small {
+            position: relative;
+            z-index: 1;
+        }
+        .section-title-small span {
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            font-weight: 700;
+        }
+
+        /* ========== SLIDE 7 — QUOTE ========== */
+        .slide-quote {
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .quote-text {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(2.5rem, 7vw, 5.5rem);
+            font-weight: 400;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            text-transform: uppercase;
+            max-width: 70vw;
+        }
+        .quote-text .accent {
+            color: var(--accent);
+        }
+        .quote-attribution {
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            margin-top: clamp(2rem, 4vh, 4rem);
+        }
+
+        /* ========== SLIDE 8 — Closing / END ========== */
+        .slide-closing {
+            justify-content: center;
+            align-items: center;
+            padding-left: 0;
+            padding-right: 0;
+            text-align: center;
+        }
+        .closing-word {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(15rem, 35vw, 30rem);
+            font-weight: 400;
+            letter-spacing: -0.05em;
+            line-height: 0.8;
+            text-transform: uppercase;
+        }
+        .closing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            margin-top: clamp(1.5rem, 3vh, 3rem);
+        }
+        .closing-contact {
+            position: absolute;
+            bottom: clamp(2rem, 4vh, 4rem);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 400;
+            text-align: center;
+            line-height: 2;
+        }
+
+        /* ========== DIVIDER LINE ========== */
+        .divider {
+            width: clamp(40px, 6vw, 80px);
+            height: 1px;
+            background: var(--faint);
+            margin: clamp(1.5rem, 3vh, 2.5rem) 0;
+        }
+
+        /* ========== TOP BAR ========== */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1.5rem, 3vw, 3rem);
+        }
+        .back-link {
+            font-family: 'Open Sans', sans-serif;
+            font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--text); }
+        .back-link .arrow {
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: currentColor;
+            position: relative;
+        }
+        .back-link .arrow::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -3px;
+            width: 6px;
+            height: 6px;
+            border-left: 1px solid currentColor;
+            border-bottom: 1px solid currentColor;
+            transform: rotate(45deg);
+        }
+        .theme-toggle {
+            width: 32px;
+            height: 32px;
+            border-radius: 0;
+            border: 1px solid var(--faint);
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .theme-toggle:hover {
+            color: var(--text);
+            border-color: var(--muted);
+        }
+
+        /* ========== NAV DOTS ========== */
+        .nav-dots {
+            position: fixed;
+            right: clamp(1rem, 2.5vw, 2rem);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .nav-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 0;
+            background: var(--faint);
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            border: none;
+            padding: 0;
+        }
+        .nav-dot.active {
+            background: var(--accent);
+            transform: scale(1.5);
+        }
+
+        /* ========== SLIDE COUNTER ========== */
+        .slide-counter {
+            position: fixed;
+            bottom: clamp(1rem, 2.5vw, 2rem);
+            left: 15vw;
+            z-index: 100;
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(0.7rem, 1vw, 0.85rem);
+            color: var(--faint);
+            letter-spacing: 0.2em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .slide {
+                padding-left: 8vw;
+                padding-right: 8vw;
+            }
+            .slide-counter {
+                left: 8vw;
+            }
+            .metrics-row {
+                flex-direction: column;
+                gap: clamp(2rem, 4vh, 3rem);
+            }
+            .metric {
+                padding: 0 !important;
+            }
+            .metric:not(:last-child)::after {
+                width: 100%;
+                height: 1px;
+                right: auto;
+                left: 0;
+                top: auto;
+                bottom: -1rem;
+            }
+            .metric .number {
+                font-size: clamp(3rem, 18vw, 6rem);
+            }
+            /* Slide 4 two-column responsive */
+            .twocol-layout {
+                flex-direction: column;
+                gap: clamp(2rem, 4vh, 3rem);
+            }
+            .twocol-left,
+            .twocol-right {
+                width: 100%;
+                padding: 0 !important;
+            }
+            .twocol-divider {
+                width: 100%;
+                height: 1px;
+                align-self: auto;
+            }
+            .twocol-left h2 {
+                font-size: clamp(3rem, 15vw, 5rem);
+            }
+            /* Slide 5 massive metrics responsive */
+            .metrics-massive-row {
+                flex-direction: column;
+                gap: clamp(2.5rem, 5vh, 4rem);
+            }
+            .metric-massive {
+                padding: 0 !important;
+            }
+            .metric-massive:not(:last-child)::after {
+                width: 100%;
+                height: 1px;
+                right: auto;
+                left: 0;
+                top: auto;
+                bottom: -1.2rem;
+            }
+            .metric-massive .big-number {
+                font-size: clamp(4rem, 22vw, 7rem);
+            }
+            /* Slide 6 section divider responsive */
+            .section-huge-number {
+                font-size: clamp(10rem, 50vw, 20rem);
+                left: 8vw;
+            }
+            /* Slide 7 quote responsive */
+            .quote-text {
+                font-size: clamp(2rem, 10vw, 3.5rem);
+                max-width: 90vw;
+            }
+            /* Slide 8 Closing responsive */
+            .closing-word {
+                font-size: clamp(6rem, 30vw, 12rem);
+            }
+            .slide-closing {
+                padding-left: 8vw;
+                padding-right: 8vw;
+            }
+        }
+
+        /* ========== REDUCED MOTION ========== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="./" class="back-link"><span class="arrow"></span> Gallery</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">&#9681;</button>
+    </div>
+
+    <div class="nav-dots" id="navDots"></div>
+    <div class="slide-counter" id="counter">01 / 08</div>
+
+    <!-- SLIDE 1 — TITLE -->
+    <section class="slide slide-title" id="slide-0">
+        <div class="title-block">
+            <div class="title-line reveal">SAMPLE</div>
+            <div class="title-line accent reveal">PRESENTATION</div>
+            <div class="subtitle reveal">Electric Ink<span class="sep"></span>bold typography design</div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2 — CONTENT -->
+    <section class="slide slide-content" id="slide-1">
+        <h2 class="reveal">THEME<br>FEATURES</h2>
+        <div class="divider reveal"></div>
+        <ul class="bullets">
+            <li class="reveal">Bebas Neue 헤딩으로 극적인 타이포그래피 임팩트 — 뷰포트를 가득 채우는 대담한 스케일</li>
+            <li class="reveal">Open Sans 본문과의 5:1 비율로 극단적인 시각 위계 구현</li>
+            <li class="reveal">일렉트릭 블루 악센트를 최소한으로 사용하여 강렬한 포인트 효과</li>
+        </ul>
+    </section>
+
+    <!-- SLIDE 3 — DATA / METRICS -->
+    <section class="slide slide-data" id="slide-2">
+        <h2 class="reveal">Impact Metrics</h2>
+        <div class="metrics-row">
+            <div class="metric reveal">
+                <div class="number">250K</div>
+                <div class="label">Monthly Readers</div>
+            </div>
+            <div class="metric reveal">
+                <div class="number accent">12X</div>
+                <div class="label">Engagement</div>
+            </div>
+            <div class="metric reveal">
+                <div class="number">98%</div>
+                <div class="label">Satisfaction</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4 — TWO-COLUMN -->
+    <section class="slide slide-twocol" id="slide-3">
+        <div class="twocol-layout">
+            <div class="twocol-left">
+                <h2 class="reveal">DESIGN<br>PRINCIPLES</h2>
+            </div>
+            <div class="twocol-divider reveal"></div>
+            <div class="twocol-right">
+                <div class="item reveal">
+                    <strong>Extreme Restraint</strong>
+                    한 가지 서체, 한 가지 색상, 한 가지 목적
+                </div>
+                <div class="item reveal">
+                    <strong>Negative Space</strong>
+                    비워둔 공간이 곧 메시지가 된다
+                </div>
+                <div class="item reveal">
+                    <strong>Raw Typography</strong>
+                    장식 없이 글자 자체가 시각적 요소
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5 — MASSIVE METRICS -->
+    <section class="slide slide-metrics-massive" id="slide-4">
+        <div class="metrics-massive-row">
+            <div class="metric-massive reveal">
+                <div class="big-number">47</div>
+                <div class="tiny-label">Projects Delivered</div>
+            </div>
+            <div class="metric-massive reveal">
+                <div class="big-number accent">3M</div>
+                <div class="tiny-label">Users Reached</div>
+            </div>
+            <div class="metric-massive reveal">
+                <div class="big-number">99</div>
+                <div class="tiny-label">Uptime Percentage</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6 — SECTION DIVIDER -->
+    <section class="slide slide-section-divider" id="slide-5">
+        <div class="section-huge-number reveal">02</div>
+        <div class="section-title-small reveal">
+            <span>Part Two — Process & Approach</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 7 — QUOTE -->
+    <section class="slide slide-quote" id="slide-6">
+        <div class="quote-text reveal">
+            GOOD DESIGN IS AS LITTLE <span class="accent">DESIGN</span> AS POSSIBLE
+        </div>
+        <div class="quote-attribution reveal">Dieter Rams — Ten Principles of Good Design</div>
+    </section>
+
+    <!-- SLIDE 8 — Closing / END -->
+    <section class="slide slide-closing" id="slide-7">
+        <div class="closing-word reveal">END</div>
+        <div class="closing-dot reveal"></div>
+        <div class="closing-contact reveal">
+            Electric Ink &mdash; Bold Typography Design
+        </div>
+    </section>
+
+    <script>
+        /* ========== THEME TOGGLE ========== */
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme-electric-ink', t);
+        }
+        function toggleTheme() {
+            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            setTheme(cur === 'dark' ? 'light' : 'dark');
+        }
+        (function () {
+            const saved = localStorage.getItem('theme-electric-ink');
+            if (saved) setTheme(saved);
+        })();
+
+        /* ========== SLIDE PRESENTATION ENGINE ========== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.current = 0;
+                this.total = this.slides.length;
+                this.isAnimating = false;
+                this.wheelAccum = 0;
+                this.wheelThreshold = 50;
+                this.touchStartY = 0;
+                this.init();
+            }
+
+            init() {
+                this.buildDots();
+                this.updateUI();
+                this.observeSlides();
+                document.addEventListener('keydown', e => this.onKey(e));
+                window.addEventListener('wheel', e => this.onWheel(e), { passive: false });
+                window.addEventListener('touchstart', e => {
+                    this.touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+                window.addEventListener('touchend', e => {
+                    const dy = this.touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(dy) > 50) dy > 0 ? this.next() : this.prev();
+                }, { passive: true });
+
+                // Initial visibility for first slide
+                requestAnimationFrame(() => {
+                    this.slides[0].classList.add('visible');
+                });
+            }
+
+            buildDots() {
+                const c = document.getElementById('navDots');
+                for (let i = 0; i < this.total; i++) {
+                    const d = document.createElement('button');
+                    d.className = 'nav-dot';
+                    d.setAttribute('aria-label', `Slide ${i + 1}`);
+                    d.onclick = () => this.goTo(i);
+                    c.appendChild(d);
+                }
+            }
+
+            observeSlides() {
+                const obs = new IntersectionObserver(entries => {
+                    entries.forEach(en => {
+                        if (en.isIntersecting) {
+                            en.target.classList.add('visible');
+                            this.current = [...this.slides].indexOf(en.target);
+                            this.updateUI();
+                        }
+                    });
+                }, { threshold: 0.5 });
+                this.slides.forEach(s => obs.observe(s));
+            }
+
+            updateUI() {
+                document.querySelectorAll('.nav-dot').forEach((d, i) =>
+                    d.classList.toggle('active', i === this.current)
+                );
+                const cur = String(this.current + 1).padStart(2, '0');
+                const tot = String(this.total).padStart(2, '0');
+                document.getElementById('counter').textContent = `${cur} / ${tot}`;
+            }
+
+            goTo(i) {
+                if (i < 0 || i >= this.total || this.isAnimating) return;
+                this.isAnimating = true;
+                this.current = i;
+                this.slides[i].scrollIntoView({ behavior: 'smooth' });
+                this.updateUI();
+                setTimeout(() => { this.isAnimating = false; }, 700);
+            }
+
+            next() { this.goTo(this.current + 1); }
+            prev() { this.goTo(this.current - 1); }
+
+            onKey(e) {
+                if (['ArrowDown', 'ArrowRight', 'Space', ' ', 'PageDown'].includes(e.key)) {
+                    e.preventDefault(); this.next();
+                }
+                if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                    e.preventDefault(); this.prev();
+                }
+                if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
+                if (e.key === 'End') { e.preventDefault(); this.goTo(this.total - 1); }
+            }
+
+            onWheel(e) {
+                e.preventDefault();
+                this.wheelAccum += e.deltaY;
+                if (Math.abs(this.wheelAccum) >= this.wheelThreshold) {
+                    this.wheelAccum > 0 ? this.next() : this.prev();
+                    this.wheelAccum = 0;
+                }
+            }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+</html>

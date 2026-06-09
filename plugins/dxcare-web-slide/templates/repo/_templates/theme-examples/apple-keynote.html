@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Apple Keynote Dark — Sample Presentation</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000;
+            --bg2: #1d1d1f;
+            --text: #f5f5f7;
+            --text2: #86868b;
+            --accent: #2997ff;
+            --glow: rgba(41, 151, 255, 0.3);
+            --card-bg: rgba(29, 29, 31, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --radius: 12px;
+            --positive: #30d158;
+        }
+
+        [data-theme="light"] {
+            --bg: #ffffff;
+            --bg2: #f5f5f7;
+            --text: #1d1d1f;
+            --text2: #6e6e73;
+            --accent: #0071e3;
+            --glow: rgba(0, 113, 227, 0.15);
+            --card-bg: rgba(245, 245, 247, 0.8);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --positive: #248a3d;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== SLIDE BASE ===== */
+        .slide {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: clamp(2rem, 5vw, 5rem);
+            position: relative;
+        }
+
+        /* ===== ENTRANCE ANIMATIONS ===== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+        .delay-6 { transition-delay: 0.6s; }
+        .delay-7 { transition-delay: 0.7s; }
+
+        /* ===== SLIDE 1 — TITLE ===== */
+        .slide-title {
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-title::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .slide-title > * { position: relative; z-index: 1; }
+        .slide-title .tag {
+            font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: clamp(0.8rem, 1.5vw, 1.5rem);
+        }
+        .slide-title h1 {
+            font-size: clamp(2.4rem, 7vw, 5.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+        }
+        .slide-title .subtitle {
+            font-size: clamp(0.95rem, 2vw, 1.5rem);
+            color: var(--text2);
+            font-weight: 400;
+            max-width: 600px;
+        }
+
+        /* ===== SLIDE 2 — SECTION DIVIDER ===== */
+        .slide-section {
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+        .slide-section .section-num {
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+        .slide-section .section-title {
+            font-size: clamp(1.6rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-top: clamp(0.3rem, 0.5vw, 0.5rem);
+        }
+        .slide-section .section-line {
+            width: clamp(40px, 8vw, 80px);
+            height: 2px;
+            background: var(--accent);
+            margin-top: clamp(0.8rem, 1.5vw, 1.2rem);
+            border: none;
+        }
+
+        /* ===== SLIDE 3 — CONTENT / BULLETS ===== */
+        .slide-content {
+            align-items: flex-start;
+            text-align: left;
+            padding: clamp(2rem, 6vw, 8rem);
+        }
+        .slide-content h2 {
+            font-size: clamp(1.6rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.2rem, 2.5vw, 2rem);
+            max-width: 800px;
+        }
+        .bullet-list li {
+            padding-left: 1.8em;
+            position: relative;
+        }
+        .bullet-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5em;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        .bullet-list .bullet-title {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text);
+        }
+        .bullet-list .bullet-desc {
+            font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+            color: var(--text2);
+            line-height: 1.6;
+            margin-top: 0.25rem;
+        }
+
+        /* ===== SLIDE 4 — TWO COLUMN ===== */
+        .slide-two-col {
+            text-align: left;
+            align-items: flex-start;
+            padding: clamp(2rem, 6vw, 8rem);
+        }
+        .slide-two-col h2 {
+            font-size: clamp(1.6rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            width: 100%;
+        }
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            gap: clamp(1.5rem, 3vw, 3rem);
+            width: 100%;
+            max-width: 1100px;
+            align-items: start;
+        }
+        .col-divider {
+            width: 1px;
+            height: 100%;
+            min-height: 200px;
+            background: var(--card-border);
+            align-self: stretch;
+        }
+        .col-left {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 2vw, 1.5rem);
+        }
+        .col-block-title {
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.2rem;
+        }
+        .col-block-desc {
+            font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+            color: var(--text2);
+            line-height: 1.6;
+        }
+        .col-card {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+        .col-card .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .highlight-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+        .highlight-text {
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        @media (max-width: 700px) {
+            .two-col-grid {
+                grid-template-columns: 1fr;
+                gap: clamp(1rem, 2vw, 1.5rem);
+            }
+            .col-divider { display: none; }
+        }
+
+        /* ===== SLIDE 5 — METRICS / KPI ===== */
+        .slide-metrics h2 {
+            font-size: clamp(1.6rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+        }
+        .kpi-row {
+            display: flex;
+            gap: clamp(1rem, 2.5vw, 2rem);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .kpi-card {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.5rem);
+            text-align: center;
+            min-width: clamp(160px, 22vw, 260px);
+        }
+        .kpi-number {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            color: var(--text);
+        }
+        .kpi-label {
+            font-size: clamp(0.75rem, 1.3vw, 0.95rem);
+            color: var(--text2);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        .kpi-change {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            color: var(--positive);
+            font-weight: 600;
+            margin-top: 0.6rem;
+            display: inline-block;
+        }
+
+        /* ===== SLIDE 6 — FLOW / DIAGRAM ===== */
+        .slide-flow h2 {
+            font-size: clamp(1.6rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+        }
+        .flow-row {
+            display: flex;
+            gap: clamp(0.4rem, 1vw, 0.8rem);
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .flow-card {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1.2rem, 2.5vw, 2rem);
+            width: 180px;
+            text-align: center;
+        }
+        .flow-card .flow-num {
+            font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+        .flow-card .flow-label {
+            font-size: clamp(0.85rem, 1.4vw, 1rem);
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 0.5rem;
+        }
+        .flow-card .flow-desc {
+            font-size: clamp(0.7rem, 1.1vw, 0.8rem);
+            color: var(--text2);
+            margin-top: 0.3rem;
+            line-height: 1.4;
+        }
+        .flow-arrow {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--text2);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 800px) {
+            .flow-card { width: 140px; }
+        }
+        @media (max-width: 600px) {
+            .flow-row { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
+
+        /* ===== SLIDE 7 — QUOTE ===== */
+        .slide-quote {
+            padding: clamp(3rem, 8vw, 8rem);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .slide-quote .quote-mark {
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--accent);
+            line-height: 1;
+            font-weight: 800;
+            opacity: 0.8;
+        }
+        .slide-quote .quote-text {
+            font-size: clamp(1.2rem, 2.8vw, 2rem);
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--text);
+            margin-top: clamp(0.5rem, 1vw, 1rem);
+            max-width: 750px;
+        }
+        .slide-quote .quote-attr {
+            margin-top: clamp(1.2rem, 2.5vw, 2rem);
+        }
+        .slide-quote .quote-name {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            font-weight: 600;
+            color: var(--text);
+        }
+        .slide-quote .quote-role {
+            font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+            color: var(--text2);
+            margin-top: 0.15rem;
+        }
+
+        /* ===== SLIDE 8 — CLOSING ===== */
+        .slide-closing {
+            position: relative;
+            overflow: hidden;
+        }
+        .slide-closing::before {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 60%;
+            background: radial-gradient(ellipse, var(--glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .slide-closing > * { position: relative; z-index: 1; }
+        .slide-closing h2 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: clamp(1.2rem, 2.5vw, 2rem);
+        }
+        .closing-items {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.2vw, 1rem);
+            align-items: center;
+        }
+        .closing-item {
+            font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+            color: var(--text2);
+            font-weight: 400;
+        }
+        /* (link styles removed — closing items are plain text) */
+        .closing-note {
+            font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1rem, 2vw, 2rem);
+        }
+        .back-link {
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            background: var(--bg2);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+            color: var(--text);
+        }
+        .theme-toggle:hover { opacity: 0.7; }
+
+        /* ===== NAV DOTS ===== */
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text2);
+            opacity: 0.3;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s, background 0.3s;
+            border: none;
+            padding: 0;
+        }
+        .nav-dot.active {
+            opacity: 1;
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        /* ===== SLIDE COUNTER ===== */
+        .slide-counter {
+            position: fixed;
+            bottom: clamp(0.8rem, 2vw, 1.5rem);
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            z-index: 100;
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            color: var(--text2);
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <a href="./" class="back-link">&#8592; Gallery</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="theme-icon">&#9790;</span>
+        </button>
+    </div>
+
+    <!-- NAV -->
+    <div class="nav-dots" id="navDots"></div>
+    <div class="slide-counter" id="counter">1 / 8</div>
+
+    <!-- ========== SLIDE 1: TITLE ========== -->
+    <section class="slide slide-title" data-slide="0">
+        <div class="tag fade-up">Apple Keynote</div>
+        <h1 class="fade-up delay-1">Sample Presentation</h1>
+        <p class="subtitle fade-up delay-2">깔끔하고 미니멀한 Apple 스타일 프레젠테이션</p>
+    </section>
+
+    <!-- ========== SLIDE 2: SECTION DIVIDER ========== -->
+    <section class="slide slide-section" data-slide="1">
+        <div class="section-num fade-up">01</div>
+        <h2 class="section-title fade-up delay-1">디자인 철학</h2>
+        <hr class="section-line fade-up delay-2">
+    </section>
+
+    <!-- ========== SLIDE 3: CONTENT / BULLETS ========== -->
+    <section class="slide slide-content" data-slide="2">
+        <h2 class="fade-up">핵심 특징</h2>
+        <ul class="bullet-list">
+            <li class="fade-up delay-1">
+                <div class="bullet-title">프리미엄 타이포그래피</div>
+                <div class="bullet-desc">Pretendard Variable 폰트로 한글과 영문 모두 최적의 가독성을 구현합니다.</div>
+            </li>
+            <li class="fade-up delay-2">
+                <div class="bullet-title">절제된 컬러 시스템</div>
+                <div class="bullet-desc">배경과 텍스트의 극명한 대비, 포인트 블루 하나로 시선을 집중시킵니다.</div>
+            </li>
+            <li class="fade-up delay-3">
+                <div class="bullet-title">여백 중심 레이아웃</div>
+                <div class="bullet-desc">불필요한 장식을 제거하고 콘텐츠에만 집중하는 미니멀 디자인입니다.</div>
+            </li>
+            <li class="fade-up delay-4">
+                <div class="bullet-title">반응형 대응</div>
+                <div class="bullet-desc">clamp() 기반 유동 타이포그래피로 모든 화면에서 일관된 경험을 제공합니다.</div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- ========== SLIDE 4: TWO COLUMN ========== -->
+    <section class="slide slide-two-col" data-slide="3">
+        <h2 class="fade-up">디자인 시스템</h2>
+        <div class="two-col-grid">
+            <div class="col-left">
+                <div class="fade-up delay-1">
+                    <div class="col-block-title">타이포그래피 스케일</div>
+                    <div class="col-block-desc">Display, Heading, Body, Caption 4단계의 체계적인 크기 시스템을 활용합니다.</div>
+                </div>
+                <div class="fade-up delay-2">
+                    <div class="col-block-title">컬러 팔레트</div>
+                    <div class="col-block-desc">다크/라이트 모드 각각에 최적화된 대비비를 가진 5가지 핵심 컬러를 사용합니다.</div>
+                </div>
+                <div class="fade-up delay-3">
+                    <div class="col-block-title">컴포넌트</div>
+                    <div class="col-block-desc">글래스모피즘 카드, 프로세스 플로우, KPI 블록 등 재사용 가능한 모듈을 제공합니다.</div>
+                </div>
+            </div>
+            <div class="col-divider fade-up delay-2"></div>
+            <div class="col-card fade-up delay-3">
+                <div class="highlight-item">
+                    <span class="highlight-dot"></span>
+                    <span class="highlight-text">backdrop-filter 글래스 효과</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-dot"></span>
+                    <span class="highlight-text">12px 통일 라운드 코너</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-dot"></span>
+                    <span class="highlight-text">cubic-bezier 커스텀 이징</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-dot"></span>
+                    <span class="highlight-text">CSS 변수 기반 테마 전환</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-dot"></span>
+                    <span class="highlight-text">prefers-reduced-motion 지원</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SLIDE 5: METRICS / KPI ========== -->
+    <section class="slide slide-metrics" data-slide="4">
+        <h2 class="fade-up">핵심 지표</h2>
+        <div class="kpi-row">
+            <div class="kpi-card fade-up delay-1">
+                <div class="kpi-number">98.5%</div>
+                <div class="kpi-label">가독성 점수</div>
+                <span class="kpi-change">+12% YoY</span>
+            </div>
+            <div class="kpi-card fade-up delay-2">
+                <div class="kpi-number">3.2s</div>
+                <div class="kpi-label">평균 로드 시간</div>
+                <span class="kpi-change">-24% 개선</span>
+            </div>
+            <div class="kpi-card fade-up delay-3">
+                <div class="kpi-number">4.9</div>
+                <div class="kpi-label">사용자 만족도</div>
+                <span class="kpi-change">+0.6 상승</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SLIDE 6: FLOW / DIAGRAM ========== -->
+    <section class="slide slide-flow" data-slide="5">
+        <h2 class="fade-up">워크플로우</h2>
+        <div class="flow-row">
+            <div class="flow-card fade-up delay-1">
+                <div class="flow-num">1</div>
+                <div class="flow-label">기획</div>
+                <div class="flow-desc">목표 설정 및 구조 설계</div>
+            </div>
+            <div class="flow-arrow fade-up delay-2">&#8594;</div>
+            <div class="flow-card fade-up delay-2">
+                <div class="flow-num">2</div>
+                <div class="flow-label">디자인</div>
+                <div class="flow-desc">비주얼 시스템 구축</div>
+            </div>
+            <div class="flow-arrow fade-up delay-3">&#8594;</div>
+            <div class="flow-card fade-up delay-3">
+                <div class="flow-num">3</div>
+                <div class="flow-label">개발</div>
+                <div class="flow-desc">인터랙티브 구현</div>
+            </div>
+            <div class="flow-arrow fade-up delay-4">&#8594;</div>
+            <div class="flow-card fade-up delay-4">
+                <div class="flow-num">4</div>
+                <div class="flow-label">배포</div>
+                <div class="flow-desc">최종 검수 및 공개</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SLIDE 7: QUOTE ========== -->
+    <section class="slide slide-quote" data-slide="6">
+        <div class="quote-mark fade-up">"</div>
+        <p class="quote-text fade-up delay-1">
+            단순함은 궁극의 정교함이다.<br>
+            우리는 복잡한 것을 간단하게 만드는 데 집중합니다.
+        </p>
+        <div class="quote-attr fade-up delay-2">
+            <div class="quote-name">Steve Jobs</div>
+            <div class="quote-role">Co-founder, Apple Inc.</div>
+        </div>
+    </section>
+
+    <!-- ========== SLIDE 8: CLOSING ========== -->
+    <section class="slide slide-closing" data-slide="7">
+        <h2 class="fade-up">감사합니다</h2>
+        <div class="closing-items">
+            <div class="closing-item fade-up delay-1">Apple Keynote 스타일의 미니멀한 디자인 시스템을 살펴보았습니다</div>
+            <div class="closing-item fade-up delay-2">그라디언트 배경과 SF Pro 타이포그래피로 프리미엄 인상을 전달합니다</div>
+            <div class="closing-item fade-up delay-3">
+                <span class="closing-note">Presented by Noel</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* ===== THEME TOGGLE ===== */
+        function setTheme(t) {
+            document.documentElement.setAttribute('data-theme', t);
+            localStorage.setItem('theme-apple-keynote', t);
+            const icon = document.querySelector('.theme-icon');
+            if (icon) icon.textContent = t === 'dark' ? '\u263E' : '\u2600\uFE0F';
+        }
+        function toggleTheme() {
+            const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+            setTheme(cur === 'dark' ? 'light' : 'dark');
+        }
+        (function initTheme() {
+            const saved = localStorage.getItem('theme-apple-keynote');
+            setTheme(saved || 'dark');
+        })();
+
+        /* ===== SLIDE PRESENTATION CLASS ===== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.current = 0;
+                this.total = this.slides.length;
+                this.isAnimating = false;
+                this.wheelAccum = 0;
+                this.wheelThreshold = 60;
+                this.wheelDebounceTimer = null;
+                this.wheelDebounceMs = 200;
+                this.touchStartY = 0;
+                this.touchSwipeThreshold = 50;
+                this.init();
+            }
+
+            init() {
+                this.buildDots();
+                this.updateUI();
+                this.setupKeyboard();
+                this.setupWheel();
+                this.setupTouch();
+                this.setupIntersectionObserver();
+                this.setupFadeAnimations();
+            }
+
+            buildDots() {
+                const container = document.getElementById('navDots');
+                for (let i = 0; i < this.total; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot';
+                    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+                    dot.addEventListener('click', () => this.goTo(i));
+                    container.appendChild(dot);
+                }
+            }
+
+            updateUI() {
+                const dots = document.querySelectorAll('.nav-dot');
+                dots.forEach((d, i) => d.classList.toggle('active', i === this.current));
+                document.getElementById('counter').textContent = (this.current + 1) + ' / ' + this.total;
+            }
+
+            goTo(index) {
+                if (index < 0 || index >= this.total || this.isAnimating) return;
+                this.isAnimating = true;
+                this.current = index;
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+                this.updateUI();
+                setTimeout(() => { this.isAnimating = false; }, 600);
+            }
+
+            next() { this.goTo(this.current + 1); }
+            prev() { this.goTo(this.current - 1); }
+
+            setupKeyboard() {
+                document.addEventListener('keydown', (e) => {
+                    switch (e.key) {
+                        case 'ArrowDown':
+                        case 'ArrowRight':
+                        case ' ':
+                        case 'Space':
+                        case 'PageDown':
+                            e.preventDefault();
+                            this.next();
+                            break;
+                        case 'ArrowUp':
+                        case 'ArrowLeft':
+                        case 'PageUp':
+                            e.preventDefault();
+                            this.prev();
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            this.goTo(0);
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            this.goTo(this.total - 1);
+                            break;
+                    }
+                });
+            }
+
+            setupWheel() {
+                window.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    this.wheelAccum += e.deltaY;
+
+                    if (this.wheelDebounceTimer) clearTimeout(this.wheelDebounceTimer);
+
+                    if (Math.abs(this.wheelAccum) >= this.wheelThreshold) {
+                        if (this.wheelAccum > 0) this.next();
+                        else this.prev();
+                        this.wheelAccum = 0;
+                    }
+
+                    this.wheelDebounceTimer = setTimeout(() => {
+                        this.wheelAccum = 0;
+                    }, this.wheelDebounceMs);
+                }, { passive: false });
+            }
+
+            setupTouch() {
+                window.addEventListener('touchstart', (e) => {
+                    this.touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+
+                window.addEventListener('touchend', (e) => {
+                    const dy = this.touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(dy) > this.touchSwipeThreshold) {
+                        if (dy > 0) this.next();
+                        else this.prev();
+                    }
+                }, { passive: true });
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            this.current = [...this.slides].indexOf(entry.target);
+                            this.updateUI();
+                            this.revealSlide(entry.target);
+                        }
+                    });
+                }, { threshold: 0.6 });
+                this.slides.forEach((s) => observer.observe(s));
+            }
+
+            setupFadeAnimations() {
+                /* Reveal the first slide immediately */
+                const firstSlide = this.slides[0];
+                if (firstSlide) {
+                    this.revealSlide(firstSlide);
+                }
+            }
+
+            revealSlide(slide) {
+                const els = slide.querySelectorAll('.fade-up');
+                els.forEach((el) => el.classList.add('visible'));
+            }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+</html>

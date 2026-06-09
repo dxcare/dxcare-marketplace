@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{{TITLE}}</title>
+{{FAVICON_LINK}}
+<!-- Pretendard Variable — loaded so the --font-* tokens (base.css + theme.css)
+     resolve to a real webfont instead of a system fallback. The family name
+     here ('Pretendard Variable') must match the first family listed in
+     --font-heading / --font-body, otherwise the load has no effect. -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<link rel="stylesheet" href="/_shared/css/base.css">
+<link rel="stylesheet" href="/_shared/css/print.css" media="print">
+<link rel="stylesheet" href="/_shared/css/a11y.css">
+<link rel="stylesheet" href="/_shared/css/diagrams.css">
+<link rel="stylesheet" href="./theme.css">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" defer></script>
+</head>
+<body data-theme="dark">
+  <!-- Brand mark — auto-swaps with the active theme (D7 / AC-3.4). The
+       light-on-dark mark (.logo-dark) shows under the dark theme; the
+       dark-on-light mark (.logo-light) shows under the light theme. Point
+       these at your two brand assets; remove both lines if the deck has no
+       brand mark. The `onerror="this.remove()"` makes a missing asset
+       fail gracefully: a deck that ships no logo SVG drops the broken-image
+       glyph from the DOM instead of rendering it (B-004 graceful logo). -->
+  <img class="brand-mark logo-dark" src="{{LOGO_DARK}}" alt="" aria-hidden="true" onerror="this.remove()">
+  <img class="brand-mark logo-light" src="{{LOGO_LIGHT}}" alt="" aria-hidden="true" onerror="this.remove()">
+
+  <main id="deck" role="main" aria-label="presentation">
+    <!-- ── SLIDE AUTHORING CONTRACT (B-005 / D2 bound stage) ──────────────
+         Slides are HAND-AUTHORED here; there is NO skeleton.md → HTML render
+         step. Every slide MUST follow the nested pattern below:
+
+             <section class="slide" data-slide="N" aria-labelledby="...">
+               <div class="slide-content">  ← REQUIRED
+                 ...your content...
+               </div>
+             </section>
+
+         The `.slide-content` wrapper IS the D2 bound stage: base.css caps it at
+         `max-width: min(1200px, 90vw)` + `margin-inline:auto` (centered column)
+         and the entry-reveal stagger is scoped to `.slide-content > *`. Omit it
+         and the slide loses both — content pins to the LEFT edge and the fade-up
+         reveal never fires. Apply it to EVERY slide, not just this first one.
+
+         (Self-contained "rich" decks may instead combine the classes —
+         `<section class="slide slide-content">` — but a skeleton deck that
+         links /_shared/css/base.css must use the nested <div> form above,
+         because base.css makes `.slide` a flex column and `.slide-content` its
+         `flex:1` child. See docs/RICH-DECKS.md.) -->
+    <section class="slide" data-slide="1" aria-labelledby="s1-title">
+      <div class="slide-content">
+        <!-- Hero brand logo (cover): create-slide fills the slot below from the
+             brand's "hero" role (theme-swapped, larger than the corner mark),
+             or leaves it empty when the brand has none. See brand.json. -->
+        {{HERO_BLOCK}}
+        <h1 id="s1-title">{{TITLE}}</h1>
+        <p>{{SUBTITLE}}</p>
+      </div>
+    </section>
+
+    <!-- Copy-paste template for each additional slide. Bump data-slide,
+         give the heading a unique id, and point aria-labelledby at it. -->
+    <!--
+    <section class="slide" data-slide="2" aria-labelledby="s2-title">
+      <div class="slide-content">
+        <h2 id="s2-title">Section heading</h2>
+        <p>Body copy. Each direct child of .slide-content fades up in turn.</p>
+      </div>
+    </section>
+    -->
+  </main>
+
+  <aside class="deck-controls" aria-label="slide controls">
+    <button data-action="prev" aria-label="previous slide">‹</button>
+    <span class="deck-counter"><span data-current>1</span> / <span data-total>1</span></span>
+    <button data-action="next" aria-label="next slide">›</button>
+    <button data-action="fullscreen" aria-label="toggle fullscreen">⛶</button>
+    <button data-action="theme" aria-label="toggle theme (T)">☾</button>
+    <button data-action="pdf" data-theme="dark" aria-label="download PDF (dark)" title="PDF 다운로드 (다크)">⬇︎</button>
+    <button data-action="pdf" data-theme="light" aria-label="download PDF (light)" title="PDF 다운로드 (라이트)">⬇︎☀</button>
+  </aside>
+
+  <div class="deck-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+
+  <script type="module">
+    // slide-core.js imports and calls initTheme() itself (it owns navigation,
+    // fullscreen, deeplink, and theme). Re-calling initTheme here would
+    // attach a second click handler and cancel toggles out. We only need to
+    // wire PDF, which slide-core does not touch.
+    import '/_shared/js/slide-core.js';
+    import { initPdfButton } from '/_shared/js/pdf.js';
+    initPdfButton();
+  </script>
+</body>
+</html>

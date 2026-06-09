@@ -1,0 +1,24 @@
+{
+  "preset": "warm",
+  "category": "education",
+  "description": "따뜻한 크림 배경 + 테라코타·앰버. 세리프 헤딩의 편안한 톤.",
+  "mood": "따뜻함, 편안, 교육",
+  "tokens": {
+    "color": {
+      "bg": "#FDF6EC",
+      "bgDark": "#2B1E16",
+      "fg": "#2B1E16",
+      "fgDark": "#FDF6EC",
+      "primary": "#C4533A",
+      "accent": "#E2A93B",
+      "muted": "#A88E7A"
+    },
+    "font": {
+      "heading": "'Fraunces', 'Noto Serif KR', serif",
+      "body": "'Pretendard Variable', Pretendard, -apple-system, sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "6px", "md": "12px", "lg": "24px" },
+    "motion": { "fast": "180ms", "base": "300ms" }
+  }
+}

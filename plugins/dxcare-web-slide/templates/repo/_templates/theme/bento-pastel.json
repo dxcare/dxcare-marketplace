@@ -1,0 +1,32 @@
+{
+  "preset": "bento-pastel",
+  "category": "creative",
+  "description": "2026 Bento Grid 트렌드. 파스텔 톤 + 큰 라운드 코너.",
+  "mood": "트렌디, 친근, 제품 소개",
+  "tokens": {
+    "color": {
+      "bg": "#fdf2f8",
+      "bgDark": "#18181b",
+      "bgSecondary": "#fce7f3",
+      "bgSecondaryDark": "#27272a",
+      "fg": "#18181b",
+      "fgDark": "#fafafa",
+      "muted": "#71717a",
+      "mutedDark": "#a1a1aa",
+      "primary": "#ec4899",
+      "primaryDark": "#f472b6",
+      "accent": "#818cf8",
+      "accent2": "#818cf8",
+      "accent3": "#34d399",
+      "cardBorder": "rgba(0, 0, 0, 0.06)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.06)"
+    },
+    "font": {
+      "heading": "'Satoshi', 'Pretendard Variable', sans-serif",
+      "body": "'DM Sans', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "12px", "md": "20px", "lg": "32px" },
+    "motion": { "fast": "180ms", "base": "320ms" }
+  }
+}

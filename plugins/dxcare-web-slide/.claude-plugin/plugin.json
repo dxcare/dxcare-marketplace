@@ -1,0 +1,22 @@
+{
+  "name": "dxcare-web-slide",
+  "version": "0.3.6",
+  "description": "Claude Code plugin for building, versioning, and deploying HTML presentations. TDD discipline, 16 theme presets with a visual gallery + terminal picker, automated theme.css regeneration, data charts (Chart.js opt-in), AI-slop generation guards, references auto-extraction, dual PDF export (in-browser html2canvas + WYSIWYG Playwright screenshot), host-agnostic deck flattening + multi-host deploy (Vercel / GitHub Pages / Cloudflare Pages) + account-free Cloudflare quick-tunnel sharing.",
+  "author": {
+    "name": "DXCare",
+    "url": "https://github.com/dxcare"
+  },
+  "homepage": "https://github.com/dxcare/dxcare-marketplace/tree/main/plugins/dxcare-web-slide",
+  "repository": "https://github.com/dxcare/dxcare-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "presentation",
+    "slides",
+    "html",
+    "theme",
+    "deploy",
+    "pdf",
+    "dark-mode",
+    "vercel"
+  ]
+}

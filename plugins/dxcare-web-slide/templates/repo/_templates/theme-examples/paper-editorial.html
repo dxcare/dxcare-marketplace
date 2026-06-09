@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Paper Editorial — Theme Sample</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ─────────────────────────────────────────────
+           PAPER EDITORIAL — Magazine / Print Aesthetic
+           ───────────────────────────────────────────── */
+
+        :root {
+            --bg: #1a1a1a;
+            --bg2: #222222;
+            --text: #ededed;
+            --text2: #999999;
+            --accent: #e5e5e5;
+            --rule: rgba(255,255,255,0.15);
+            --rule-strong: rgba(255,255,255,0.35);
+            --radius: 0px;
+            --font-heading: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+            --font-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+            --pad-x: clamp(3rem, 8vw, 10rem);
+            --pad-y: clamp(2rem, 5vh, 5rem);
+            --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        }
+
+        .light-theme {
+            --bg: #faf9f6;
+            --bg2: #f0eeea;
+            --text: #1a1a1a;
+            --text2: #666666;
+            --accent: #1a1a1a;
+            --rule: rgba(0,0,0,0.12);
+            --rule-strong: rgba(0,0,0,0.3);
+        }
+
+        /* ── Reset ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html {
+            scroll-snap-type: y mandatory;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            height: 100%;
+            overflow: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* ── Noise texture overlay on body ── */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: var(--noise);
+            background-repeat: repeat;
+            background-size: 256px 256px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+        }
+        .light-theme::after {
+            opacity: 0.4;
+        }
+
+        /* ── Slide base ── */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start; /* LEFT-ALIGNED — asymmetric */
+            position: relative;
+            overflow: hidden;
+            padding: var(--pad-y) var(--pad-x);
+        }
+
+        /* ── Typography ── */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            color: var(--text);
+            max-width: 60vw;
+            text-align: left;
+        }
+        h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.6rem, 4.5vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            color: var(--text);
+            text-align: left;
+        }
+        p, li {
+            font-family: var(--font-body);
+            font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+            line-height: 1.85;
+            color: var(--text2);
+            font-weight: 300;
+        }
+
+        /* Small-caps utility */
+        .sc {
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            font-weight: 700;
+            color: var(--text2);
+        }
+
+        /* Thin horizontal rule */
+        .hr {
+            width: 100%;
+            height: 1px;
+            background: var(--rule);
+            border: none;
+        }
+        .hr--strong {
+            background: var(--rule-strong);
+        }
+        .hr--short {
+            width: 60px;
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 1 — Magazine Cover / Title
+           ══════════════════════════════════════════════ */
+        .slide-title {
+            justify-content: flex-end;
+            padding-bottom: clamp(4rem, 10vh, 10rem);
+        }
+        .slide-title .vol-line {
+            margin-bottom: 1.5rem;
+        }
+        .slide-title h1 {
+            margin-bottom: 1.2rem;
+        }
+        .slide-title .meta-rule {
+            width: 100%;
+            max-width: 60vw;
+            margin-bottom: 1.2rem;
+        }
+        .slide-title .meta {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .slide-title .meta .sc {
+            color: var(--text2);
+        }
+        .slide-title .subtitle {
+            font-family: var(--font-heading);
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+            color: var(--text2);
+            max-width: 45vw;
+            line-height: 1.6;
+            margin-top: 1.5rem;
+        }
+
+        /* Decorative vertical line — left edge of title slide */
+        .slide-title::before {
+            content: '';
+            position: absolute;
+            left: clamp(1.5rem, 4vw, 5rem);
+            top: 15%;
+            bottom: 15%;
+            width: 1px;
+            background: var(--rule);
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 2 — Two-Column Content
+           ══════════════════════════════════════════════ */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            gap: 0;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .two-col__divider {
+            background: var(--rule);
+            align-self: stretch;
+        }
+
+        /* Left column */
+        .two-col__left {
+            padding-right: clamp(1.5rem, 3vw, 3rem);
+        }
+        .two-col__left .section-label {
+            margin-bottom: 1.2rem;
+        }
+        .two-col__left .item {
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) 0;
+            border-bottom: 1px solid var(--rule);
+        }
+        .two-col__left .item:last-child {
+            border-bottom: none;
+        }
+        .two-col__left .item-num {
+            font-family: var(--font-heading);
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            font-weight: 700;
+            color: var(--text);
+            display: inline-block;
+            margin-right: 0.8rem;
+            min-width: 2rem;
+        }
+        .two-col__left .item-title {
+            font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+            font-weight: 700;
+            color: var(--text);
+        }
+        .two-col__left .item-desc {
+            margin-top: 0.25rem;
+            font-size: clamp(0.75rem, 1.2vw, 0.88rem);
+            padding-left: 2.8rem;
+        }
+
+        /* Right column — pull quote */
+        .two-col__right {
+            padding-left: clamp(1.5rem, 3vw, 3rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .pull-quote {
+            position: relative;
+            padding-left: 0;
+        }
+        .pull-quote__mark {
+            font-family: var(--font-heading);
+            font-size: clamp(5rem, 12vw, 10rem);
+            line-height: 0.6;
+            color: var(--rule-strong);
+            position: absolute;
+            top: -0.1em;
+            left: -0.15em;
+            user-select: none;
+            pointer-events: none;
+            font-style: normal;
+        }
+        .pull-quote__text {
+            font-family: var(--font-heading);
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            line-height: 1.4;
+            color: var(--text);
+            position: relative;
+            z-index: 1;
+            padding-top: 1rem;
+        }
+        .pull-quote__attr {
+            margin-top: 1.2rem;
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            font-weight: 700;
+            color: var(--text2);
+        }
+        .pull-quote__attr::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: var(--text2);
+            vertical-align: middle;
+            margin-right: 0.6rem;
+        }
+
+        @media (max-width: 700px) {
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .two-col__divider {
+                height: 1px;
+                width: 100%;
+            }
+            .two-col__left { padding-right: 0; }
+            .two-col__right { padding-left: 0; }
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 3 — Editorial Statistics / Infographic
+           ══════════════════════════════════════════════ */
+        .stats-row {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: clamp(2rem, 4vw, 4rem);
+        }
+        .stat-block {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: clamp(1rem, 2vw, 2rem);
+        }
+        .stat-block + .stat-block {
+            border-left: 1px solid var(--rule);
+        }
+        .stat-block:first-child {
+            padding-left: 0;
+        }
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 7vw, 5.5rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            color: var(--text);
+        }
+        .stat-label {
+            margin-top: 0.6rem;
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            font-weight: 700;
+            color: var(--text2);
+        }
+        .stat-desc {
+            margin-top: 0.5rem;
+            font-size: clamp(0.7rem, 1.1vw, 0.82rem);
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.6;
+            max-width: 200px;
+        }
+
+        /* Drop cap for paragraph */
+        .drop-cap::first-letter {
+            font-family: var(--font-heading);
+            font-size: clamp(2.8rem, 5vw, 4rem);
+            font-weight: 900;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.15em;
+            margin-top: 0.05em;
+            color: var(--text);
+        }
+
+        .stats-footer {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .stats-footer p {
+            max-width: 600px;
+        }
+
+        @media (max-width: 600px) {
+            .stats-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .stat-block + .stat-block {
+                border-left: none;
+                border-top: 1px solid var(--rule);
+            }
+            .stat-block { padding-left: 0; }
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 4 — Two-Column Contrast Layout
+           ══════════════════════════════════════════════ */
+        .contrast-col {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            gap: 0;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .contrast-col__divider {
+            background: var(--rule);
+            align-self: stretch;
+        }
+        .contrast-col__left {
+            padding-right: clamp(1.5rem, 3vw, 3rem);
+        }
+        .contrast-col__left h2 {
+            margin-bottom: 1rem;
+        }
+        .contrast-col__left p {
+            max-width: 440px;
+        }
+        .contrast-col__right {
+            padding-left: clamp(1.5rem, 3vw, 3rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: clamp(1.2rem, 2vw, 2rem);
+        }
+        .highlight-item {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+        .highlight-num {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+        .highlight-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .highlight-detail .sc {
+            color: var(--text2);
+        }
+        .highlight-detail p {
+            font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+            line-height: 1.5;
+        }
+        .highlight-item + .highlight-item {
+            padding-top: clamp(1rem, 1.5vw, 1.5rem);
+            border-top: 1px solid var(--rule);
+        }
+
+        @media (max-width: 700px) {
+            .contrast-col {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .contrast-col__divider {
+                height: 1px;
+                width: 100%;
+            }
+            .contrast-col__left { padding-right: 0; }
+            .contrast-col__right { padding-left: 0; }
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 5 — Data / Metrics (Magazine Infographic)
+           ══════════════════════════════════════════════ */
+        .metrics-row {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: clamp(2rem, 4vw, 4rem);
+        }
+        .metric-cell {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: clamp(1rem, 2vw, 2rem);
+        }
+        .metric-cell + .metric-cell {
+            border-left: 1px solid var(--rule);
+        }
+        .metric-big {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            color: var(--text);
+        }
+        .metric-label {
+            margin-top: 0.8rem;
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            font-weight: 700;
+            color: var(--text2);
+        }
+        .metrics-summary {
+            width: 100%;
+            max-width: 1100px;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .metrics-summary p {
+            max-width: 650px;
+        }
+
+        @media (max-width: 600px) {
+            .metrics-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .metric-cell + .metric-cell {
+                border-left: none;
+                border-top: 1px solid var(--rule);
+            }
+            .metric-cell { text-align: left; align-items: flex-start; }
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 6 — Timeline (Typographic)
+           ══════════════════════════════════════════════ */
+        .timeline {
+            width: 100%;
+            max-width: 800px;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+            position: relative;
+            padding-left: clamp(1rem, 2vw, 2rem);
+        }
+        /* Vertical spine */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--rule);
+        }
+        .timeline-node {
+            position: relative;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) 0;
+            padding-left: clamp(1.2rem, 2vw, 2rem);
+        }
+        /* Horizontal rule at each node */
+        .timeline-node::before {
+            content: '';
+            position: absolute;
+            left: calc(-1 * clamp(1rem, 2vw, 2rem));
+            top: 50%;
+            width: clamp(1rem, 2vw, 2rem);
+            height: 1px;
+            background: var(--rule-strong);
+        }
+        .timeline-node + .timeline-node {
+            border-top: 1px solid var(--rule);
+        }
+        .timeline-date {
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            font-weight: 700;
+            color: var(--text2);
+            margin-bottom: 0.3rem;
+        }
+        .timeline-title {
+            font-family: var(--font-heading);
+            font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.2rem;
+        }
+        .timeline-desc {
+            font-size: clamp(0.75rem, 1.2vw, 0.88rem);
+            color: var(--text2);
+            font-weight: 300;
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 7 — Quote / Testimonial (Centered)
+           ══════════════════════════════════════════════ */
+        .slide-quote-centered {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .big-quote {
+            position: relative;
+            max-width: 750px;
+            padding: clamp(2rem, 4vw, 4rem) 0;
+        }
+        .big-quote__mark {
+            font-family: var(--font-heading);
+            font-size: clamp(8rem, 20vw, 16rem);
+            line-height: 0.5;
+            color: var(--rule);
+            position: absolute;
+            top: -0.15em;
+            left: 50%;
+            transform: translateX(-50%);
+            user-select: none;
+            pointer-events: none;
+            font-style: normal;
+            opacity: 0.5;
+        }
+        .big-quote__text {
+            font-family: var(--font-heading);
+            font-style: italic;
+            font-weight: 400;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            line-height: 1.45;
+            color: var(--text);
+            position: relative;
+            z-index: 1;
+        }
+        .big-quote__rule {
+            width: 60px;
+            height: 1px;
+            background: var(--rule-strong);
+            margin: 1.5rem auto 0;
+        }
+        .big-quote__attr {
+            margin-top: 1rem;
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            font-weight: 700;
+            color: var(--text2);
+        }
+
+        /* ══════════════════════════════════════════════
+           SLIDE 8 — Closing (Fin.)
+           ══════════════════════════════════════════════ */
+        .slide-closing {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .closing-heading {
+            font-family: var(--font-heading);
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            color: var(--text);
+            font-style: italic;
+        }
+        .closing-meta {
+            margin-top: 1.2rem;
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            font-weight: 700;
+            color: var(--text2);
+        }
+        .closing-rule {
+            width: 100%;
+            max-width: 400px;
+            height: 1px;
+            background: var(--rule);
+            margin: clamp(1.5rem, 3vw, 2.5rem) auto;
+        }
+        .closing-actions {
+            display: flex;
+            gap: clamp(2rem, 4vw, 4rem);
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .closing-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .closing-action__label {
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.55rem, 0.85vw, 0.65rem);
+            font-weight: 700;
+            color: var(--text2);
+        }
+        .closing-action__value {
+            font-family: var(--font-heading);
+            font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 2px;
+            transition: border-color 0.25s;
+        }
+        .closing-action__value:hover {
+            border-color: var(--text);
+        }
+
+        /* ══════════════════════════════════════════════
+           Reveal Animation — Fade only (no translateY)
+           ══════════════════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .slide.visible .reveal {
+            opacity: 1;
+        }
+        .reveal:nth-child(1)  { transition-delay: 0s; }
+        .reveal:nth-child(2)  { transition-delay: 0.12s; }
+        .reveal:nth-child(3)  { transition-delay: 0.24s; }
+        .reveal:nth-child(4)  { transition-delay: 0.36s; }
+        .reveal:nth-child(5)  { transition-delay: 0.48s; }
+        .reveal:nth-child(6)  { transition-delay: 0.60s; }
+        .reveal:nth-child(7)  { transition-delay: 0.72s; }
+        .reveal:nth-child(8)  { transition-delay: 0.84s; }
+
+        /* ══════════════════════════════════════════════
+           UI — Back link, toggle, dots, counter
+           ══════════════════════════════════════════════ */
+        .back-link {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            font-size: clamp(0.6rem, 1vw, 0.72rem);
+            font-weight: 700;
+            color: var(--text2);
+            background: none;
+            border: 1px solid var(--rule);
+            padding: 0.4rem 0.9rem;
+            border-radius: 0;
+            text-decoration: none;
+            z-index: 100;
+            transition: color 0.25s, border-color 0.25s;
+        }
+        .back-link:hover {
+            color: var(--text);
+            border-color: var(--text);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            background: none;
+            border: 1px solid var(--rule);
+            padding: 0.4rem 0.6rem;
+            border-radius: 0;
+            transition: border-color 0.25s;
+            line-height: 1;
+            color: var(--text2);
+        }
+        .theme-toggle:hover {
+            border-color: var(--text);
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 0;
+            background: var(--text2);
+            opacity: 0.25;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .dot.active {
+            background: var(--text);
+            opacity: 1;
+            transform: scaleY(3);
+        }
+        .dot:hover {
+            opacity: 0.6;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem;
+            right: 1.5rem;
+            font-family: var(--font-body);
+            font-variant: small-caps;
+            letter-spacing: 0.15em;
+            font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+            font-weight: 700;
+            color: var(--text2);
+            z-index: 100;
+        }
+        .slide-counter .counter-current {
+            font-family: var(--font-heading);
+            font-variant: normal;
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        /* ── Section numbering — small caps chapter markers ── */
+        .chapter-label {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+        .chapter-label .hr--short {
+            flex-shrink: 0;
+        }
+
+        /* ══════════════════════════════════════════════
+           Reduced motion & responsive
+           ══════════════════════════════════════════════ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.15s !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+        @media (max-height: 500px) {
+            .nav-dots { display: none; }
+        }
+        @media (max-width: 500px) {
+            h1 { max-width: 90vw; }
+            .slide-title .subtitle { max-width: 85vw; }
+            .slide-title::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ── UI Controls ── -->
+    <a href="./" class="back-link">Gallery</a>
+    <div class="theme-toggle" onclick="setTheme(document.body.classList.contains('light-theme')?'dark':'light')"><span id="themeIcon">&#9788;</span></div>
+    <nav class="nav-dots" id="navDots"></nav>
+    <div class="slide-counter"><span class="counter-current" id="counterCurrent">1</span>&thinsp;/&thinsp;<span id="counterTotal">8</span></div>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 1 — Magazine Cover Title
+         ══════════════════════════════════════════════════ -->
+    <section class="slide slide-title" id="slide-0">
+        <div class="reveal hr hr--strong meta-rule" style="max-width:60vw;"></div>
+        <div class="reveal sc vol-line">Paper Editorial &mdash; Vol. 09 &bull; 2026</div>
+        <h1 class="reveal">Sample<br>Presentation</h1>
+        <div class="reveal hr meta-rule"></div>
+        <div class="reveal meta">
+            <span class="sc">March 2026</span>
+            <span class="sc">Editorial Design</span>
+            <span class="sc">Monochrome</span>
+        </div>
+        <p class="reveal subtitle">Typography-driven editorial design. A monochrome aesthetic that strips away color to let content speak with pure typographic authority.</p>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 2 — Two-Column Editorial Content
+         ══════════════════════════════════════════════════ -->
+    <section class="slide" id="slide-1">
+        <div class="chapter-label reveal">
+            <span class="sc">Section 01</span>
+            <div class="hr hr--short"></div>
+        </div>
+        <h2 class="reveal">Theme<br>Characteristics</h2>
+
+        <div class="two-col reveal">
+            <div class="two-col__left">
+                <div class="item">
+                    <span class="item-num">01</span>
+                    <span class="item-title">Playfair Display + Lato</span>
+                    <p class="item-desc">Bold serif headings paired with clean sans-serif body text create a magazine-grade hierarchy.</p>
+                </div>
+                <div class="item">
+                    <span class="item-num">02</span>
+                    <span class="item-title">Monochrome Color System</span>
+                    <p class="item-desc">Zero color accents. Pure black-and-white tones force attention onto content itself.</p>
+                </div>
+                <div class="item">
+                    <span class="item-num">03</span>
+                    <span class="item-title">Sharp Edges, Zero Radius</span>
+                    <p class="item-desc">Every element uses 0px border-radius for a strict, disciplined editorial grid.</p>
+                </div>
+                <div class="item">
+                    <span class="item-num">04</span>
+                    <span class="item-title">Magazine Layouts</span>
+                    <p class="item-desc">Two-column grids, pull quotes, and infographic-style data — designed for longform narrative.</p>
+                </div>
+            </div>
+            <div class="two-col__divider"></div>
+            <div class="two-col__right">
+                <div class="pull-quote">
+                    <span class="pull-quote__mark" aria-hidden="true">&ldquo;</span>
+                    <p class="pull-quote__text">Good typography is invisible. Only bad typography is noticed.</p>
+                    <div class="pull-quote__attr">Beatrice Warde, 1932</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 3 — Editorial Statistics / Infographic
+         ══════════════════════════════════════════════════ -->
+    <section class="slide" id="slide-2">
+        <div class="chapter-label reveal">
+            <span class="sc">Section 02</span>
+            <div class="hr hr--short"></div>
+        </div>
+        <h2 class="reveal">Insights</h2>
+
+        <div class="reveal hr" style="max-width:1000px; margin-top:1rem;"></div>
+
+        <div class="stats-row reveal">
+            <div class="stat-block">
+                <div class="stat-number">+38%</div>
+                <div class="stat-label">Readability Improvement</div>
+                <p class="stat-desc">Serif-forward hierarchy increases text comprehension across long-form content.</p>
+            </div>
+            <div class="stat-block">
+                <div class="stat-number">4.2m</div>
+                <div class="stat-label">Average Dwell Time</div>
+                <p class="stat-desc">Users spend significantly more time with editorially structured presentations.</p>
+            </div>
+            <div class="stat-block">
+                <div class="stat-number">12.7%</div>
+                <div class="stat-label">Conversion Rate</div>
+                <p class="stat-desc">Clean monochrome design outperforms color-heavy alternatives in B2B contexts.</p>
+            </div>
+            <div class="stat-block">
+                <div class="stat-number">89%</div>
+                <div class="stat-label">Retention</div>
+                <p class="stat-desc">Audiences recall content presented with strong typographic hierarchy.</p>
+            </div>
+        </div>
+
+        <div class="reveal hr" style="max-width:1000px; margin-top:1rem;"></div>
+
+        <div class="stats-footer reveal">
+            <p class="drop-cap">Editorial design has always understood that restraint is the highest form of expression. By removing color and ornament, what remains is the architecture of information itself — the weight of a letterform, the rhythm of whitespace, the authority of a well-set column.</p>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 4 — Two-Column Contrast Layout
+         ══════════════════════════════════════════════════ -->
+    <section class="slide" id="slide-3">
+        <div class="chapter-label reveal">
+            <span class="sc">Section 03</span>
+            <div class="hr hr--short"></div>
+        </div>
+        <h2 class="reveal">Strategy &amp;<br>Differentiators</h2>
+
+        <div class="contrast-col reveal">
+            <div class="contrast-col__left">
+                <p style="margin-bottom:1rem;">Our editorial approach rejects the superficial in favor of substance. Every design decision serves a communicative purpose — nothing is decorative for its own sake. The result is work that commands authority through discipline, not embellishment.</p>
+                <p>This philosophy extends beyond aesthetics into structural thinking: how information is sequenced, weighted, and revealed across the page determines whether a reader merely scans or truly comprehends.</p>
+            </div>
+            <div class="contrast-col__divider"></div>
+            <div class="contrast-col__right">
+                <div class="highlight-item">
+                    <div class="highlight-num">97%</div>
+                    <div class="highlight-detail">
+                        <span class="sc">Brand Recall</span>
+                        <p>Monochrome editorial layouts achieve near-total recall among target audiences.</p>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-num">3.1x</div>
+                    <div class="highlight-detail">
+                        <span class="sc">Engagement Multiplier</span>
+                        <p>Structured longform outperforms carousel-style content by a factor of three.</p>
+                    </div>
+                </div>
+                <div class="highlight-item">
+                    <div class="highlight-num">62s</div>
+                    <div class="highlight-detail">
+                        <span class="sc">Avg. Time Per Slide</span>
+                        <p>Readers dwell longer when typography does the heavy lifting.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 5 — Data / Metrics (Magazine Infographic)
+         ══════════════════════════════════════════════════ -->
+    <section class="slide" id="slide-4">
+        <div class="chapter-label reveal">
+            <span class="sc">Section 04</span>
+            <div class="hr hr--short"></div>
+        </div>
+        <h2 class="reveal">By the Numbers</h2>
+
+        <div class="reveal hr" style="max-width:1100px; margin-top:1rem;"></div>
+
+        <div class="metrics-row reveal">
+            <div class="metric-cell">
+                <div class="metric-big">240</div>
+                <div class="metric-label">Projects Delivered</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-big">18</div>
+                <div class="metric-label">Countries Reached</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-big">5.4M</div>
+                <div class="metric-label">Total Impressions</div>
+            </div>
+            <div class="metric-cell">
+                <div class="metric-big">99.8</div>
+                <div class="metric-label">Uptime Percentage</div>
+            </div>
+        </div>
+
+        <div class="reveal hr" style="max-width:1100px; margin-top:1rem;"></div>
+
+        <div class="metrics-summary reveal">
+            <p class="drop-cap">Numbers without context are merely decoration. Each figure above represents a deliberate investment in craft — projects shaped by editorial rigor, audiences earned through clarity, and systems built to endure. Scale is not the goal; sustained quality at scale is.</p>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 6 — Timeline (Typographic)
+         ══════════════════════════════════════════════════ -->
+    <section class="slide" id="slide-5">
+        <div class="chapter-label reveal">
+            <span class="sc">Section 05</span>
+            <div class="hr hr--short"></div>
+        </div>
+        <h2 class="reveal">Milestones</h2>
+
+        <div class="timeline reveal">
+            <div class="timeline-node">
+                <div class="timeline-date">January 2024</div>
+                <div class="timeline-title">Foundation &amp; Research Phase</div>
+                <p class="timeline-desc">Initial design language established. Conducted extensive typographic research across 50+ editorial publications to define the core aesthetic framework.</p>
+            </div>
+            <div class="timeline-node">
+                <div class="timeline-date">June 2024</div>
+                <div class="timeline-title">System Architecture Complete</div>
+                <p class="timeline-desc">Finalized the modular component system — grid structures, type scales, and spacing tokens locked for production use.</p>
+            </div>
+            <div class="timeline-node">
+                <div class="timeline-date">November 2024</div>
+                <div class="timeline-title">Beta Launch</div>
+                <p class="timeline-desc">Deployed to a closed group of 120 early adopters. Feedback loop established; iterated through 14 refinement cycles.</p>
+            </div>
+            <div class="timeline-node">
+                <div class="timeline-date">March 2025</div>
+                <div class="timeline-title">Public Release</div>
+                <p class="timeline-desc">Full editorial theme system launched. Adopted by design teams across three continents within the first quarter.</p>
+            </div>
+            <div class="timeline-node">
+                <div class="timeline-date">January 2026</div>
+                <div class="timeline-title">Version 2.0 — Current</div>
+                <p class="timeline-desc">Major update with dark mode parity, enhanced infographic components, and refined typographic scale for ultra-wide displays.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 7 — Quote / Testimonial (Centered)
+         ══════════════════════════════════════════════════ -->
+    <section class="slide slide-quote-centered" id="slide-6">
+        <div class="big-quote reveal">
+            <span class="big-quote__mark" aria-hidden="true">&ldquo;</span>
+            <p class="big-quote__text">The details are not the details.<br>They make the design.</p>
+            <div class="big-quote__rule"></div>
+            <div class="big-quote__attr">Charles Eames</div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         SLIDE 8 — Closing
+         ══════════════════════════════════════════════════ -->
+    <section class="slide slide-closing" id="slide-7">
+        <div class="closing-heading reveal">Fin.</div>
+        <div class="closing-meta reveal">Paper Editorial &mdash; Vol. 09 &bull; March 2026</div>
+        <div class="closing-rule reveal"></div>
+        <div class="closing-actions reveal">
+            <div class="closing-action">
+                <span class="closing-action__label">Typography</span>
+                <span class="closing-action__value">신문 에디토리얼 스타일의 정제된 타이포그래피 시스템</span>
+            </div>
+            <div class="closing-action">
+                <span class="closing-action__label">Layout</span>
+                <span class="closing-action__value">컬럼 기반 그리드와 클래식한 인쇄 미학의 디지털 재해석</span>
+            </div>
+            <div class="closing-action">
+                <span class="closing-action__label">Identity</span>
+                <span class="closing-action__value">모노크롬 팔레트와 세리프 서체로 완성한 지적인 브랜드 인상</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    /* ── Theme Toggle ── */
+    function setTheme(t) {
+        document.body.classList.toggle('light-theme', t === 'light');
+        document.getElementById('themeIcon').textContent = t === 'light' ? '\u263E' : '\u263C';
+        localStorage.setItem('theme-paper-editorial', t);
+    }
+    (function() {
+        var s = localStorage.getItem('theme-paper-editorial');
+        if (s) setTheme(s);
+        else if (matchMedia('(prefers-color-scheme:light)').matches) setTheme('light');
+    })();
+
+    /* ── Slide Presentation Engine ── */
+    class SlidePresentation {
+        constructor() {
+            this.slides = [].slice.call(document.querySelectorAll('.slide'));
+            this.current = 0;
+            this.total = this.slides.length;
+            this.wheelAcc = 0;
+            this.wheelTimer = null;
+            this.touchY = 0;
+            this.locked = false;
+            this.init();
+        }
+
+        init() {
+            this.buildDots();
+            this.updateUI();
+            this.slides[0].classList.add('visible');
+
+            /* Keyboard navigation */
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault(); this.next();
+                }
+                if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                    e.preventDefault(); this.prev();
+                }
+            }.bind(this));
+
+            /* Wheel navigation */
+            document.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                this.wheelAcc += e.deltaY;
+                clearTimeout(this.wheelTimer);
+                this.wheelTimer = setTimeout(function() {
+                    if (Math.abs(this.wheelAcc) > 50) {
+                        this.wheelAcc > 0 ? this.next() : this.prev();
+                    }
+                    this.wheelAcc = 0;
+                }.bind(this), 80);
+            }.bind(this), { passive: false });
+
+            /* Touch navigation */
+            document.addEventListener('touchstart', function(e) {
+                this.touchY = e.touches[0].clientY;
+            }.bind(this), { passive: true });
+            document.addEventListener('touchend', function(e) {
+                var d = this.touchY - e.changedTouches[0].clientY;
+                if (Math.abs(d) > 50) { d > 0 ? this.next() : this.prev(); }
+            }.bind(this), { passive: true });
+        }
+
+        buildDots() {
+            var nav = document.getElementById('navDots');
+            this.slides.forEach(function(_, i) {
+                var d = document.createElement('div');
+                d.className = 'dot' + (i === 0 ? ' active' : '');
+                d.addEventListener('click', function() { this.goTo(i); }.bind(this));
+                nav.appendChild(d);
+            }.bind(this));
+        }
+
+        goTo(i) {
+            if (i < 0 || i >= this.total || i === this.current || this.locked) return;
+            this.locked = true;
+            this.slides[this.current].classList.remove('visible');
+            this.current = i;
+            this.slides[this.current].classList.add('visible');
+            this.slides[this.current].scrollIntoView({ behavior: 'smooth' });
+            this.updateUI();
+            setTimeout(function() { this.locked = false; }.bind(this), 600);
+        }
+
+        next() { this.goTo(this.current + 1); }
+        prev() { this.goTo(this.current - 1); }
+
+        updateUI() {
+            var dots = document.querySelectorAll('.dot');
+            for (var j = 0; j < dots.length; j++) {
+                dots[j].classList.toggle('active', j === this.current);
+            }
+            document.getElementById('counterCurrent').textContent = this.current + 1;
+            document.getElementById('counterTotal').textContent = this.total;
+        }
+    }
+
+    new SlidePresentation();
+    </script>
+</body>
+</html>

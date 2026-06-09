@@ -1,0 +1,16 @@
+{
+  "slug": "{{SLUG}}",
+  "title": "{{TITLE}}",
+  "audience": "{{AUDIENCE}}",
+  "audience_org": "{{AUDIENCE_ORG}}",
+  "meeting_date": "{{MEETING_DATE}}",
+  "status": "draft",
+  "private": false,
+  "features": {
+    "toc": false,
+    "notes": false,
+    "shortcuts": false,
+    "animation": "minimal"
+  },
+  "milestones": []
+}

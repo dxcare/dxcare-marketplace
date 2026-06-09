@@ -1,0 +1,24 @@
+{
+  "preset": "minimal",
+  "category": "basic",
+  "description": "순수 흑백 미니멀. 장식 최소, 타이포·여백 중심.",
+  "mood": "미니멀, 절제, 중립",
+  "tokens": {
+    "color": {
+      "bg": "#FFFFFF",
+      "bgDark": "#111111",
+      "fg": "#111111",
+      "fgDark": "#F5F5F5",
+      "primary": "#111111",
+      "accent": "#555555",
+      "muted": "#999999"
+    },
+    "font": {
+      "heading": "'Inter', 'Pretendard Variable', -apple-system, sans-serif",
+      "body": "'Inter', 'Pretendard Variable', -apple-system, sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "0px", "md": "2px", "lg": "4px" },
+    "motion": { "fast": "120ms", "base": "200ms" }
+  }
+}

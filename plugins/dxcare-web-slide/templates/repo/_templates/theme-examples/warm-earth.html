@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Warm Earth — Sample Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #1c1917;
+            --bg2: #292524;
+            --text: #fafaf9;
+            --text2: #a8a29e;
+            --accent: #f59e0b;
+            --accent-soft: rgba(245,158,11,0.15);
+            --radius: 16px;
+            --card-bg: rgba(41,37,36,0.7);
+            --card-border: rgba(255,255,255,0.08);
+            --font-heading: 'Lora', Georgia, serif;
+            --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .light-theme {
+            --bg: #fafaf9;
+            --bg2: #f5f5f4;
+            --text: #1c1917;
+            --text2: #78716c;
+            --accent: #d97706;
+            --accent-soft: rgba(217,119,6,0.12);
+            --card-bg: rgba(245,245,244,0.85);
+            --card-border: rgba(0,0,0,0.06);
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+            .slide { opacity: 1; transform: none; }
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.4s, color 0.4s;
+        }
+
+        /* Warm noise texture overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+        }
+
+        /* ── Slide base ── */
+        .slide {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: clamp(1.5rem, 4vw, 4rem);
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+        }
+        .slide.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide > * { position: relative; z-index: 1; }
+
+        /* ── Typography ── */
+        h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.4rem, 6.5vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            color: var(--text);
+        }
+        h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.6rem, 4.5vw, 3rem);
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            color: var(--text);
+        }
+        h3 {
+            font-family: var(--font-heading);
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            font-weight: 600;
+            color: var(--text);
+        }
+        p, li {
+            font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+            line-height: 1.7;
+            color: var(--text2);
+        }
+
+        /* ── Slide 1: Title ── */
+        .slide-title { gap: clamp(0.6rem, 1.2vw, 1rem); }
+        .slide-title .pill {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding: 0.4em 1.4em;
+            border: 1px solid var(--accent);
+            border-radius: 999px;
+            background: var(--accent-soft);
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+        }
+        .slide-title h1 {
+            margin-bottom: clamp(0.4rem, 1vw, 0.8rem);
+            max-width: 18ch;
+        }
+        .slide-title .subtitle {
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            color: var(--text2);
+            max-width: 36ch;
+            font-weight: 400;
+        }
+        .slide-title .warm-glow {
+            position: absolute;
+            width: 50vw;
+            height: 50vw;
+            max-width: 500px;
+            max-height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(245,158,11,0.1), transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .light-theme .slide-title .warm-glow {
+            background: radial-gradient(circle, rgba(217,119,6,0.08), transparent 70%);
+        }
+
+        /* ── Slide 2: Section Divider ── */
+        .slide-divider { gap: clamp(0.6rem, 1.2vw, 1.2rem); }
+        .slide-divider .big-num {
+            font-family: var(--font-heading);
+            font-size: clamp(5rem, 14vw, 12rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.15;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .slide-divider h2 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .slide-divider .amber-line {
+            width: clamp(50px, 10vw, 100px);
+            height: 2px;
+            background: var(--accent);
+            border: none;
+            border-radius: 2px;
+        }
+        .slide-divider .section-desc {
+            font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+            color: var(--text2);
+            max-width: 32ch;
+        }
+
+        /* ── Slide 3: Content / Bullets ── */
+        .slide-content {
+            align-items: flex-start;
+            text-align: left;
+            padding: clamp(2rem, 6vw, 8rem);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .slide-content h2 {
+            margin-bottom: clamp(1.2rem, 2.5vw, 2rem);
+        }
+        .slide-content ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 2vw, 1.6rem);
+            width: 100%;
+        }
+        .slide-content li {
+            font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+            color: var(--text2);
+            line-height: 1.65;
+            padding-left: 2em;
+            position: relative;
+        }
+        .slide-content li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        .slide-content li strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+        .slide-content .warm-note {
+            margin-top: clamp(1.2rem, 2vw, 1.8rem);
+            font-size: clamp(0.85rem, 1.4vw, 1rem);
+            color: var(--accent);
+            font-style: italic;
+            font-family: var(--font-heading);
+        }
+
+        /* ── Slide 4: Two-Column ── */
+        .slide-twocol {
+            text-align: left;
+            padding: clamp(2rem, 5vw, 6rem);
+        }
+        .twocol-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(2rem, 4vw, 4rem);
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+        .twocol-left h2 {
+            font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+        .twocol-left p {
+            font-size: clamp(0.88rem, 1.5vw, 1.05rem);
+            color: var(--text2);
+            line-height: 1.7;
+        }
+        .twocol-left p + p {
+            margin-top: 0.8rem;
+        }
+        .twocol-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-top: 3px solid var(--accent);
+            border-radius: var(--radius);
+            padding: clamp(1.8rem, 3.5vw, 3rem);
+            text-align: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .twocol-card .stat-label {
+            font-family: var(--font-heading);
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+        .twocol-card .stat-value {
+            font-family: var(--font-heading);
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.1;
+        }
+        .twocol-card .stat-sub {
+            font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+            color: var(--text2);
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+        @media (max-width: 640px) {
+            .twocol-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+        }
+
+        /* ── Slide 5: Data / Metrics Cards ── */
+        .slide-metrics h2 {
+            font-size: clamp(1.6rem, 4vw, 3rem);
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+        }
+        .metrics-row {
+            display: flex;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            min-width: clamp(150px, 24vw, 260px);
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+        }
+        .metric-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(245,158,11,0.1);
+        }
+        .light-theme .metric-card:hover {
+            box-shadow: 0 12px 40px rgba(217,119,6,0.08);
+        }
+        .metric-card .metric-icon {
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            margin-bottom: 0.8rem;
+        }
+        .metric-card .metric-val {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 4.5vw, 3.2rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.1;
+        }
+        .metric-card .metric-label {
+            font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+            color: var(--text2);
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* ── Slide 6: Vertical Timeline ── */
+        .slide-timeline {
+            text-align: left;
+            padding: clamp(2rem, 5vw, 6rem);
+        }
+        .slide-timeline h2 {
+            text-align: center;
+            width: 100%;
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        .timeline {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.2rem, 2.5vw, 2rem);
+            max-width: 600px;
+            width: 100%;
+            padding-left: 2.5rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background: var(--accent-soft);
+            border-radius: 2px;
+        }
+        .tl-item {
+            position: relative;
+        }
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0.35em;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--bg2);
+            border: 2px solid var(--accent);
+            z-index: 1;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        .tl-item.active::before {
+            background: var(--accent);
+            box-shadow: 0 0 16px rgba(245,158,11,0.4);
+        }
+        .light-theme .tl-item.active::before {
+            box-shadow: 0 0 16px rgba(217,119,6,0.3);
+        }
+        .tl-item .tl-date {
+            font-family: var(--font-heading);
+            font-size: clamp(0.65rem, 1.1vw, 0.8rem);
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.2rem;
+        }
+        .tl-item .tl-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .tl-item .tl-desc {
+            font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+            color: var(--text2);
+            line-height: 1.55;
+        }
+
+        /* ── Slide 7: Quote ── */
+        .slide-quote {
+            gap: clamp(0.5rem, 1vw, 1rem);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .slide-quote .quote-mark {
+            font-family: var(--font-heading);
+            font-size: clamp(4rem, 10vw, 8rem);
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.35;
+            margin-bottom: -0.3em;
+        }
+        .slide-quote blockquote {
+            font-family: var(--font-heading);
+            font-size: clamp(1.2rem, 2.8vw, 2rem);
+            font-style: italic;
+            font-weight: 500;
+            line-height: 1.5;
+            max-width: 28ch;
+            color: var(--text);
+        }
+        .slide-quote .attribution {
+            margin-top: clamp(0.8rem, 1.5vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .slide-quote .attribution::before {
+            content: '';
+            width: clamp(24px, 4vw, 40px);
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        .slide-quote .attribution span {
+            font-size: clamp(0.8rem, 1.3vw, 1rem);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── Slide 8: Next Steps ── */
+        .slide-next {
+            gap: clamp(1.5rem, 3vw, 2.5rem);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .slide-next h2 {
+            font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+            font-weight: 700;
+        }
+        .next-items {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            width: 100%;
+            max-width: 520px;
+        }
+        .next-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1.2rem, 2.5vw, 1.8rem);
+            text-align: left;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.3s;
+        }
+        .next-item:hover {
+            transform: translateX(6px);
+        }
+        .next-item.primary {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .next-item .next-icon {
+            width: clamp(36px, 5vw, 48px);
+            height: clamp(36px, 5vw, 48px);
+            border-radius: 12px;
+            background: var(--accent-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 2vw, 1.4rem);
+            flex-shrink: 0;
+        }
+        .next-item.primary .next-icon {
+            background: rgba(245,158,11,0.25);
+        }
+        .light-theme .next-item.primary .next-icon {
+            background: rgba(217,119,6,0.18);
+        }
+        .next-item .next-text .next-title {
+            font-family: var(--font-heading);
+            font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+            font-weight: 700;
+        }
+        .next-item.primary .next-text .next-title {
+            color: var(--accent);
+        }
+        .next-item .next-text .next-desc {
+            font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+            color: var(--text2);
+            margin-top: 0.15rem;
+        }
+
+        /* (amber-btn removed — not needed for presentation slides) */
+
+        /* ── Top bar ── */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(0.6rem, 1.5vw, 1rem) clamp(1rem, 2vw, 2rem);
+        }
+        .back-link {
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.7; }
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background: var(--bg2);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s, background 0.2s;
+            color: var(--text);
+        }
+        .theme-toggle:hover { opacity: 0.7; }
+
+        /* ── Nav dots ── */
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text2);
+            opacity: 0.3;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s, background 0.3s;
+            border: none;
+            padding: 0;
+        }
+        .nav-dot.active {
+            opacity: 1;
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        /* ── Slide counter ── */
+        .slide-counter {
+            position: fixed;
+            bottom: clamp(0.8rem, 2vw, 1.5rem);
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            z-index: 100;
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            color: var(--text2);
+            font-variant-numeric: tabular-nums;
+        }
+
+        @media (max-height: 500px) { .nav-dots { display: none; } }
+    </style>
+</head>
+<body>
+    <!-- Top bar -->
+    <div class="top-bar">
+        <a href="./" class="back-link">&#8592; Gallery</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">&#9728;&#65039;</button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-dots" id="navDots"></div>
+    <div class="slide-counter" id="counter">1 / 8</div>
+
+    <!-- Slide 1: Title — Centered, amber pill badge, large Lora heading, Nunito subtitle, warm amber glow -->
+    <section class="slide slide-title">
+        <div class="warm-glow"></div>
+        <div class="pill">Warm Earth</div>
+        <h1>따뜻한 감성으로<br>전하는 이야기</h1>
+        <p class="subtitle">자연에서 영감을 받은 어스 톤 팔레트와 따뜻한 세리프 타이포그래피로 안정감과 신뢰를 전달합니다</p>
+    </section>
+
+    <!-- Slide 2: Section Divider — Large serif "01" in amber, section title, thin amber line -->
+    <section class="slide slide-divider">
+        <div class="big-num">01</div>
+        <h2>우리의 이야기</h2>
+        <hr class="amber-line">
+        <p class="section-desc">브랜드의 가치와 비전을 따뜻한 시선으로 풀어갑니다</p>
+    </section>
+
+    <!-- Slide 3: Content — Serif heading, 4 bullet points with amber circle markers -->
+    <section class="slide slide-content">
+        <h2>핵심 가치</h2>
+        <ul>
+            <li><strong>진정성 있는 소통</strong> &#8212; 고객과의 신뢰를 최우선으로, 투명하고 솔직한 커뮤니케이션을 지향합니다</li>
+            <li><strong>사람 중심의 디자인</strong> &#8212; 기술이 아닌 사용자의 경험에서 출발하여, 모든 접점에서 따뜻함을 전달합니다</li>
+            <li><strong>지속 가능한 성장</strong> &#8212; 단기적 성과보다 장기적 관계 구축에 집중하며, 함께 성장하는 파트너십을 추구합니다</li>
+            <li><strong>창의적 문제 해결</strong> &#8212; 다양한 관점을 존중하고 협업을 통해 혁신적인 솔루션을 만들어갑니다</li>
+        </ul>
+        <p class="warm-note">* 모든 가치는 팀원들의 합의를 통해 선정되었습니다</p>
+    </section>
+
+    <!-- Slide 4: Two-Column — Left: heading + paragraphs. Right: card with amber border highlight -->
+    <section class="slide slide-twocol">
+        <div class="twocol-grid">
+            <div class="twocol-left">
+                <h2>고객 만족도<br>새로운 기준</h2>
+                <p>지난 6개월간 고객 경험 혁신 프로젝트를 통해 모든 접점에서의 만족도가 크게 향상되었습니다.</p>
+                <p>개인 맞춤형 서비스 도입과 응대 프로세스 개선이 핵심 동력으로 작용하며, 업계 평균 대비 2배 이상의 재방문율을 달성했습니다.</p>
+            </div>
+            <div class="twocol-card">
+                <div class="stat-label">Customer Satisfaction</div>
+                <div class="stat-value">92.4%</div>
+                <div class="stat-sub">+12.8% vs 전년 동기</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: Data/Metrics — 3 warm-toned cards, large amber numbers -->
+    <section class="slide slide-metrics">
+        <h2>성과 한눈에 보기</h2>
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-icon">&#127793;</div>
+                <div class="metric-val">1.8M</div>
+                <div class="metric-label">누적 서비스 이용자</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">&#9749;</div>
+                <div class="metric-val">4.9</div>
+                <div class="metric-label">고객 평점 (5점 만점)</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-icon">&#128150;</div>
+                <div class="metric-val">87%</div>
+                <div class="metric-label">재이용 의향률</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 6: Timeline — Vertical timeline with amber markers, 4 milestones -->
+    <section class="slide slide-timeline">
+        <h2>성장 여정</h2>
+        <div class="timeline">
+            <div class="tl-item">
+                <div class="tl-date">2024년 3월</div>
+                <div class="tl-title">브랜드 탄생</div>
+                <div class="tl-desc">따뜻한 감성을 핵심 가치로, 5명의 창립 멤버가 서비스를 시작했습니다</div>
+            </div>
+            <div class="tl-item">
+                <div class="tl-date">2024년 9월</div>
+                <div class="tl-title">첫 번째 이정표</div>
+                <div class="tl-desc">이용자 10만 명 돌파 및 시드 투자 유치, 팀 규모 20명으로 성장</div>
+            </div>
+            <div class="tl-item active">
+                <div class="tl-date">2025년 6월</div>
+                <div class="tl-title">서비스 확장</div>
+                <div class="tl-desc">3개 도시로 서비스 확대, B2B 솔루션 출시 및 전략적 파트너십 체결</div>
+            </div>
+            <div class="tl-item">
+                <div class="tl-date">2026년 상반기</div>
+                <div class="tl-title">글로벌 진출</div>
+                <div class="tl-desc">아시아 5개국 진출 준비, 다국어 지원 및 현지화 프로젝트 진행 예정</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Quote — Large amber quotation mark (serif), warm italic quote -->
+    <section class="slide slide-quote">
+        <div class="quote-mark">&#8220;</div>
+        <blockquote>좋은 서비스는 기술이 아니라 사람에 대한 깊은 이해에서 시작됩니다</blockquote>
+        <div class="attribution">
+            <span>이하은, 공동 창업자</span>
+        </div>
+    </section>
+
+    <!-- Slide 8: 오늘의 이야기 — 핵심 요약 -->
+    <section class="slide slide-next">
+        <h2>오늘의 이야기</h2>
+        <div class="next-items">
+            <div class="next-item">
+                <div class="next-icon">&#127793;</div>
+                <div class="next-text">
+                    <div class="next-title">따뜻한 어스톤 컬러 시스템</div>
+                    <div class="next-desc">앰버, 테라코타, 올리브 팔레트로 자연스럽고 편안한 분위기를 전달합니다</div>
+                </div>
+            </div>
+            <div class="next-item primary">
+                <div class="next-icon">&#9749;</div>
+                <div class="next-text">
+                    <div class="next-title">감성적인 타이포그래피</div>
+                    <div class="next-desc">Lora 세리프와 Nunito 산세리프의 조합으로 따뜻한 브랜드 인상을 완성했습니다</div>
+                </div>
+            </div>
+            <div class="next-item">
+                <div class="next-icon">&#127776;</div>
+                <div class="next-text">
+                    <div class="next-title">스토리텔링 중심 구성</div>
+                    <div class="next-desc">인용문과 데이터를 자연스럽게 엮어 공감할 수 있는 내러티브를 만들었습니다</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* ── Theme toggle ── */
+        function setTheme(t) {
+            document.body.classList.toggle('light-theme', t === 'light');
+            document.querySelector('.theme-toggle').textContent = t === 'light' ? '\u{1F319}' : '\u{2600}\u{FE0F}';
+            localStorage.setItem('theme-warm-earth', t);
+        }
+        function toggleTheme() {
+            const isLight = document.body.classList.contains('light-theme');
+            setTheme(isLight ? 'dark' : 'light');
+        }
+        (function initTheme() {
+            const saved = localStorage.getItem('theme-warm-earth');
+            if (saved) setTheme(saved);
+            else if (matchMedia('(prefers-color-scheme: light)').matches) setTheme('light');
+        })();
+
+        /* ── Slide Presentation class ── */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.current = 0;
+                this.total = this.slides.length;
+                this.isAnimating = false;
+                this.wheelAccum = 0;
+                this.wheelThreshold = 50;
+                this.touchStartY = 0;
+                this.init();
+            }
+
+            init() {
+                this.buildDots();
+                this.updateUI();
+                this.observeSlides();
+
+                document.addEventListener('keydown', e => this.onKey(e));
+                window.addEventListener('wheel', e => this.onWheel(e), { passive: false });
+                window.addEventListener('touchstart', e => {
+                    this.touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+                window.addEventListener('touchend', e => {
+                    const dy = this.touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(dy) > 50) {
+                        dy > 0 ? this.next() : this.prev();
+                    }
+                }, { passive: true });
+            }
+
+            buildDots() {
+                const container = document.getElementById('navDots');
+                for (let i = 0; i < this.total; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot';
+                    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+                    dot.onclick = () => this.goTo(i);
+                    container.appendChild(dot);
+                }
+            }
+
+            observeSlides() {
+                const observer = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            this.current = [...this.slides].indexOf(entry.target);
+                            this.updateUI();
+                        }
+                    });
+                }, { threshold: 0.5 });
+                this.slides.forEach(s => observer.observe(s));
+                if (this.slides[0]) this.slides[0].classList.add('visible');
+            }
+
+            updateUI() {
+                document.querySelectorAll('.nav-dot').forEach((d, i) =>
+                    d.classList.toggle('active', i === this.current)
+                );
+                document.getElementById('counter').textContent =
+                    `${this.current + 1} / ${this.total}`;
+            }
+
+            goTo(i) {
+                if (i < 0 || i >= this.total || this.isAnimating) return;
+                this.isAnimating = true;
+                this.current = i;
+                this.slides[i].scrollIntoView({ behavior: 'smooth' });
+                this.updateUI();
+                setTimeout(() => { this.isAnimating = false; }, 800);
+            }
+
+            next() { this.goTo(this.current + 1); }
+            prev() { this.goTo(this.current - 1); }
+
+            onKey(e) {
+                if (['ArrowDown', 'ArrowRight', 'Space', ' ', 'PageDown'].includes(e.key)) {
+                    e.preventDefault(); this.next();
+                }
+                if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                    e.preventDefault(); this.prev();
+                }
+                if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
+                if (e.key === 'End') { e.preventDefault(); this.goTo(this.total - 1); }
+            }
+
+            onWheel(e) {
+                e.preventDefault();
+                this.wheelAccum += e.deltaY;
+                if (Math.abs(this.wheelAccum) >= this.wheelThreshold) {
+                    this.wheelAccum > 0 ? this.next() : this.prev();
+                    this.wheelAccum = 0;
+                }
+            }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+</html>

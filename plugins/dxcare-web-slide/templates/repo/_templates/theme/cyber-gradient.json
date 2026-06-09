@@ -1,0 +1,31 @@
+{
+  "preset": "cyber-gradient",
+  "category": "tech",
+  "description": "보라-시안 그래디언트 글로우. 미래지향 AI/테크.",
+  "mood": "AI, 미래, 테크 스타트업",
+  "tokens": {
+    "color": {
+      "bg": "#fafafa",
+      "bgDark": "#09090b",
+      "bgSecondary": "#f4f4f5",
+      "bgSecondaryDark": "#18181b",
+      "fg": "#09090b",
+      "fgDark": "#fafafa",
+      "muted": "#71717a",
+      "mutedDark": "#a1a1aa",
+      "primary": "#7c3aed",
+      "primaryDark": "#8b5cf6",
+      "accent": "#06b6d4",
+      "accent2": "#06b6d4",
+      "cardBorder": "rgba(139, 92, 246, 0.15)",
+      "cardBorderDark": "rgba(139, 92, 246, 0.15)"
+    },
+    "font": {
+      "heading": "'General Sans', 'Pretendard Variable', sans-serif",
+      "body": "'Inter', 'Pretendard Variable', sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "8px", "md": "16px", "lg": "24px" },
+    "motion": { "fast": "180ms", "base": "320ms" }
+  }
+}

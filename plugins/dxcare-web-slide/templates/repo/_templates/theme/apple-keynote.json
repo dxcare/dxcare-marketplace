@@ -1,0 +1,30 @@
+{
+  "preset": "apple-keynote",
+  "category": "investor",
+  "description": "Apple 스타일. 검정 배경 + 파란 액센트. 가장 검증된 비즈니스 테마.",
+  "mood": "미니멀, 프리미엄, 신뢰감",
+  "tokens": {
+    "color": {
+      "bg": "#ffffff",
+      "bgDark": "#000000",
+      "bgSecondary": "#f5f5f7",
+      "bgSecondaryDark": "#1d1d1f",
+      "fg": "#1d1d1f",
+      "fgDark": "#f5f5f7",
+      "muted": "#6e6e73",
+      "mutedDark": "#86868b",
+      "primary": "#0071e3",
+      "primaryDark": "#2997ff",
+      "accent": "#2997ff",
+      "cardBorder": "rgba(0, 0, 0, 0.1)",
+      "cardBorderDark": "rgba(255, 255, 255, 0.1)"
+    },
+    "font": {
+      "heading": "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif",
+      "body": "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif",
+      "mono": "'JetBrains Mono', monospace"
+    },
+    "radius": { "sm": "6px", "md": "12px", "lg": "20px" },
+    "motion": { "fast": "150ms", "base": "250ms" }
+  }
+}
