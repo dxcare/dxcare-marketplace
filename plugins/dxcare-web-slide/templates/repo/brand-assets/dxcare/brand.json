@@ -1,0 +1,9 @@
+{
+  "name": "DXCare",
+  "default": true,
+  "roles": {
+    "mark":    { "on-dark": "inline-white.png",  "on-light": "inline-color.png" },
+    "hero":    { "on-dark": "stacked-white.png", "on-light": "stacked-color.png" },
+    "favicon": { "any": "symbol-color.png" }
+  }
+}

@@ -4,8 +4,8 @@
 가 deck 을 만들 때 브랜드를 골라(여러 개면 물어봄, 하나면 그대로) 그 브랜드의 로고를
 `slides/<slug>/assets/` 로 복사하고 deck 에 **역할별로** 배선합니다.
 
-> 기본 라이브러리는 비어 있습니다. 브랜드를 추가하기 전에는 deck 이 **로고 없이**
-> 생성됩니다(graceful). 아래 가이드대로 회사/팀 로고를 넣으면 그때부터 배선됩니다.
+> 기본 브랜드로 **DXCare** 세트(`dxcare/`)가 동봉되어 있습니다(`"default": true`).
+> 다른 브랜드를 추가하지 않으면 `new` 가 묻지 않고 DXCare 로고를 씁니다.
 
 ## 역할 (roles) — 같은 브랜드, 다른 활용
 
@@ -35,6 +35,22 @@
 - `roles` 가 없는 브랜드는 **flat 컨벤션**으로 폴백: `logo-on-dark.{svg,png}` /
   `logo-on-light.{svg,png}` 두 파일이 `mark` 로만 들어갑니다 (간단한 브랜드용).
 - `svg` 우선 · `png` 폴백. 한쪽 테마만 있어도 그 슬롯만 채웁니다.
+
+## 동봉된 DXCare 세트
+
+DXCare 로고를 lockup × 색상으로 정리해 `dxcare/` 에 동봉합니다. 역할에 다른 변형을
+쓰고 싶으면 `brand.json` 의 파일명만 바꾸면 됩니다.
+
+| lockup | 설명 | 파일 |
+|--------|------|------|
+| `symbol`      | 심볼만 (그라데이션 X)        | `symbol-color.png` · `symbol-white.png` · `symbol-violetbg.png` |
+| `inline`      | DXCare 가로 로고            | `inline-color.png` · `inline-white.png` · `inline-violetbg.png` |
+| `stacked`     | 심볼 위 + DXCare 아래 (세로) | `stacked-color.png` · `stacked-white.png` · `stacked-violetbg.png` |
+| `wordmark-en` | DXCare 단색 워드마크         | `wordmark-en-black.png` · `-white.png` · `-blue.png` · `-violet.png` |
+| `wordmark-kr` | DXCare + 디엑스케어          | `wordmark-kr-color.png` · `-white.png` · `-violetbg.png` |
+
+- `-white` = 어두운 배경용, `-color`/`-black` = 밝은 배경용, `-violetbg` = 브랜드 보라(`#4d35ef`) 배경 위.
+- 브랜드 컬러: 바이올렛 `#4d35ef` · 시안 `#03b7c5` (심볼 X 의 상단→하단 그라데이션).
 
 ## 브랜드 추가 / 제거
 
