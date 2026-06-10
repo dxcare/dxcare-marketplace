@@ -10,8 +10,8 @@
     {
       "name": "dxcare-web-slide",
       "source": "./plugins/dxcare-web-slide",
-      "description": "HTML 웹 프레젠테이션 생성·관리·배포 플러그인. 5개 자연어 스킬 (init/new/work/milestone/deploy), 16개 테마 프리셋 + 갤러리 시각 선택, 자동 theme.css 생성, 데이터 차트 모듈 (Chart.js opt-in — 막대/선/파이), Rich Deck 모드 (self-contained scroll-snap), 풀 내비게이션 + 진입 모션, 도식 9패턴, references 자동추출(PDF/PPTX/DOCX/MD/TXT), 다크/라이트 토글 + 양 테마 대비 게이트, PDF 다운로드(in-browser html2canvas + WYSIWYG export-pdf), AI-slop 생성 가드, 자동 milestone 스냅샷, deck 평탄화(host-agnostic flat 폴더) + 멀티-호스트 배포(Vercel/GitHub Pages/Cloudflare Pages) + 계정없는 cloudflared 즉시 터널 공유. 트리거: 'dxcare-web-slide:*' 또는 자연어 ('새 슬라이드 만들자', '배포', '테마 바꿔', '차트 넣자' 등).",
-      "version": "0.3.6",
+      "description": "HTML 웹 프레젠테이션 생성·관리·배포 플러그인. 5개 자연어 스킬 (init/new/work/milestone/deploy), 16개 테마 프리셋 + 갤러리 시각 선택, 자동 theme.css 생성, 데이터 차트 모듈 (Chart.js opt-in — 막대/선/파이), Rich Deck 모드 (self-contained scroll-snap), 풀 내비게이션 + 진입 모션, 도식 9패턴, references 자동추출(PDF/PPTX/DOCX/MD/TXT), 다크/라이트 토글 + 양 테마 대비 게이트, PDF 다운로드(in-browser html2canvas + WYSIWYG export-pdf), 편집 가능한 PPTX 다운로드(DOM → 네이티브 PowerPoint 객체), AI-slop 생성 가드, 자동 milestone 스냅샷, deck 평탄화(host-agnostic flat 폴더) + 멀티-호스트 배포(Vercel/GitHub Pages/Cloudflare Pages) + 계정없는 cloudflared 즉시 터널 공유. 트리거: 'dxcare-web-slide:*' 또는 자연어 ('새 슬라이드 만들자', '배포', '테마 바꿔', '차트 넣자' 등).",
+      "version": "0.3.7",
       "keywords": [
         "presentation",
         "slides",
@@ -22,7 +22,8 @@
         "dark-mode",
         "vercel",
         "nextjs",
-        "chart"
+        "chart",
+        "pptx"
       ]
     }
   ]

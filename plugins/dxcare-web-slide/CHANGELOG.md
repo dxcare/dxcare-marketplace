@@ -13,6 +13,29 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 
 ---
 
+## [0.3.7] — 2026-06-10
+
+> **편집 가능한 PPTX 내보내기.** PDF의 래스터 캡처와 달리, 슬라이드 DOM을 PowerPoint 네이티브 객체로 변환 — 다운로드 후 PowerPoint/Keynote에서 텍스트·도형을 그대로 수정할 수 있다.
+
+### Added
+- `_shared/js/pptx.js` — PptxGenJS(CDN) 기반 PPTX exporter. 덱 컨트롤 바에 `P`(다크)/`P☀`(라이트) 버튼 추가 (`data-action="pptx"`).
+  - 텍스트 → 실제 텍스트 박스. per-run 폰트/크기/색/굵기/자간 보존 — 인라인 `<small>`/`<em>`/`<strong>`은 런 분리, `<br>`은 줄바꿈, `text-transform`은 텍스트에 직접 적용
+  - 배경/테두리를 가진 요소(카드·비교표 셀 등) → `rect`/`roundRect` 도형 (border-radius → rectRadius, rgba alpha → transparency)
+  - `<img>` → 그림 개체 (cross-origin taint는 건너뛰고 export 계속)
+  - 좌표는 `getBoundingClientRect()`를 슬라이드 레이아웃(10in × 뷰포트 비율)으로 스케일링 — 화면에서 보이는 위치 그대로
+  - 모바일(<1200px)은 PDF와 동일하게 1920×1080 hidden iframe에서 추출
+- `pdf.js` 공용 헬퍼 export — `buildOverlay` / `prepareMobileIframe` / `sleep` / `deckFileBase` (파일명 규칙을 PDF·PPTX가 공유)
+- `_templates/index.html` — pptxgenjs@3.12.0 CDN + PPTX 버튼 2개 + `initPptxButton()` 배선
+
+### Fixed (구현 과정에서 잡은 함정 — 회귀 방지용 기록)
+- 테마 전환 transition 도중 `getComputedStyle`을 읽으면 중간 보간색이 캡처됨 → export 동안 전역 `transition: none` 스타일 주입 후 `setTheme` 호출
+- `pdf-capture`의 `.slide { position: static }`은 슬라이드 높이를 콘텐츠 높이로 붕괴시킴 → PPTX 경로는 absolute 레이아웃을 유지해 뷰포트 크기·수직 센터링 보존
+
+### Design trade-off
+- 그라데이션·글로우·박스섀도·pseudo-element 장식은 의도적으로 드롭 — 편집성이 목표. 픽셀 충실도가 필요하면 기존 PDF 버튼 또는 `pnpm export-pdf` 사용.
+
+---
+
 ## [0.3.6] — 2026-06-04
 
 > 브랜드 로고 **역할별** 활용 + 풀세트 동봉. 코너 마크 하나에 그치지 않고 표지 hero·favicon 까지 자동.
