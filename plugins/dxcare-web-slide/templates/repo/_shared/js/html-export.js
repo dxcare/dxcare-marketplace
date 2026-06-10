@@ -168,6 +168,35 @@ const PLAYER_JS = `(function () {
     }
   });
 
+  // 마우스 휠 — navigation.js와 동일하게 deltaY를 누적해 임계치(60)에서
+  // 한 장 이동, 200ms 유휴 후 리셋 (물리 스크롤 1회 = 슬라이드 1장)
+  var wheelAccum = 0;
+  var wheelReset = null;
+  document.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    wheelAccum += e.deltaY;
+    clearTimeout(wheelReset);
+    wheelReset = setTimeout(function () { wheelAccum = 0; }, 200);
+    if (wheelAccum > 60) { wheelAccum = 0; go(cur + 1); }
+    else if (wheelAccum < -60) { wheelAccum = 0; go(cur - 1); }
+  }, { passive: false });
+
+  // 슬라이드 표면 클릭으로 다음 장 (버튼·링크·컨트롤 영역 제외)
+  var INTERACTIVE = 'a, button, input, select, textarea, label, summary, [role="button"], [data-action]';
+  var deckEl = document.getElementById('deck');
+  if (deckEl) deckEl.addEventListener('click', function (e) {
+    if (e.target.closest(INTERACTIVE)) return;
+    if (e.target.closest('.deck-controls, .nav-dots')) return;
+    go(cur + 1);
+  });
+
+  // 카운터 클릭 → 첫 슬라이드
+  var counter = document.querySelector('.deck-counter');
+  if (counter) {
+    counter.style.cursor = 'pointer';
+    counter.addEventListener('click', function () { go(0); });
+  }
+
   var touchX = null;
   document.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
   document.addEventListener('touchend', function (e) {
