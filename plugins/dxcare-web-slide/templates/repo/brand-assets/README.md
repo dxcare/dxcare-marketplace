@@ -43,14 +43,14 @@ DXCare 로고를 lockup × 색상으로 정리해 `dxcare/` 에 동봉합니다.
 
 | lockup | 설명 | 파일 |
 |--------|------|------|
-| `symbol`      | 심볼만 (그라데이션 X)        | `symbol-color.png` · `symbol-white.png` · `symbol-violetbg.png` |
+| `symbol`      | 심볼만 (2색 X)              | `symbol-color.png` · `symbol-white.png` · `symbol-violetbg.png` |
 | `inline`      | DXCare 가로 로고            | `inline-color.png` · `inline-white.png` · `inline-violetbg.png` |
 | `stacked`     | 심볼 위 + DXCare 아래 (세로) | `stacked-color.png` · `stacked-white.png` · `stacked-violetbg.png` |
 | `wordmark-en` | DXCare 단색 워드마크         | `wordmark-en-black.png` · `-white.png` · `-blue.png` · `-violet.png` |
 | `wordmark-jp` | DXCare + 법인명 `DX CARE株式会社` | `wordmark-jp-color.png` · `-white.png` · `-violetbg.png` |
 
-- `-white` = 어두운 배경용, `-color`/`-black` = 밝은 배경용, `-violetbg` = 브랜드 보라(`#4d35ef`) 배경 위.
-- 브랜드 컬러: 바이올렛 `#4d35ef` · 시안 `#03b7c5` (심볼 X 의 상단→하단 그라데이션).
+- `-white` = 어두운 배경용, `-color`/`-black` = 밝은 배경용, `-violetbg` = 브랜드 인디고(`#3d4b9d`) 배경 위.
+- 브랜드 컬러: 인디고 `#3d4b9d` · 틸 `#23b6b9` (AI 원본 기준 — 심볼 X 의 2색 구성).
 
 ## 브랜드 추가 / 제거
 
