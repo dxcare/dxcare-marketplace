@@ -326,7 +326,7 @@ function pickOpaque(...colors) {
   return null;
 }
 
-function imgToDataUrl(img) {
+export function imgToDataUrl(img) {
   return new Promise((resolve) => {
     const draw = () => {
       const canvas = document.createElement('canvas');

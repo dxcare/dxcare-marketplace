@@ -87,6 +87,7 @@
     <button data-action="pdf" data-theme="light" aria-label="download PDF (light)" title="PDF 다운로드 (라이트)">⬇︎☀</button>
     <button data-action="pptx" data-theme="dark" aria-label="download PPTX (dark)" title="PPTX 다운로드 (다크) — 편집 가능">P</button>
     <button data-action="pptx" data-theme="light" aria-label="download PPTX (light)" title="PPTX 다운로드 (라이트) — 편집 가능">P☀</button>
+    <button data-action="html" aria-label="download standalone HTML" title="HTML 다운로드 — 오프라인·서버 없이 열람">H</button>
   </aside>
 
   <div class="deck-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
@@ -99,8 +100,10 @@
     import '/_shared/js/slide-core.js';
     import { initPdfButton } from '/_shared/js/pdf.js';
     import { initPptxButton } from '/_shared/js/pptx.js';
+    import { initHtmlButton } from '/_shared/js/html-export.js';
     initPdfButton();
     initPptxButton();
+    initHtmlButton();
   </script>
 </body>
 </html>

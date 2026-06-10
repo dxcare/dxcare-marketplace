@@ -13,6 +13,21 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 
 ---
 
+## [0.3.9] — 2026-06-10
+
+> **단독 HTML 내보내기.** 서버 기동 없이 `file://`로 더블클릭해 열 수 있는 단일 HTML 파일 다운로드 — 오프라인 시연·이메일 전달용.
+
+### Added
+- `_shared/js/html-export.js` — 덱 컨트롤 바에 `H` 버튼 추가 (`data-action="html"`). 같은 출처 CSS(base/diagrams/a11y/print/theme)를 `<style>`로 인라인, `<img>`·favicon은 data URI 임베드, `<슬러그>-standalone.html`로 저장.
+- **내장 미니 플레이어** — `slide-core.js`는 ES 모듈이라 `file://`에서 CORS로 차단되므로, 내보내기 파일에는 일반 인라인 스크립트로 핵심 동작을 재구현: `data-active` 활성화 모델(entry reveal 동작), 키보드(←/→/Space/Home/End/T)·버튼·닷·스와이프 내비, 테마 토글, 진행바, 해시 딥링크.
+- `pptx.js`의 `imgToDataUrl` export — HTML exporter와 공유.
+
+### Notes / trade-off
+- 웹폰트(Pretendard·세리프) CDN `<link>`는 유지 — 온라인이면 동일 렌더, 완전 오프라인이면 시스템 폰트로 graceful 대체. 임베드 시 파일이 수 MB로 커져 의도적으로 제외 (현재 ~1MB).
+- PDF/PPTX 버튼은 CDN 의존이라 내보내기 파일에서는 제외.
+
+---
+
 ## [0.3.8] — 2026-06-10
 
 > PPTX 내보내기 **콘텐츠 fit**. 화면 디자인의 칼럼 여백·수직 센터링 공백을 걷어내고, 콘텐츠가 16:9 슬라이드를 꽉 채우도록 균일 확대.
