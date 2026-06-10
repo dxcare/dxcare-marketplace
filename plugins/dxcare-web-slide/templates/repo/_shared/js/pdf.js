@@ -95,19 +95,7 @@ export async function generatePDF(theme = 'dark') {
 
     progress.textContent = 'PDF 저장 중...';
     const suffix = theme === 'light' ? 'light' : 'dark';
-    // Filename precedence:
-    //   1. Samsung V10-era decks: version token in title (V1, V10...)
-    //   2. Consumer opt-in via <html data-slug="..."> or <body data-slug="...">
-    //   3. Slugify document.title (e.g. "Q2 Strategy Review" → "q2-strategy-review")
-    //   4. Final fallback literal
-    const versionMatch = document.title.match(/V\d+/)?.[0];
-    const slugAttr = document.documentElement.dataset.slug ?? document.body.dataset.slug;
-    const titleSlug = document.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
-    const base = versionMatch || slugAttr || titleSlug || 'slides';
-    pdf.save(`${base}-${suffix}.pdf`);
+    pdf.save(`${deckFileBase()}-${suffix}.pdf`);
   } finally {
     if (iframe) iframe.remove();
     else {
@@ -119,7 +107,7 @@ export async function generatePDF(theme = 'dark') {
   }
 }
 
-function buildOverlay() {
+export function buildOverlay() {
   const overlay = document.createElement('div');
   overlay.className = 'pdf-overlay';
   overlay.style.cssText =
@@ -145,7 +133,7 @@ function buildOverlay() {
   return overlay;
 }
 
-async function prepareMobileIframe(theme) {
+export async function prepareMobileIframe(theme) {
   const iframe = document.createElement('iframe');
   iframe.style.cssText = `position:fixed;left:-9999px;top:0;width:${PDF_W}px;height:${PDF_H}px;border:none;opacity:0;pointer-events:none;`;
   document.body.appendChild(iframe);
@@ -178,8 +166,20 @@ async function prepareMobileIframe(theme) {
   return { iframe, slides, doc: idoc };
 }
 
-function sleep(ms) {
+export function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+/* Filename base shared by the PDF and PPTX exporters — same precedence:
+   version token in title → data-slug opt-in → slugified title → fallback. */
+export function deckFileBase() {
+  const versionMatch = document.title.match(/V\d+/)?.[0];
+  const slugAttr = document.documentElement.dataset.slug ?? document.body.dataset.slug;
+  const titleSlug = document.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return versionMatch || slugAttr || titleSlug || 'slides';
 }
 
 let pdfInitialized = false;

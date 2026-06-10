@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="./theme.css">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js" defer></script>
 </head>
 <body data-theme="dark">
   <!-- Brand mark — auto-swaps with the active theme (D7 / AC-3.4). The
@@ -84,6 +85,8 @@
     <button data-action="theme" aria-label="toggle theme (T)">☾</button>
     <button data-action="pdf" data-theme="dark" aria-label="download PDF (dark)" title="PDF 다운로드 (다크)">⬇︎</button>
     <button data-action="pdf" data-theme="light" aria-label="download PDF (light)" title="PDF 다운로드 (라이트)">⬇︎☀</button>
+    <button data-action="pptx" data-theme="dark" aria-label="download PPTX (dark)" title="PPTX 다운로드 (다크) — 편집 가능">P</button>
+    <button data-action="pptx" data-theme="light" aria-label="download PPTX (light)" title="PPTX 다운로드 (라이트) — 편집 가능">P☀</button>
   </aside>
 
   <div class="deck-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
@@ -95,7 +98,9 @@
     // wire PDF, which slide-core does not touch.
     import '/_shared/js/slide-core.js';
     import { initPdfButton } from '/_shared/js/pdf.js';
+    import { initPptxButton } from '/_shared/js/pptx.js';
     initPdfButton();
+    initPptxButton();
   </script>
 </body>
 </html>
