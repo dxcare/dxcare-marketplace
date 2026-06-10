@@ -1,6 +1,6 @@
 {
   "name": "dxcare-web-slide",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Claude Code plugin for building, versioning, and deploying HTML presentations. TDD discipline, 16 theme presets with a visual gallery + terminal picker, automated theme.css regeneration, data charts (Chart.js opt-in), AI-slop generation guards, references auto-extraction, dual PDF export (in-browser html2canvas + WYSIWYG Playwright screenshot), editable PPTX export (DOM → native PowerPoint objects), host-agnostic deck flattening + multi-host deploy (Vercel / GitHub Pages / Cloudflare Pages) + account-free Cloudflare quick-tunnel sharing.",
   "author": {
     "name": "DXCare",

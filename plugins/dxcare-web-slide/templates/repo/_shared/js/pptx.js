@@ -65,20 +65,55 @@ export async function generatePPTX(theme = 'dark') {
     const view = targetDoc.defaultView;
     const bodyBg = view.getComputedStyle(targetDoc.body).backgroundColor;
 
+    const SLIDE_H_IN = SLIDE_W_IN * (9 / 16);
+    const FIT_MARGIN_IN = 0.35; // 콘텐츠 fit 후 남길 슬라이드 가장자리 여백
+    const MAX_ZOOM = 2; // 빈약한 슬라이드가 과도하게 확대되지 않도록 상한 (기준 스케일 대비)
+
     for (let i = 0; i < total; i++) {
       progress.textContent = `슬라이드 ${i + 1} / ${total} 변환 중...`;
       bar.style.width = `${((i + 1) / total) * 100}%`;
 
       const slideEl = targetSlides[i];
       const sRect = slideEl.getBoundingClientRect();
-      const scale = SLIDE_W_IN / sRect.width; // inches per CSS px
+      const baseScale = SLIDE_W_IN / sRect.width; // inches per CSS px (스크린 1:1)
 
       const pSlide = pptx.addSlide();
       const slideBg = view.getComputedStyle(slideEl).backgroundColor;
       const bg = parseColor(pickOpaque(slideBg, bodyBg));
       if (bg) pSlide.background = { color: bg.hex };
 
-      const ctx = { pptx, pSlide, view, origin: sRect, scale };
+      // 1차 패스: 화면 디자인의 좌우 칼럼 여백·수직 센터링 공백을 걷어내기
+      // 위해, 실제로 emit될 요소들의 경계 박스를 측정한다.
+      const bounds = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity };
+      const measureCtx = { view, origin: sRect, scale: baseScale, offX: 0, offY: 0, bounds };
+      for (const child of slideEl.children) await walkElement(child, measureCtx);
+
+      // 2차 패스: 경계 박스가 여백(FIT_MARGIN_IN)을 남기고 슬라이드를 채우도록
+      // 균일 확대. 폰트/자간/반경도 동일 비율로 커진다. 오프셋은 원본 슬라이드
+      // 중심을 유지하는 값을 우선하고(가운데 정렬 푸터 등 디자인 기준점 보존),
+      // 경계 박스가 여백을 벗어나면 그 범위 안으로 클램프한다.
+      let scale = baseScale;
+      let offX = 0;
+      let offY = 0;
+      if (bounds.minX < bounds.maxX) {
+        const bw = bounds.maxX - bounds.minX; // px
+        const bh = bounds.maxY - bounds.minY;
+        const availW = SLIDE_W_IN - FIT_MARGIN_IN * 2;
+        const availH = SLIDE_H_IN - FIT_MARGIN_IN * 2;
+        scale = Math.min(availW / bw, availH / bh, baseScale * MAX_ZOOM);
+        offX = clamp(
+          SLIDE_W_IN / 2 - (sRect.width / 2) * scale,
+          FIT_MARGIN_IN - bounds.minX * scale,
+          SLIDE_W_IN - FIT_MARGIN_IN - bounds.maxX * scale,
+        );
+        offY = clamp(
+          SLIDE_H_IN / 2 - (sRect.height / 2) * scale,
+          FIT_MARGIN_IN - bounds.minY * scale,
+          SLIDE_H_IN - FIT_MARGIN_IN - bounds.maxY * scale,
+        );
+      }
+
+      const ctx = { pptx, pSlide, view, origin: sRect, scale, offX, offY };
       for (const child of slideEl.children) await walkElement(child, ctx);
     }
 
@@ -128,44 +163,63 @@ function isTextUnit(el, ctx) {
   return true;
 }
 
+/* rect(px) → 슬라이드 좌표(in). measure 패스(ctx.bounds)에서는 경계 박스만
+   누적하고 null을 반환해 emit을 건너뛴다. */
+function place(rect, ctx) {
+  const rx = rect.left - ctx.origin.left;
+  const ry = rect.top - ctx.origin.top;
+  if (ctx.bounds) {
+    ctx.bounds.minX = Math.min(ctx.bounds.minX, rx);
+    ctx.bounds.minY = Math.min(ctx.bounds.minY, ry);
+    ctx.bounds.maxX = Math.max(ctx.bounds.maxX, rx + rect.width);
+    ctx.bounds.maxY = Math.max(ctx.bounds.maxY, ry + rect.height);
+    return null;
+  }
+  return {
+    x: ctx.offX + rx * ctx.scale,
+    y: ctx.offY + ry * ctx.scale,
+    w: rect.width * ctx.scale,
+    h: rect.height * ctx.scale,
+  };
+}
+
 function emitBoxShape(el, cs, rect, ctx) {
   const fill = parseColor(cs.backgroundColor);
   const bw = parseFloat(cs.borderTopWidth) || 0;
   const line = bw > 0 ? parseColor(cs.borderTopColor) : null;
   if (!fill && !line) return;
 
+  const opts = place(rect, ctx);
+  if (!opts) return;
+
   const radiusPx = parseFloat(cs.borderTopLeftRadius) || 0;
-  const opts = {
-    x: (rect.left - ctx.origin.left) * ctx.scale,
-    y: (rect.top - ctx.origin.top) * ctx.scale,
-    w: rect.width * ctx.scale,
-    h: rect.height * ctx.scale,
-  };
   if (fill) opts.fill = { color: fill.hex, transparency: fill.transparency };
   else opts.fill = { color: 'FFFFFF', transparency: 100 };
-  if (line) opts.line = { color: line.hex, width: Math.max(0.25, bw * 0.75), transparency: line.transparency };
+  if (line) opts.line = { color: line.hex, width: Math.max(0.25, bw * ctx.scale * 72), transparency: line.transparency };
   if (radiusPx > 0) opts.rectRadius = Math.min(radiusPx * ctx.scale, opts.h / 2);
 
   ctx.pSlide.addShape(radiusPx > 0 ? 'roundRect' : 'rect', opts);
 }
 
 async function emitImage(el, rect, ctx) {
+  const pos = place(rect, ctx);
+  if (!pos) return;
   try {
     const data = await imgToDataUrl(el);
     if (!data) return;
-    ctx.pSlide.addImage({
-      data,
-      x: (rect.left - ctx.origin.left) * ctx.scale,
-      y: (rect.top - ctx.origin.top) * ctx.scale,
-      w: rect.width * ctx.scale,
-      h: rect.height * ctx.scale,
-    });
+    ctx.pSlide.addImage({ data, ...pos });
   } catch {
     /* tainted/broken image — skip, keep exporting */
   }
 }
 
 function emitText(el, cs, rect, ctx) {
+  // 측정·배치 모두 실제 그려진 텍스트의 타이트 박스 기준 — 빈 칼럼 폭을
+  // 포함한 블록 rect를 쓰면 (1) 전폭 블록이 fit 확대를 막고 (2) 확대 후
+  // 텍스트 박스가 슬라이드 밖으로 넘치며 가운데/오른쪽 정렬이 어긋난다.
+  // 정렬은 타이트 박스 안에서 그대로 성립하므로 위치가 보존된다.
+  const pos = place(textContentRect(el, rect), ctx);
+  if (!pos) return;
   const runs = collectRuns(el, cs, ctx);
   if (!runs.length) return;
 
@@ -173,10 +227,9 @@ function emitText(el, cs, rect, ctx) {
   const lineHeightPx = cs.lineHeight === 'normal' ? fontPx * 1.2 : parseFloat(cs.lineHeight);
 
   ctx.pSlide.addText(runs, {
-    x: (rect.left - ctx.origin.left) * ctx.scale,
-    y: (rect.top - ctx.origin.top) * ctx.scale,
-    w: rect.width * ctx.scale + 0.05, // breathing room — PPT fonts metric-differ
-    h: rect.height * ctx.scale + 0.05,
+    ...pos,
+    w: pos.w + 0.05, // breathing room — PPT fonts metric-differ
+    h: pos.h + 0.05,
     align: cs.textAlign === 'start' ? 'left' : /** @type {any} */ (cs.textAlign),
     valign: 'top',
     margin: 0,
@@ -218,6 +271,23 @@ function runOptions(cs, ctx) {
   const ls = parseFloat(cs.letterSpacing);
   if (!Number.isNaN(ls) && ls > 0) opts.charSpacing = Math.round(ls * 72 * ctx.scale * 10) / 10;
   return opts;
+}
+
+/* 요소 안에 실제로 그려진 텍스트의 타이트 경계 박스 (Range 측정). */
+function textContentRect(el, fallback) {
+  try {
+    const range = el.ownerDocument.createRange();
+    range.selectNodeContents(el);
+    const r = range.getBoundingClientRect();
+    if (r && r.width > 0 && r.height > 0) return r;
+  } catch {
+    /* fall through */
+  }
+  return fallback;
+}
+
+function clamp(v, lo, hi) {
+  return Math.min(Math.max(v, lo), hi);
 }
 
 /* ── small utilities ───────────────────────────────────────────────── */
