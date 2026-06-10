@@ -15,60 +15,51 @@
      <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js" defer></script>
 */
 
-import { setTheme } from './theme-toggle.js';
 import { buildOverlay, prepareMobileIframe, sleep, deckFileBase } from './pdf.js';
 
-const SLIDE_W_IN = 10; // PowerPoint default 16:9 width (inches)
+const SLIDE_W_IN = 10; // PowerPoint 표준 16:9 와이드 폭 (인치) — 높이는 5.625in 고정
 
 /**
- * Generate an editable PPTX of every `.slide` at the given theme.
+ * Generate an editable 16:9 PPTX of every `.slide` at the given theme.
+ * Extraction always runs inside the 1920×1080 hidden iframe so the output
+ * aspect is fixed at 16:9 regardless of the browser window shape.
  * @param {'dark'|'light'} theme — theme to apply during extraction
  */
 export async function generatePPTX(theme = 'dark') {
-  const priorTheme = document.body.dataset.theme ?? 'dark';
-
-  // 테마 전환 transition이 진행되는 동안 getComputedStyle을 읽으면 중간
-  // 보간색이 캡처된다 — setTheme 전에 전역 transition을 꺼서 색을 즉시
-  // 확정시키고, reveal 스태거의 opacity/transform도 함께 무력화한다.
-  const styleEl = document.createElement('style');
-  styleEl.textContent =
-    '*, *::before, *::after { transition: none !important; animation: none !important; }\n' +
-    '.slide .slide-content > * { opacity: 1 !important; transform: none !important; }';
-  document.head.appendChild(styleEl);
-  setTheme(theme);
-
   const overlay = buildOverlay();
   document.body.appendChild(overlay);
   const progress = overlay.querySelector('.pdf-progress');
   const bar = overlay.querySelector('.pdf-bar');
 
-  const isMobile = window.innerWidth < 1200;
-  let targetSlides, targetDoc, iframe;
+  let iframe;
 
   try {
-    if (isMobile) {
-      progress.textContent = '데스크톱 레이아웃 준비 중...';
-      const prep = await prepareMobileIframe(theme);
-      iframe = prep.iframe;
-      targetSlides = prep.slides;
-      targetDoc = prep.doc;
-    } else {
-      // pdf-capture와 달리 .slide의 absolute 레이아웃을 유지한다 — 슬라이드가
-      // 뷰포트 크기를 지키고 수직 센터링 rect가 그대로 보존된다.
-      await document.fonts.ready;
-      await sleep(100);
-      targetSlides = document.querySelectorAll('.slide');
-      targetDoc = document;
-    }
+    // 항상 1920×1080(정확히 16:9) 히든 iframe에서 측정한다 — 결과가 브라우저
+    // 창 비율과 무관하게 16:9로 고정되고, 테마도 iframe에만 적용되므로 메인
+    // 화면이 깜빡이지 않는다 (transition 중간색 캡처 문제도 원천 차단).
+    progress.textContent = '16:9 레이아웃 준비 중...';
+    const prep = await prepareMobileIframe(theme);
+    iframe = prep.iframe;
+    const targetDoc = prep.doc;
 
+    // prepareMobileIframe의 pdf-capture는 .slide를 position:static으로 풀어
+    // 높이를 붕괴시킨다(PDF 캡처용) — PPTX는 absolute 레이아웃이 필요하므로
+    // 해제하고, reveal 스태거의 opacity/transform만 무력화한다.
+    targetDoc.body.classList.remove('pdf-capture');
+    const fixEl = targetDoc.createElement('style');
+    fixEl.textContent =
+      '*, *::before, *::after { transition: none !important; animation: none !important; }\n' +
+      '.slide .slide-content > * { opacity: 1 !important; transform: none !important; }';
+    targetDoc.head.appendChild(fixEl);
+    await sleep(100);
+
+    const targetSlides = targetDoc.querySelectorAll('.slide');
     const total = targetSlides.length;
     const PptxGen = /** @type {any} */ (window).PptxGenJS;
     const pptx = new PptxGen();
 
-    // Layout matches the first slide's on-screen aspect so rect math is 1:1.
-    const ref = targetSlides[0].getBoundingClientRect();
-    const slideHIn = (SLIDE_W_IN * ref.height) / ref.width;
-    pptx.defineLayout({ name: 'DECK', width: SLIDE_W_IN, height: slideHIn });
+    // 표준 16:9 — PowerPoint 기본 와이드 슬라이드 크기.
+    pptx.defineLayout({ name: 'DECK', width: SLIDE_W_IN, height: SLIDE_W_IN * (9 / 16) });
     pptx.layout = 'DECK';
 
     const view = targetDoc.defaultView;
@@ -78,10 +69,6 @@ export async function generatePPTX(theme = 'dark') {
       progress.textContent = `슬라이드 ${i + 1} / ${total} 변환 중...`;
       bar.style.width = `${((i + 1) / total) * 100}%`;
 
-      if (isMobile) {
-        targetSlides[i].scrollIntoView({ behavior: 'instant' });
-        await sleep(50);
-      }
       const slideEl = targetSlides[i];
       const sRect = slideEl.getBoundingClientRect();
       const scale = SLIDE_W_IN / sRect.width; // inches per CSS px
@@ -101,8 +88,6 @@ export async function generatePPTX(theme = 'dark') {
   } finally {
     if (iframe) iframe.remove();
     overlay.remove();
-    setTheme(priorTheme);
-    styleEl.remove(); // transition 복원은 테마 원복 후 — 원복 페이드도 생략
   }
 }
 
